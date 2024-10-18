@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - "feature/**"
+      - main
   workflow_dispatch:
 
 jobs:
