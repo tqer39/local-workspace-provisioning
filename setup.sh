@@ -220,6 +220,12 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
             echo "Rancher Desktop のインストール方法が不明です。手動でインストールしてください。"
             exit 1
         fi
+        if ! command -v rancher-desktop &> /dev/null; then
+            echo "Rancher Desktop のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "Rancher Desktop のインストールが完了しました。"
+        fi
     else
         echo "Rancher Desktop は既にインストールされています。"
     fi
