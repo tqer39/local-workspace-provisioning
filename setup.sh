@@ -2,8 +2,8 @@
 
 # 作業ディレクトリの設定
 OWNER="tqer39"  # あなたのGitHubのユーザー名に変更してください
-REPO_NAME="local-workspace-provisioning"
 WORKSPACE="$HOME/workspace"
+REPO_NAME="local-workspace-provisioning"
 DOTFILES_DIR="${WORKSPACE}/${REPO_NAME}"
 REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
 
