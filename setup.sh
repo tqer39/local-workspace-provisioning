@@ -49,11 +49,7 @@ install_if_missing() {
     local install_cmd="$2"
     if ! command -v "$cmd" &> /dev/null; then
         echo "$cmd がインストールされていません。インストールを試みます。"
-        if [[ "$install_cmd" == *"brew"* ]]; then
-            eval "$install_cmd"
-        else
-            $SUDO bash -c "$install_cmd"
-        fi
+        $SUDO bash -c "$install_cmd"
         if ! command -v "$cmd" &> /dev/null; then
             echo "$cmd のインストールに失敗しました。手動でインストールしてください。"
             exit 1
