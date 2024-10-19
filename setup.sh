@@ -111,7 +111,7 @@ fi
 
 # 必要なパッケージのインストール（Linuxbrew の場合、パスを通す必要があるかもしれません）
 if [[ "$OS_TYPE" == "Linux" ]]; then
-    eval "$($HOME/.linuxbrew/bin/brew shellenv)"
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 # ~/workspace ディレクトリを作成
