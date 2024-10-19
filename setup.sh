@@ -2,10 +2,20 @@
 
 # 作業ディレクトリの設定
 OWNER="tqer39"  # あなたのGitHubのユーザー名に変更してください
-REPO_NAME="local-workspace-provisioning"
 WORKSPACE="$HOME/workspace"
+REPO_NAME="local-workspace-provisioning"
 DOTFILES_DIR="${WORKSPACE}/${REPO_NAME}"
 REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
+
+# CI環境で実行されているか確認
+if [ -n "$CI" ]; then
+    echo "CI環境で実行されています。"
+
+    # GUIアプリケーションのインストールをスキップ
+    INSTALL_GUI_APPS=false
+else
+    INSTALL_GUI_APPS=true
+fi
 
 # OSタイプの取得
 OS_TYPE="$(uname -s)"
@@ -84,6 +94,10 @@ fi
 if ! command -v brew &> /dev/null; then
     echo "Homebrew がインストールされていません。インストールを試みます。"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # CI 環境でのみ eval コマンドを実行
+    if [[ "$CI" == "true" ]]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
     # brew がインストールされたか確認
     if ! command -v brew &> /dev/null; then
         echo "Homebrew のインストールに失敗しました。手動でインストールしてください。"
@@ -97,7 +111,7 @@ fi
 
 # 必要なパッケージのインストール（Linuxbrew の場合、パスを通す必要があるかもしれません）
 if [[ "$OS_TYPE" == "Linux" ]]; then
-    eval "$($HOME/.linuxbrew/bin/brew shellenv)"
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
 # ~/workspace ディレクトリを作成

@@ -1,0 +1,104 @@
+name: Setup Script Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  test-setup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: 実行権限を設定
+      run: chmod +x setup.sh
+
+    - name: セットアップスクリプトを実行
+      run: |
+        ./setup.sh
+
+    - name: zsh のインストール確認
+      run: |
+        if command -v zsh &> /dev/null; then
+          echo "✅ zsh がインストールされています。"
+        else
+          echo "❌ zsh がインストールされていません。"
+          exit 1
+        fi
+
+    - name: Rancher Desktop のインストール確認
+      run: |
+        if command -v rdctl &> /dev/null || [ -d "/Applications/Rancher Desktop.app" ]; then
+          echo "✅ Rancher Desktop がインストールされています。"
+        else
+          echo "⚠️ Rancher Desktop がインストールされていません。CI環境ではこれは期待される動作です。"
+        fi
+
+    - name: anyenv のインストール確認
+      run: |
+        if command -v anyenv &> /dev/null; then
+          echo "✅ anyenv がインストールされています。"
+        else
+          echo "❌ anyenv がインストールされていません。"
+          exit 1
+        fi
+
+    - name: direnv のインストール確認
+      run: |
+        if command -v direnv &> /dev/null; then
+          echo "✅ direnv がインストールされています。"
+        else
+          echo "❌ direnv がインストールされていません。"
+          exit 1
+        fi
+
+    - name: starship のインストール確認
+      run: |
+        if command -v starship &> /dev/null; then
+          echo "✅ starship がインストールされています。"
+        else
+          echo "❌ starship がインストールされていません。"
+          exit 1
+        fi
+
+    - name: AWS CLI のインストール確認
+      run: |
+        if command -v aws &> /dev/null; then
+          echo "✅ AWS CLI がインストールされています。"
+        else
+          echo "❌ AWS CLI がインストールされていません。"
+          exit 1
+        fi
+
+    - name: jq のインストール確認
+      run: |
+        if command -v jq &> /dev/null; then
+          echo "✅ jq がインストールされています。"
+        else
+          echo "❌ jq がインストールされていません。"
+          exit 1
+        fi
+
+    - name: GitHub CLI のインストール確認
+      run: |
+        if command -v gh &> /dev/null; then
+          echo "✅ GitHub CLI がインストールされています。"
+        else
+          echo "❌ GitHub CLI がインストールされていません。"
+          exit 1
+        fi
+
+    - name: Visual Studio Code のインストール確認
+      run: |
+        if command -v code &> /dev/null; then
+          echo "✅ Visual Studio Code がインストールされています。"
+        else
+          echo "⚠️ Visual Studio Code がインストールされていません。CI環境ではこれは期待される動作です。"
+        fi
