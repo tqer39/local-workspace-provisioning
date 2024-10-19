@@ -120,17 +120,22 @@ if [ ! -d "$WORKSPACE" ]; then
     mkdir -p "$WORKSPACE"
 fi
 
-# リポジトリをクローン
-if [ ! -d "$DOTFILES_DIR" ]; then
-    echo "dotfiles を $DOTFILES_DIR にクローンします..."
-    git clone "$REPO_URL" "$DOTFILES_DIR"
-    if [ $? -ne 0 ]; then
-        echo "リポジトリのクローンに失敗しました。"
-        exit 1
-    fi
+# リポジトリをクローンまたは既存のリポジトリを使用
+if [ "$CI" == "true" ]; then
+    echo "CI環境で実行されています。既存のリポジトリを使用します。"
+    DOTFILES_DIR="$GITHUB_WORKSPACE"
 else
-    echo "dotfiles は既に存在します。最新の変更を取得します..."
-    git -C "$DOTFILES_DIR" pull
+    if [ ! -d "$DOTFILES_DIR" ]; then
+        echo "dotfiles を $DOTFILES_DIR にクローンします..."
+        git clone "$REPO_URL" "$DOTFILES_DIR"
+        if [ $? -ne 0 ]; then
+            echo "リポジトリのクローンに失敗しました。"
+            exit 1
+        fi
+    else
+        echo "dotfiles は既に存在します。最新の変更を取得します..."
+        git -C "$DOTFILES_DIR" pull
+    fi
 fi
 
 # dotfiles のシンボリックリンクを作成
