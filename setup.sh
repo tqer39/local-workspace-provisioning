@@ -104,6 +104,15 @@ if ! command -v brew &> /dev/null; then
         exit 1
     else
         echo "Homebrew のインストールが完了しました。"
+        if [[ "$OS_TYPE" == "Linux" ]]; then
+            # Linuxbrew の場合、ビルドに必要なパッケージをインストール
+            if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+                $SUDO $PACKAGE_MANAGER update
+                $SUDO $PACKAGE_MANAGER install -y build-essential
+            elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+                $SUDO yum install -y gcc make
+            fi
+        fi
     fi
 else
     echo "Homebrew は既にインストールされています。"
