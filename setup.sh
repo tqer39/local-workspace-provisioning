@@ -49,7 +49,11 @@ install_if_missing() {
     local install_cmd="$2"
     if ! command -v "$cmd" &> /dev/null; then
         echo "$cmd がインストールされていません。インストールを試みます。"
-        brew install "$cmd"
+        if [[ "$install_cmd" == *"brew"* ]]; then
+            brew install "$cmd"
+        else
+            $SUDO bash -c "$install_cmd"
+        fi
         if ! command -v "$cmd" &> /dev/null; then
             echo "$cmd のインストールに失敗しました。手動でインストールしてください。"
             exit 1
@@ -96,7 +100,6 @@ if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     # CI 環境でのみ eval コマンドを実行
     if [[ "$CI" == "true" ]]; then
-        echo "CI環境で実行されています。eval コマンドを実行します。"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     fi
     # brew がインストールされたか確認
@@ -178,7 +181,6 @@ done
 . "$HOME/.bashrc"
 
 # zsh のインストール確認
-which brew
 install_if_missing "zsh" "$SUDO brew install zsh"
 
 # デフォルトシェルを zsh に変更
