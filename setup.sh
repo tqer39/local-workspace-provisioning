@@ -183,17 +183,21 @@ done
 # zsh のインストール確認
 install_if_missing "zsh" "$SUDO brew install zsh"
 
-# デフォルトシェルを zsh に変更
-CURRENT_SHELL=$(basename "$SHELL")
-if [ "$CURRENT_SHELL" != "zsh" ]; then
-    ZSH_PATH=$(which zsh)
-    if chsh -s "$ZSH_PATH"; then
-        echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
+# デフォルトシェルを zsh に変更 (CI環境ではスキップ)
+if [ "$CI" != "true" ]; then
+    CURRENT_SHELL=$(basename "$SHELL")
+    if [ "$CURRENT_SHELL" != "zsh" ]; then
+        ZSH_PATH=$(which zsh)
+        if chsh -s "$ZSH_PATH"; then
+            echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
+        else
+            echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
+        fi
     else
-        echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
+        echo "デフォルトのシェルは既に zsh です。"
     fi
 else
-    echo "デフォルトのシェルは既に zsh です。"
+    echo "CI環境ではデフォルトシェルの変更をスキップします。"
 fi
 
 # Rancher Desktop のインストール
