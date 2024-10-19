@@ -92,15 +92,6 @@ if [[ $(command -v brew) ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# anyenv
-# ------------------------------------------------------------------------------
-# 挙動がおかしいときは chsh, $SHELL あたりを確認。$SHELL がちがう shell なら os reboot
-if [ -d "$HOME/.anyenv" ]; then
-  export PATH="$HOME/.anyenv/bin:$PATH"
-  eval "$(anyenv init -)"
-fi
-
-# ------------------------------------------------------------------------------
 # shortcut
 # ------------------------------------------------------------------------------
 alias ..='cd ..'
@@ -286,5 +277,14 @@ if command -v pyenv &> /dev/null; then
   eval "$(pyenv init -)"
 fi
 
+# anyenv
+# 挙動がおかしいときは chsh, $SHELL あたりを確認。$SHELL がちがう shell なら os reboot
+if [ -e "$HOME/.anyenv" ]; then
+    export ANYENV_ROOT="$HOME/.anyenv"
+    export PATH="$ANYENV_ROOT/bin:$PATH"
+    if command -v anyenv 1>/dev/null 2>&1; then
+        eval "$(anyenv init -)"
+    fi
+fi
 
 echo "zsh..."
