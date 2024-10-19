@@ -94,6 +94,10 @@ fi
 if ! command -v brew &> /dev/null; then
     echo "Homebrew がインストールされていません。インストールを試みます。"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    # CI 環境でのみ eval コマンドを実行
+    if [[ "$CI" == "true" ]]; then
+        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+    fi
     # brew がインストールされたか確認
     if ! command -v brew &> /dev/null; then
         echo "Homebrew のインストールに失敗しました。手動でインストールしてください。"
