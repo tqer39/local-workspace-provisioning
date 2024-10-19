@@ -226,6 +226,10 @@ if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
     git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
 fi
 
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 1
+
 # シェルに anyenv のパスを追加（dotfiles で管理されている前提）
 # eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
 
