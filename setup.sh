@@ -178,6 +178,7 @@ done
 . "$HOME/.bashrc"
 
 # zsh のインストール確認
+which brew
 install_if_missing "zsh" "$SUDO brew install zsh"
 
 # デフォルトシェルを zsh に変更
