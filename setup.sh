@@ -173,6 +173,9 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# .bashrc を読み込む
+. "$HOME/.bashrc"
+
 # zsh のインストール確認
 install_if_missing "zsh" "$SUDO brew install zsh"
 
