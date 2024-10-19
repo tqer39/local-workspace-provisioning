@@ -82,4 +82,4 @@ if [ -z "$SSH_AUTH_SOCK" ]; then
 fi
 
 # anyenv
-eval $(anyenv init -)
+eval "$(anyenv init -)"
