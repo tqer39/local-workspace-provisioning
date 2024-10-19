@@ -152,6 +152,7 @@ echo "シンボリックリンクを作成します..."
 
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
+    ".bashrc"
     ".zshrc"
     # 他の dotfile を追加
 )
