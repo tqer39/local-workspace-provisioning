@@ -241,19 +241,14 @@ fi
 echo "Hyper.js をインストールします..."
 
 if [[ "$OS_TYPE" == "Linux" ]]; then
-    if ! command -v snap &> /dev/null; then
-        echo "snapd がインストールされていません。インストールを試みます。"
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y snapd
-        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            $SUDO yum install -y epel-release
-            $SUDO yum install -y snapd
-        fi
-        $SUDO systemctl enable --now snapd.socket
-        $SUDO ln -s /var/lib/snapd/snap /snap
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        DL_PATH="$HOME/Downloads"
+        wget -P $DL_PATH https://releases.hyper.is/download/deb
+        $SUDO dpkg -i "${DL_PATH}/deb"
+        rm -rf "${DL_PATH}/deb"
+    else
+        $SUDO snap install hyper --classic
     fi
-    $SUDO snap install hyper --classic
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask hyper
 fi
