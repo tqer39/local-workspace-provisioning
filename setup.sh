@@ -96,6 +96,7 @@ if ! command -v brew &> /dev/null; then
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     # CI 環境でのみ eval コマンドを実行
     if [[ "$CI" == "true" ]]; then
+        echo "CI環境で実行されています。eval コマンドを実行します。"
         eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
     fi
     # brew がインストールされたか確認
