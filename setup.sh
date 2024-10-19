@@ -270,6 +270,13 @@ else
     echo "anyenv は既に初期化されています。"
 fi
 
+
+# anyenv-install プラグインのインストール
+if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
+    echo "anyenv-install プラグインをインストールします..."
+    git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
+fi
+
 # シェルに anyenv のパスを追加（dotfiles で管理されている前提）
 # eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
 
