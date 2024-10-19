@@ -35,7 +35,7 @@ jobs:
 
     - name: Rancher Desktop のインストール確認
       run: |
-        if command -v rdctl &> /dev/null || [ -d "/Applications/Rancher Desktop.app" ]; then
+        if command -v rancher-desktop &> /dev/null || [ -d "/Applications/Rancher Desktop.app" ]; then
           echo "✅ Rancher Desktop がインストールされています。"
         else
           echo "⚠️ Rancher Desktop がインストールされていません。CI環境ではこれは期待される動作です。"
