@@ -209,7 +209,8 @@ anyenv --version
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
     echo "anyenv を初期化します..."
-    anyenv install --init
+    # anyenv install --init
+    anyenv init
     if [ $? -ne 0 ]; then
         echo "anyenv の初期化に失敗しました。"
         exit 1
