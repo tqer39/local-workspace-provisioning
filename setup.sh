@@ -204,6 +204,7 @@ fi
 # anyenv のインストール
 echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
+anyenv --version
 
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
