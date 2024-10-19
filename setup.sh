@@ -201,6 +201,23 @@ else
     echo "CI環境ではデフォルトシェルの変更をスキップします。"
 fi
 
+# anyenv のインストール
+echo "anyenv をインストールします..."
+install_if_missing "anyenv" "brew install anyenv"
+
+# anyenv の初期化
+if [ ! -d "$HOME/.anyenv" ]; then
+    echo "anyenv を初期化します..."
+    anyenv install --init
+    exec $SHELL -l
+    if [ $? -ne 0 ]; then
+        echo "anyenv の初期化に失敗しました。"
+        exit 1
+    fi
+else
+    echo "anyenv は既に初期化されています。"
+fi
+
 # Rancher Desktop のインストール
 echo "Rancher Desktop をインストールします..."
 
@@ -252,24 +269,6 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask hyper
 fi
-
-# anyenv のインストール
-echo "anyenv をインストールします..."
-install_if_missing "anyenv" "brew install anyenv"
-
-# anyenv の初期化
-if [ ! -d "$HOME/.anyenv" ]; then
-    echo "anyenv を初期化します..."
-    anyenv install --init
-    exec $SHELL -l
-    if [ $? -ne 0 ]; then
-        echo "anyenv の初期化に失敗しました。"
-        exit 1
-    fi
-else
-    echo "anyenv は既に初期化されています。"
-fi
-
 
 # anyenv-install プラグインのインストール
 if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
