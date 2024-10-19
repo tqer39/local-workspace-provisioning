@@ -218,6 +218,27 @@ else
     echo "anyenv は既に初期化されています。"
 fi
 
+# anyenv-install プラグインのインストール
+if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
+    echo "anyenv-install プラグインをインストールします..."
+    git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
+fi
+
+# シェルに anyenv のパスを追加（dotfiles で管理されている前提）
+# eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
+
+# nodenv, pyenv, tfenv のインストール
+ENVS=("nodenv" "pyenv" "tfenv")
+
+for env in "${ENVS[@]}"; do
+    if [ ! -d "$HOME/.anyenv/envs/$env" ]; then
+        echo "$env をインストールします..."
+        anyenv install "$env"
+    else
+        echo "$env は既にインストールされています。"
+    fi
+done
+
 # Rancher Desktop のインストール
 echo "Rancher Desktop をインストールします..."
 
@@ -269,27 +290,6 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask hyper
 fi
-
-# anyenv-install プラグインのインストール
-if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
-    echo "anyenv-install プラグインをインストールします..."
-    git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
-fi
-
-# シェルに anyenv のパスを追加（dotfiles で管理されている前提）
-# eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
-
-# nodenv, pyenv, tfenv のインストール
-ENVS=("nodenv" "pyenv" "tfenv")
-
-for env in "${ENVS[@]}"; do
-    if [ ! -d "$HOME/.anyenv/envs/$env" ]; then
-        echo "$env をインストールします..."
-        anyenv install "$env"
-    else
-        echo "$env は既にインストールされています。"
-    fi
-done
 
 # direnv のインストール
 echo "direnv をインストールします..."
