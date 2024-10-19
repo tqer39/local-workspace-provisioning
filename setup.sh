@@ -260,7 +260,8 @@ install_if_missing "anyenv" "brew install anyenv"
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
     echo "anyenv を初期化します..."
-    anyenv init -
+    anyenv init
+    anyenv install --init
     if [ $? -ne 0 ]; then
         echo "anyenv の初期化に失敗しました。"
         exit 1
