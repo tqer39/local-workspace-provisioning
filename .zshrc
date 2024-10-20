@@ -77,9 +77,6 @@ is_linux() {
   fi
 }
 
-# brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-
 # ------------------------------------------------------------------------------
 # shortcut
 # ------------------------------------------------------------------------------
@@ -98,35 +95,6 @@ if [[ is_ubuntu ]]; then
   alias install='sudo apt install'
   alias remove='sudo apt remove'
   alias search='apt search'
-fi
-
-# ------------------------------------------------------------------------------
-# git
-# ------------------------------------------------------------------------------
-if [[ $(command -v git) ]]; then
-  alias g='git'
-  alias gb='git branch'
-  alias ga='git add'
-  alias gc='git commit -am'
-  alias gca='git commit --amend'
-  alias gd='git diff'
-  alias gds='git diff --staged'
-  alias gf='git fetch'
-  alias gm='git merge'
-  alias gr="git rebase"
-  alias grc="git rebase --continue"
-  alias gra="git rebase --abort"
-  alias gpl='git pull'
-  alias gps='git push'
-  alias gpso='git push origin'
-  alias gpso-this='git push --set-upstream origin $(git branch --contains | cut -d " " -f 2)'
-  alias gstt='git status'
-  alias gsts='git stash'
-  alias gsw='git switch'
-  alias gswc='git switch -c'
-  alias gl='git log --oneline'
-  alias gbm='git branch --merged'
-  alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
 fi
 
 # ------------------------------------------------------------------------------
@@ -177,6 +145,36 @@ export GOPATH="${HOME}/go"
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/home/tqer39/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+# brew
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+
+# git
+if [[ $(command -v git) ]]; then
+  alias g='git'
+  alias gb='git branch'
+  alias ga='git add'
+  alias gc='git commit -am'
+  alias gca='git commit --amend'
+  alias gd='git diff'
+  alias gds='git diff --staged'
+  alias gf='git fetch'
+  alias gm='git merge'
+  alias gr="git rebase"
+  alias grc="git rebase --continue"
+  alias gra="git rebase --abort"
+  alias gpl='git pull'
+  alias gps='git push'
+  alias gpso='git push origin'
+  alias gpso-this='git push --set-upstream origin $(git branch --contains | cut -d " " -f 2)'
+  alias gstt='git status'
+  alias gsts='git stash'
+  alias gsw='git switch'
+  alias gswc='git switch -c'
+  alias gl='git log --oneline'
+  alias gbm='git branch --merged'
+  alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
+fi
 
 # anyenv
 # 挙動がおかしいときは chsh, $SHELL あたりを確認。$SHELL がちがう shell なら os reboot
