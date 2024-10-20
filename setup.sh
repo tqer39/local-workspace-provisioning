@@ -214,7 +214,7 @@ aws --version
 
 # aws-vault のインストール
 echo "aws-vault をインストールします..."
-install_if_missing "aws-vault" "brew install --cask aws-vault"
+install_if_missing "aws-vault" "brew install aws-vault"
 aws-vault --version
 
 # jq のインストール
