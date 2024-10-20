@@ -224,6 +224,13 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     # macOS では pbcopy/pbpaste がデフォルトで使える
 fi
 
+# deskpad のインストール ※macOS のみ
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if ! command -v deskpad &> /dev/null; then
+        install_if_missing "deskpad" "brew install --cask deskpad"
+    fi
+fi
+
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 0
