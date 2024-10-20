@@ -220,14 +220,6 @@ export GOPATH="${HOME}/go"
 export PATH="/home/tqer39/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
-
-# ------------------------------------------------------------------------------
-# pyenv
-# ------------------------------------------------------------------------------
-if command -v pyenv &> /dev/null; then
-  eval "$(pyenv init -)"
-fi
-
 # anyenv
 # 挙動がおかしいときは chsh, $SHELL あたりを確認。$SHELL がちがう shell なら os reboot
 export PATH="$HOME/.anyenv/bin:$PATH"
