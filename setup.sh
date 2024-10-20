@@ -221,24 +221,27 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         wget -O "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}" -d "$DL_PATH"
         # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" ~/.local/share/fonts/
+        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" "$HOME/.local/share/fonts/"
         # すべてのユーザーにインストール
         sudo cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
         # インストーラとディレクトリを削除
         rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
-
         rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
         wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}" -d "$DL_PATH"
         # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* ~/.local/share/fonts
-        # すべてのユーザーにインストール
-        sudo cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
+        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts"
         # インストーラとディレクトリを削除
         rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
-
         # フォントのキャッシュを更新
         fc-cache -vf
+        # フォントのインストール確認
+        if fc-list | grep -i "HackGen"; then
+            echo "✅ HackGenNerd Font が正常にインストールされました。"
+        else
+            echo "❌ HackGenNerd Font のインストールに失敗しました。"
+            exit 1
+        fi
     elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
         $SUDO yum install -y
     fi
