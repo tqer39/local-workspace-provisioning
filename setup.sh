@@ -159,6 +159,7 @@ DOTFILES=(
     ".bashrc"
     ".bash_profile"
     ".zshrc"
+    ".config/starship.toml"
     # 他の dotfile を追加
 )
 
@@ -177,6 +178,10 @@ for file in "${DOTFILES[@]}"; do
         echo "ファイルが存在しません: $source_file"
     fi
 done
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 0
 
 # Hyper.js のインストール
 echo "Hyper.js をインストールします..."
@@ -231,6 +236,7 @@ gh --version
 # direnv のインストール
 echo "direnv をインストールします..."
 install_if_missing "direnv" "brew install direnv"
+eval "$(direnv hook zsh)"
 direnv --version
 
 # direnv の初期化（dotfiles で管理されている前提）
@@ -240,10 +246,6 @@ direnv --version
 echo "starship をインストールします..."
 install_if_missing "starship" "brew install starship"
 starship --version
-
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 1
 
 # .bashrc を読み込む
 . "$HOME/.bashrc"
@@ -348,14 +350,6 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask rancher
 else
     echo "サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
-fi
-
-# starship の設定ファイルを作成またはシンボリックリンク（dotfiles で管理している前提）
-STARSHIP_CONFIG="$HOME/.config/starship.toml"
-if [ ! -e "$STARSHIP_CONFIG" ]; then
-    mkdir -p "$HOME/.config"
-    ln -sf "$DOTFILES_DIR/starship.toml" "$STARSHIP_CONFIG"
-    echo "starship の設定ファイルをリンクしました: $STARSHIP_CONFIG"
 fi
 
 # Visual Studio Code のインストール
