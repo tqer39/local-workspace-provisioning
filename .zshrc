@@ -109,7 +109,6 @@ if [[ is_ubuntu ]]; then
   alias install='sudo apt install'
   alias remove='sudo apt remove'
   alias search='apt search'
-  alias pbcopy='xsel --clipboard --input'
 fi
 
 # ------------------------------------------------------------------------------
@@ -275,6 +274,12 @@ eval "$(anyenv init -)"
 
 # direnv
 eval "$(direnv hook zsh)"
+
+# pbcopy/pbpaste
+if command -v xsel &> /dev/null; then
+  alias pbcopy='xsel --clipboard --input'
+  alias pbpaste='xsel --clipboard --output'
+fi
 
 # Starship ... https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要

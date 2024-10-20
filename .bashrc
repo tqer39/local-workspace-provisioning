@@ -274,6 +274,12 @@ eval "$(anyenv init -)"
 # direnv
 eval "$(direnv hook zsh)"
 
+# pbcopy/pbpaste
+if command -v xsel &> /dev/null; then
+  alias pbcopy='xsel --clipboard --input'
+  alias pbpaste='xsel --clipboard --output'
+fi
+
 # Starship ... # see https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要
 if command -v starship &> /dev/null; then
