@@ -555,7 +555,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     fi
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew tap homebrew/cask-fonts
-    brew install --cask font-hackgen-nerd-font
+    brew install --cask font-hackgen-nerd
 
     # フォントのインストール確認
     if fc-list | grep -i "HackGen"; then
