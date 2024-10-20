@@ -222,9 +222,6 @@ install_if_missing "eza" "brew install eza"
 # fd
 install_if_missing "fd" "brew install fd"
 
-# z
-install_if_missing "z" "brew install z"
-
 # aws cli
 if ! command -v aws &> /dev/null; then
     echo "AWS CLI がインストールされていません。インストールを試みます。"
