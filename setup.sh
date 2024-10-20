@@ -183,6 +183,10 @@ echo "Hyper.js をインストールします..."
 
 if [[ "$OS_TYPE" == "Linux" ]]; then
     if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        # 依存パッケージのインストール
+        $SUDO $PACKAGE_MANAGER update
+        $SUDO $PACKAGE_MANAGER install -y libnotify4
+        # Hyper.js のインストール
         DL_PATH="$HOME/Downloads"
         wget -P $DL_PATH https://releases.hyper.is/download/deb
         $SUDO dpkg -i "${DL_PATH}/deb"
