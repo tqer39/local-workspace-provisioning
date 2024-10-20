@@ -205,6 +205,7 @@ fi
 echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
 anyenv --version
+anyenv install --init
 anyenv install --list
 
 # anyenv-install プラグインのインストール
