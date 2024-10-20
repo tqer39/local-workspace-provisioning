@@ -207,7 +207,7 @@ install_if_missing "anyenv" "brew install anyenv"
 anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --init
-anyenv install --list
+anyenv install -l
 eval $(anyenv install -)
 
 # anyenv-install プラグインのインストール
