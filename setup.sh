@@ -47,6 +47,7 @@ fi
 install_if_missing() {
     local cmd="$1"
     local install_cmd="$2"
+    echo "$cmd のインストールを確認します..."
     if ! command -v "$cmd" &> /dev/null; then
         echo "$cmd がインストールされていません。インストールを試みます。"
         if [[ "$install_cmd" == *"brew"* ]]; then
@@ -54,13 +55,16 @@ install_if_missing() {
         else
             $SUDO bash -c "$install_cmd"
         fi
+
         if ! command -v "$cmd" &> /dev/null; then
             echo "$cmd のインストールに失敗しました。手動でインストールしてください。"
             exit 1
         else
+            echo "$cmd --version: $($cmd --version)"
             echo "$cmd のインストールが完了しました。"
         fi
     else
+        echo "$cmd --version: $($cmd --version)"
         echo "$cmd は既にインストールされています。"
     fi
 }
@@ -179,7 +183,6 @@ done
 
 # zsh
 install_if_missing "zsh" "brew install zsh"
-echo "zsh version: $(zsh --version)"
 
 # デフォルトシェルを zsh に変更 (CI環境ではスキップ)
 if [ "$CI" != "true" ]; then
@@ -209,37 +212,26 @@ fi
 
 # eza
 install_if_missing "eza" "brew install eza"
-echo "zsh version: $(eza --version)"
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 0
 
 # aws cli
-echo "AWS CLI をインストールします..."
 install_if_missing "aws" "brew install awscli"
-echo "aws version: $(aws --version)"
 
 # aws-vault
-echo "aws-vault をインストールします..."
 install_if_missing "aws-vault" "brew install aws-vault"
-echo "aws-vault version: $(aws-vault --version)"
 
 # jq
-echo "jq をインストールします..."
 install_if_missing "jq" "brew install jq"
-echo "jq version: $(jq --version)"
 
 # gh (GitHub CLI)
-echo "GitHub CLI をインストールします..."
 install_if_missing "gh" "brew install gh"
-echo "gh version: $(gh --version)"
 
 # direnv
-echo "direnv をインストールします..."
 install_if_missing "direnv" "brew install direnv"
 eval "$(direnv hook zsh)"
-direnv --version
 
 # direnv の初期化（dotfiles で管理されている前提）
 # eval "$(direnv hook zsh)" は .zshrc に含まれている前提
@@ -247,12 +239,10 @@ direnv --version
 # starship
 echo "starship をインストールします..."
 install_if_missing "starship" "brew install starship"
-starship --version
 
 # anyenv
 echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
-anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --force-init
 anyenv install -l
