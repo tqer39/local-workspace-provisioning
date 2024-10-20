@@ -422,15 +422,21 @@ if ! command -v google-chrome &> /dev/null; then
             $SUDO yum check-update
             $SUDO yum install -y google-chrome-stable
         fi
+
+        if ! command -v google-chrome &> /dev/null; then
+            echo "❌ Google Chrome のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ Google Chrome のインストールが完了しました。"
+        fi
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
         brew install --cask google-chrome
-    fi
-
-    if ! command -v google-chrome &> /dev/null; then
-        echo "❌ Google Chrome のインストールに失敗しました。手動でインストールしてください。"
-        exit 1
-    else
-        echo "✅ Google Chrome のインストールが完了しました。"
+        if [ ! -d "/Applications/Google Chrome.app" ]; then
+            echo "❌ Google Chrome のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ Google Chrome のインストールが完了しました。"
+        fi
     fi
 else
     echo "✅ Google Chrome は既にインストールされています。"
