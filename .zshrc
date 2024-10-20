@@ -101,24 +101,6 @@ if [[ is_ubuntu ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# eza
-# ------------------------------------------------------------------------------
-if [[ $(command -v eza) ]]; then
-  alias e='eza --icons --git'
-  alias l=e
-  alias ls=e
-  alias ea='eza -a --icons --git'
-  alias la=ea
-  alias ee='eza -aahl --icons --git'
-  alias ll=ee
-  alias et='eza -T -L 3 -a -I "node_modules|.git|.cache" --icons'
-  alias lt=et
-  alias eta='eza -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
-  alias lta=eta
-  alias l='clear && ls'
-fi
-
-# ------------------------------------------------------------------------------
 # git
 # ------------------------------------------------------------------------------
 if [[ $(command -v git) ]]; then
@@ -297,6 +279,22 @@ fi
 # bat
 if command -v bat; then
   alias cat="bat"
+fi
+
+# eza
+if [[ $(command -v eza) ]]; then
+  alias e='eza --icons --git'
+  alias l=e
+  alias ls=e
+  alias ea='eza -a --icons --git'
+  alias la=ea
+  alias ee='eza -aahl --icons --git'
+  alias ll=ee
+  alias et='eza -T -L 3 -a -I "node_modules|.git|.cache" --icons'
+  alias lt=et
+  alias eta='eza -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
+  alias lta=eta
+  alias l='clear && ls'
 fi
 
 # Starship ... https://starship.rs/ja-jp/guide/
