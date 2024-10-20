@@ -111,17 +111,6 @@ if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
 fi
 
 # ------------------------------------------------------------------------------
-# shortcut
-# ------------------------------------------------------------------------------
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias dl='cd ~/Downloads'
-alias d='cd ~/Desktop'
-alias work='cd ~/workspace'
-
-# ------------------------------------------------------------------------------
 # \shellcheck
 # ------------------------------------------------------------------------------
 if [[ $(command -v shellcheck) ]]; then
@@ -159,6 +148,15 @@ fi
 # Rancher Desktop
 # ------------------------------------------------------------------------------
 export PATH="/home/tqer39/.rd/bin:$PATH"
+
+# shortcut
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias dl='cd ~/Downloads'
+alias d='cd ~/Desktop'
+alias work='cd ~/workspace'
 
 # brew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"

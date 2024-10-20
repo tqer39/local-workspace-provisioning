@@ -77,18 +77,6 @@ is_linux() {
   fi
 }
 
-# ------------------------------------------------------------------------------
-# shortcut
-# ------------------------------------------------------------------------------
-alias ..='cd ..'
-alias ...='cd ../..'
-alias ....='cd ../../..'
-alias .....='cd ../../../..'
-alias dl='cd ~/Downloads'
-alias d='cd ~/Desktop'
-alias work='cd ~/workspace'
-alias tqer39='mkdir -p ~/workspace/tqer39 && cd ~/workspace/tqer39'
-
 # ubuntu なら実行する
 if [[ is_ubuntu ]]; then
   alias update='sudo apt update && sudo apt upgrade -y'
@@ -145,6 +133,15 @@ export GOPATH="${HOME}/go"
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/home/tqer39/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
+# shortcut
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias dl='cd ~/Downloads'
+alias d='cd ~/Desktop'
+alias work='cd ~/workspace'
 
 # brew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
