@@ -224,7 +224,7 @@ fi
 # deskpad のインストール ※macOS のみ
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v deskpad &> /dev/null; then
-        brew install --cask deskpad
+        brew install deskpad
     fi
 
     # アプリの存在有無でインストールされたかどうかをチェック
