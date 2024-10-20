@@ -208,14 +208,13 @@ anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --init
 anyenv install --list
+exec $SHELL -l
 
 # anyenv-install プラグインのインストール
 # if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
 #     echo "anyenv-install プラグインをインストールします..."
 #     git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
 # fi
-
-anyenv init
 
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
