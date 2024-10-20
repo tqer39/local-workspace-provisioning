@@ -18,22 +18,3 @@ runs:
     - name: セットアップスクリプトを実行
       run: ./${{ inputs.script }}
       shell: bash
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
