@@ -220,7 +220,24 @@ install_if_missing "fzf" "brew install fzf"
 install_if_missing "z" "brew install z"
 
 # aws cli
-install_if_missing "aws" "brew install awscli"
+if ! command -v aws &> /dev/null; then
+    echo "AWS CLI がインストールされていません。インストールを試みます。"
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        brew install awscli
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install awscli
+    fi
+
+    if ! command -v aws &> /dev/null; then
+        echo "AWS CLI のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "AWS CLI のインストールが完了しました。"
+    fi
+else
+    echo "AWS CLI は既にインストールされています。"
+fi
+echo "aws --version: $(aws --version)"
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
