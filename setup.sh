@@ -216,26 +216,25 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         # バージョン指定
         HACKGEN_VERSION="2.9.0"
         DL_PATH="$HOME/Downloads"
-        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
         wget -O "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
         # ユーザーにインストール
         mkdir -p "$HOME/.local/share/fonts"
-        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" "$HOME/.local/share/fonts/"
-        # すべてのユーザーにインストール
-        sudo cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
+        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
         # インストーラとディレクトリを削除
         rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
         rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
-        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}" -d "$DL_PATH"
+
+        wget -O "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
+        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
         # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts"
+        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
         # インストーラとディレクトリを削除
         rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
+        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
+
         # フォントのキャッシュを更新
         fc-cache -vf
-
         # フォントのインストール確認
         if fc-list | grep -i "HackGen"; then
             echo "✅ HackGenNerd Font が正常にインストールされました。"
@@ -258,6 +257,10 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
         exit 1
     fi
 fi
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 0
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
