@@ -191,6 +191,7 @@ DOTFILES=(
     ".bash_profile"
     ".bashrc"
     ".gitconfig"
+    ".hyper.js"
     ".zshrc"
     # 他の dotfile を追加
 )
