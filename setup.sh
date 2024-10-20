@@ -208,7 +208,7 @@ anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --init
 anyenv install --list
-exec $SHELL -l
+eval $(anyenv install -)
 
 # anyenv-install プラグインのインストール
 # if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
