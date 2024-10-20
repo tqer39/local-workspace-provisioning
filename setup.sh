@@ -208,7 +208,8 @@ anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --force-init
 anyenv install -l
-exec $SHELL -l
+export PATH="$HOME/.anyenv/bin:$PATH"
+eval "$(anyenv init -)"
 
 # anyenv-install プラグインのインストール
 # if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
