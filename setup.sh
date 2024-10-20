@@ -76,24 +76,6 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     echo "macOSでは通常curlがプリインストールされています。"
 fi
 
-# git のインストール確認
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        install_if_missing "git" "$SUDO $PACKAGE_MANAGER update && $SUDO $PACKAGE_MANAGER install -y git"
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        install_if_missing "git" "$SUDO yum install -y git"
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    if ! command -v git &> /dev/null; then
-        echo "git がインストールされていません。インストールを試みます。"
-        xcode-select --install
-        echo "Xcode Command Line Tools のインストールが必要です。インストールが完了したら、再度スクリプトを実行してください。"
-        exit 1
-    else
-        echo "git は既にインストールされています。"
-    fi
-fi
-
 # brew のインストール確認
 if ! command -v brew &> /dev/null; then
     echo "Homebrew がインストールされていません。インストールを試みます。"
@@ -120,6 +102,21 @@ if ! command -v brew &> /dev/null; then
     fi
 else
     echo "Homebrew は既にインストールされています。"
+fi
+
+# git のインストール確認
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        install_if_missing "git" "$SUDO $PACKAGE_MANAGER update && $SUDO $PACKAGE_MANAGER install -y git"
+    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+        install_if_missing "git" "$SUDO yum install -y git"
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    if ! command -v git &> /dev/null; then
+        install_if_missing "git" "brew install git"
+    else
+        echo "git は既にインストールされています。"
+    fi
 fi
 
 # 必要なパッケージのインストール（Linuxbrew の場合、パスを通す必要があるかもしれません）
@@ -228,6 +225,14 @@ fi
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v deskpad &> /dev/null; then
         brew install --cask deskpad
+    fi
+
+    # アプリの存在有無でインストールされたかどうかをチェックしたい
+    if ! command -v deskpad &> /dev/null; then
+        echo "deskpad のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "deskpad のインストールが完了しました。"
     fi
 fi
 
