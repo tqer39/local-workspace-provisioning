@@ -218,7 +218,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         DL_PATH="$HOME/Downloads"
         mkdir -p "$HOME/.local/share/fonts"
         rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
-        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        wget -O "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}" -d "$DL_PATH"
         # ユーザーにインストール
         cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" ~/.local/share/fonts/
