@@ -170,16 +170,6 @@ ctrl+d\t\t:ターミナルを強制終了
 "'
 
 # ------------------------------------------------------------------------------
-# mysql-client
-# ------------------------------------------------------------------------------
-if [[ $(command -v brew) ]]; then
-  if [ "$(brew list | grep -c "^mysql-client@*.*$")" -gt 0 ]; then
-    PATH="$(brew --prefix mysql-client)/bin:$PATH"
-    export PATH
-  fi
-fi
-
-# ------------------------------------------------------------------------------
 # pre-commit
 # ------------------------------------------------------------------------------
 if [[ $(command -v pre-commit) ]]; then
@@ -282,6 +272,14 @@ fi
 if [[ $(command -v brew) ]]; then
   if [ "$(brew list | grep -c "^openjdk@*.*$")" -gt 0 ]; then
     PATH="$(brew --prefix openjdk@11)/bin:$PATH"
+    export PATH
+  fi
+fi
+
+# mysql-client
+if [[ $(command -v brew) ]]; then
+  if [ "$(brew list | grep -c "^mysql-client@*.*$")" -gt 0 ]; then
+    PATH="$(brew --prefix mysql-client)/bin:$PATH"
     export PATH
   fi
 fi
