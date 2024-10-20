@@ -213,12 +213,18 @@ fi
 # eza
 install_if_missing "eza" "brew install eza"
 
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 0
+# fzf
+install_if_missing "eza" "brew install fzf"
+
+# z
+install_if_missing "eza" "brew install z"
 
 # aws cli
 install_if_missing "aws" "brew install awscli"
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 0
 
 # aws-vault
 install_if_missing "aws-vault" "brew install aws-vault"
