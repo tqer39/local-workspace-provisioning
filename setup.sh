@@ -208,6 +208,7 @@ anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --force-init
 anyenv install -l
+exec $SHELL -l
 
 # anyenv-install プラグインのインストール
 # if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
@@ -241,7 +242,6 @@ for env in "${ENVS[@]}"; do
     else
         echo "$env は既にインストールされています。"
     fi
-    eval "$($env init -)"
     $env --version
 done
 
