@@ -178,6 +178,26 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# Hyper.js のインストール
+echo "Hyper.js をインストールします..."
+
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        DL_PATH="$HOME/Downloads"
+        wget -P $DL_PATH https://releases.hyper.is/download/deb
+        $SUDO dpkg -i "${DL_PATH}/deb"
+        rm -rf "${DL_PATH}/deb"
+    else
+        $SUDO snap install hyper --classic
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    brew install --cask hyper
+fi
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 1
+
 # .bashrc を読み込む
 . "$HOME/.bashrc"
 
@@ -247,10 +267,6 @@ for env in "${ENVS[@]}"; do
     $env --version
 done
 
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 1
-
 # Rancher Desktop のインストール
 echo "Rancher Desktop をインストールします..."
 
@@ -285,22 +301,6 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask rancher
 else
     echo "サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
-fi
-
-# Hyper.js のインストール
-echo "Hyper.js をインストールします..."
-
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        DL_PATH="$HOME/Downloads"
-        wget -P $DL_PATH https://releases.hyper.is/download/deb
-        $SUDO dpkg -i "${DL_PATH}/deb"
-        rm -rf "${DL_PATH}/deb"
-    else
-        $SUDO snap install hyper --classic
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask hyper
 fi
 
 # direnv のインストール
