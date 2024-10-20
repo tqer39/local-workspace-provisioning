@@ -179,6 +179,37 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# Visual Studio Code のインストール
+echo "Visual Studio Code をインストールします..."
+if ! command -v code &> /dev/null; then
+    echo "Visual Studio Code をインストールします。"
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            curl https://packages.microsoft.com/keys/microsoft.asc | $SUDO gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/packages.microsoft.gpg] \
+            https://packages.microsoft.com/repos/code stable main" | $SUDO tee /etc/apt/sources.list.d/vscode.list
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y code
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            rpm --import https://packages.microsoft.com/keys/microsoft.asc
+            $SUDO sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
+            $SUDO yum check-update
+            $SUDO yum install -y code
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask visual-studio-code
+    fi
+
+    if ! command -v code &> /dev/null; then
+        echo "Visual Studio Code のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "Visual Studio Code のインストールが完了しました。"
+    fi
+else
+    echo "Visual Studio Code は既にインストールされています。"
+fi
+
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 0
@@ -350,25 +381,6 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask rancher
 else
     echo "サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
-fi
-
-# Visual Studio Code のインストール
-echo "Visual Studio Code をインストールします..."
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        curl https://packages.microsoft.com/keys/microsoft.asc | $SUDO gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/packages.microsoft.gpg] \
-        https://packages.microsoft.com/repos/code stable main" | $SUDO tee /etc/apt/sources.list.d/vscode.list
-        $SUDO $PACKAGE_MANAGER update
-        $SUDO $PACKAGE_MANAGER install -y code
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        rpm --import https://packages.microsoft.com/keys/microsoft.asc
-        $SUDO sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
-        $SUDO yum check-update
-        $SUDO yum install -y code
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask visual-studio-code
 fi
 
 echo "セットアップが完了しました！"
