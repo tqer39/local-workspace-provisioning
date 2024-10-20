@@ -210,8 +210,8 @@ echo 'anyenv init'
 anyenv init
 echo 'anyenv install --init'
 anyenv install --init
-# echo 'exec $SHELL -l'
-# exec $SHELL -l
+echo 'exec $SHELL -l'
+exec $SHELL -l
 echo 'anyenv install -l'
 anyenv install -l
 
