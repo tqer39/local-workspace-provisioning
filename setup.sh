@@ -558,7 +558,7 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask font-hackgen-nerd
 
     # フォントのインストール確認
-    if fc-list | grep -i "HackGen"; then
+    if mdls -name kMDItemDisplayName -raw /Library/Fonts/HackGen*.ttf | grep -i "HackGen"; then
         echo "✅ HackGenNerd Font が正常にインストールされました。"
     else
         echo "❌ HackGenNerd Font のインストールに失敗しました。"
