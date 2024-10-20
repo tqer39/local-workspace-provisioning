@@ -214,10 +214,10 @@ fi
 install_if_missing "eza" "brew install eza"
 
 # fzf
-install_if_missing "eza" "brew install fzf"
+install_if_missing "fzf" "brew install fzf"
 
 # z
-install_if_missing "eza" "brew install z"
+install_if_missing "z" "brew install z"
 
 # aws cli
 install_if_missing "aws" "brew install awscli"
