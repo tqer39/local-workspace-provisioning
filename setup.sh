@@ -187,51 +187,94 @@ elif [ "$SHELL" == "/bin/zsh" ]; then
     echo "デフォルトのシェルが zsh です。.zshrc を読み込むように設定します。"
     echo "source ~/.zshrc" >> "$HOME/.zshrc"
 fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask brave-browser
-else
-    echo "サポートされていないOSです。Brave のインストールをスキップします。"
-fi
-echo "brave-browser version: $(brave-browser --version)"
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 0
 
-# 1Password のインストール
-echo "1Password をインストールします..."
-if ! command -v 1password &> /dev/null; then
-    echo "1Password がインストールされていません。インストールを試みます。"
-    if [[ "$OS_TYPE" == "Linux" ]]; then
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO apt-key add -
-            echo 'deb [arch=amd64] https://downloads.1password.com/linux/debian/amd64 stable main' | $SUDO tee /etc/apt/sources.list.d/1password.list
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y 1password
-        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO rpm --import -
-            $SUDO sh -c 'echo -e "[1password]\nname=1Password\nbaseurl=https://downloads.1password.com/linux/rpm\nenabled=1\ngpgcheck=1\ngpgkey=https://downloads.1password.com/linux/keys/1password.asc" > /etc/yum.repos.d/1password.repo'
-            $SUDO yum check-update
-            $SUDO yum install -y 1password
-        fi
+# aws cli
+echo "AWS CLI をインストールします..."
+install_if_missing "aws" "brew install awscli"
+echo "aws version: $(aws --version)"
 
-        if ! command -v 1password &> /dev/null; then
-            echo "1Password のインストールに失敗しました。手動でインストールしてください。"
-            exit 1
+# aws-vault
+echo "aws-vault をインストールします..."
+install_if_missing "aws-vault" "brew install aws-vault"
+echo "aws-vault version: $(aws-vault --version)"
+
+# jq
+echo "jq をインストールします..."
+install_if_missing "jq" "brew install jq"
+echo "jq version: $(jq --version)"
+
+# gh (GitHub CLI)
+echo "GitHub CLI をインストールします..."
+install_if_missing "gh" "brew install gh"
+echo "gh version: $(gh --version)"
+
+# direnv
+echo "direnv をインストールします..."
+install_if_missing "direnv" "brew install direnv"
+eval "$(direnv hook zsh)"
+direnv --version
+
+# direnv の初期化（dotfiles で管理されている前提）
+# eval "$(direnv hook zsh)" は .zshrc に含まれている前提
+
+# starship
+echo "starship をインストールします..."
+install_if_missing "starship" "brew install starship"
+starship --version
+
+# zsh
+install_if_missing "zsh" "$SUDO brew install zsh"
+echo "zsh version: $(zsh --version)"
+
+# デフォルトシェルを zsh に変更 (CI環境ではスキップ)
+if [ "$CI" != "true" ]; then
+    CURRENT_SHELL=$(basename "$SHELL")
+    if [ "$CURRENT_SHELL" != "zsh" ]; then
+        ZSH_PATH=$(which zsh)
+        if chsh -s "$ZSH_PATH"; then
+            echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
         else
-            echo "1Password のインストールが完了しました。"
+            echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
         fi
-    elif [[ "$OS_TYPE" == "Darwin" ]]; then
-        brew install --cask 1password
     else
-        echo "サポートされていないOSです。1Password のインストールをスキップします。"
+        echo "デフォルトのシェルは既に zsh です。"
     fi
 else
-    echo "1Password は既にインストールされています。"
+    echo "CI環境ではデフォルトシェルの変更をスキップします。"
 fi
-echo "1password version: $(1password --version)"
 
-# Visual Studio Code のインストール
+# anyenv
+echo "anyenv をインストールします..."
+install_if_missing "anyenv" "brew install anyenv"
+anyenv --version
+git clone https://github.com/anyenv/anyenv ~/.anyenv
+anyenv install --force-init
+anyenv install -l
+export PATH="$HOME/.anyenv/bin:$PATH"
+eval "$(anyenv init -)"
+
+# シェルに anyenv のパスを追加（dotfiles で管理されている前提）
+# eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
+
+# nodenv, pyenv, tfenv のインストール
+ENVS=("nodenv" "pyenv" "tfenv")
+
+for env in "${ENVS[@]}"; do
+    if [ ! -d "$HOME/.anyenv/envs/$env" ]; then
+        echo "$env をインストールします..."
+        anyenv install "$env"
+    else
+        echo "$env は既にインストールされています。"
+    fi
+    eval "$(anyenv init -)"
+    $env --version
+done
+
+# Visual Studio Code
 echo "Visual Studio Code をインストールします..."
 if ! command -v code &> /dev/null; then
     echo "Visual Studio Code がインストールされていません。インストールを試みます。"　
@@ -262,7 +305,7 @@ else
     echo "Visual Studio Code は既にインストールされています。"
 fi
 
-# Hyper.js のインストール
+# Hyper.js
 echo "Hyper.js をインストールします..."
 if ! command -v hyper &> /dev/null; then
     echo "Hyper.js がインストールされていません。インストールを試みます。"
@@ -291,96 +334,8 @@ if ! command -v hyper &> /dev/null; then
     fi
 fi
 
-# aws cli のインストール
-echo "AWS CLI をインストールします..."
-install_if_missing "aws" "brew install awscli"
-echo "aws version: $(aws --version)"
-
-# aws-vault のインストール
-echo "aws-vault をインストールします..."
-install_if_missing "aws-vault" "brew install aws-vault"
-echo "aws-vault version: $(aws-vault --version)"
-
-
-# jq のインストール
-echo "jq をインストールします..."
-install_if_missing "jq" "brew install jq"
-echo "jq version: $(jq --version)"
-
-# gh (GitHub CLI) のインストール
-echo "GitHub CLI をインストールします..."
-install_if_missing "gh" "brew install gh"
-echo "gh version: $(gh --version)"
-
-
-# direnv のインストール
-echo "direnv をインストールします..."
-install_if_missing "direnv" "brew install direnv"
-eval "$(direnv hook zsh)"
-direnv --version
-
-# direnv の初期化（dotfiles で管理されている前提）
-# eval "$(direnv hook zsh)" は .zshrc に含まれている前提
-
-# starship のインストール
-echo "starship をインストールします..."
-install_if_missing "starship" "brew install starship"
-starship --version
-
-# .bashrc を読み込む
-. "$HOME/.bashrc"
-
-# zsh のインストール確認
-install_if_missing "zsh" "$SUDO brew install zsh"
-echo "zsh version: $(zsh --version)"
-
-# デフォルトシェルを zsh に変更 (CI環境ではスキップ)
-if [ "$CI" != "true" ]; then
-    CURRENT_SHELL=$(basename "$SHELL")
-    if [ "$CURRENT_SHELL" != "zsh" ]; then
-        ZSH_PATH=$(which zsh)
-        if chsh -s "$ZSH_PATH"; then
-            echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
-        else
-            echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
-        fi
-    else
-        echo "デフォルトのシェルは既に zsh です。"
-    fi
-else
-    echo "CI環境ではデフォルトシェルの変更をスキップします。"
-fi
-
-# anyenv のインストール
-echo "anyenv をインストールします..."
-install_if_missing "anyenv" "brew install anyenv"
-anyenv --version
-git clone https://github.com/anyenv/anyenv ~/.anyenv
-anyenv install --force-init
-anyenv install -l
-export PATH="$HOME/.anyenv/bin:$PATH"
-eval "$(anyenv init -)"
-
-# シェルに anyenv のパスを追加（dotfiles で管理されている前提）
-# eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
-
-# nodenv, pyenv, tfenv のインストール
-ENVS=("nodenv" "pyenv" "tfenv")
-
-for env in "${ENVS[@]}"; do
-    if [ ! -d "$HOME/.anyenv/envs/$env" ]; then
-        echo "$env をインストールします..."
-        anyenv install "$env"
-    else
-        echo "$env は既にインストールされています。"
-    fi
-    eval "$(anyenv init -)"
-    $env --version
-done
-
-# Rancher Desktop のインストール
+# Rancher Desktop
 echo "Rancher Desktop をインストールします..."
-
 if [[ "$OS_TYPE" == "Linux" ]]; then
     # Linux の場合
     if ! command -v rancher-desktop &> /dev/null; then
@@ -413,6 +368,100 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
 else
     echo "サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
 fi
+
+# Google Chrome
+echo "Google Chrome をインストールします..."
+if ! command -v google-chrome &> /dev/null; then
+    echo "Google Chrome がインストールされていません。インストールを試みます。"
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | $SUDO gpg --dearmor -o /usr/share/keyrings/google-linux-keyring.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/google-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | $SUDO tee /etc/apt/sources.list.d/google-chrome.list
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y google-chrome-stable
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            $SUDO sh -c 'echo -e "[google-chrome]\nname=Google Chrome\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://dl.google.com/linux/linux_signing_key.pub" > /etc/yum.repos.d/google-chrome.repo'
+            $SUDO yum check-update
+            $SUDO yum install -y google-chrome-stable
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask google-chrome
+    fi
+
+    if ! command -v google-chrome &> /dev/null; then
+        echo "Google Chrome のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "Google Chrome のインストールが完了しました。"
+    fi
+else
+    echo "Google Chrome は既にインストールされています。"
+fi
+
+# Brave
+echo "Brave ブラウザをインストールします..."
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        # Brave の GPG キーを追加
+        $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+            https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+
+        # Brave のリポジトリを追加
+        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
+        https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
+
+        # パッケージリストを更新
+        $SUDO $PACKAGE_MANAGER update
+
+        # Brave ブラウザをインストール
+        $SUDO $PACKAGE_MANAGER install -y brave-browser
+    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+        $SUDO dnf install dnf-plugins-core
+        $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
+        $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+        $SUDO dnf install -y brave-browser
+    else
+        echo "Brave のインストール方法が不明です。手動でインストールしてください。"
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    brew install --cask brave-browser
+else
+    echo "サポートされていないOSです。Brave のインストールをスキップします。"
+fi
+echo "brave-browser version: $(brave-browser --version)"
+
+# 1Password
+echo "1Password をインストールします..."
+if ! command -v 1password &> /dev/null; then
+    echo "1Password がインストールされていません。インストールを試みます。"
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO apt-key add -
+            echo 'deb [arch=amd64] https://downloads.1password.com/linux/debian/amd64 stable main' | $SUDO tee /etc/apt/sources.list.d/1password.list
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y 1password
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO rpm --import -
+            $SUDO sh -c 'echo -e "[1password]\nname=1Password\nbaseurl=https://downloads.1password.com/linux/rpm\nenabled=1\ngpgcheck=1\ngpgkey=https://downloads.1password.com/linux/keys/1password.asc" > /etc/yum.repos.d/1password.repo'
+            $SUDO yum check-update
+            $SUDO yum install -y 1password
+        fi
+
+        if ! command -v 1password &> /dev/null; then
+            echo "1Password のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "1Password のインストールが完了しました。"
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask 1password
+    else
+        echo "サポートされていないOSです。1Password のインストールをスキップします。"
+    fi
+else
+    echo "1Password は既にインストールされています。"
+fi
+echo "1password version: $(1password --version)"
 
 echo "セットアップが完了しました！"
 
