@@ -227,7 +227,7 @@ fi
 # deskpad のインストール ※macOS のみ
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v deskpad &> /dev/null; then
-        install_if_missing "deskpad" "brew install --cask deskpad"
+        brew install --cask deskpad
     fi
 fi
 
