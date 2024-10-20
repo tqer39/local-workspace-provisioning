@@ -185,12 +185,12 @@ if ! command -v 1password &> /dev/null; then
     echo "1Password がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO
+            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO apt-key add -
             echo 'deb [arch=amd64] https://downloads.1password.com/linux/debian/amd64 stable main' | $SUDO tee /etc/apt/sources.list.d/1password.list
             $SUDO $PACKAGE_MANAGER update
             $SUDO $PACKAGE_MANAGER install -y 1password
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            rpm --import https://downloads.1password.com/linux/keys/1password.asc
+            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO rpm --import -
             $SUDO sh -c 'echo -e "[1password]\nname=1Password\nbaseurl=https://downloads.1password.com/linux/rpm\nenabled=1\ngpgcheck=1\ngpgkey=https://downloads.1password.com/linux/keys/1password.asc" > /etc/yum.repos.d/1password.repo'
             $SUDO yum check-update
             $SUDO yum install -y 1password
