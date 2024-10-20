@@ -15,19 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
-    - name: 実行権限を設定
-      run: chmod +x setup.sh
-    - name: セットアップスクリプトを実行
-      run: |
-        ./setup.sh
+    - uses: ./.github/actions/setup-script
 
   test-macos:
     timeout-minutes: 10
     runs-on: macos-latest
     steps:
-    - uses: actions/checkout@v4
-    - name: 実行権限を設定
-      run: chmod +x setup.sh
-    - name: セットアップスクリプトを実行
-      run: |
-        ./setup.sh
+      - uses: actions/checkout@v4
+      - uses: ./.github/actions/setup-script
