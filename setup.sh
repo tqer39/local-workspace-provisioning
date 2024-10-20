@@ -237,11 +237,9 @@ eval "$(direnv hook zsh)"
 # eval "$(direnv hook zsh)" は .zshrc に含まれている前提
 
 # starship
-echo "starship をインストールします..."
 install_if_missing "starship" "brew install starship"
 
 # anyenv
-echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
 git clone https://github.com/anyenv/anyenv ~/.anyenv
 anyenv install --force-init
