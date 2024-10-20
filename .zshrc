@@ -81,17 +81,6 @@ is_linux() {
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # ------------------------------------------------------------------------------
-# asdf
-# ------------------------------------------------------------------------------
-if [[ $(command -v brew) ]]; then
-  # see https://asdf-vm.com/guide/getting-started.html#_2-download-asdf
-  # ZSH & Homebrew
-
-  # shellcheck source=/dev/null
-  . "$(brew --prefix asdf)/libexec/asdf.sh"
-fi
-
-# ------------------------------------------------------------------------------
 # shortcut
 # ------------------------------------------------------------------------------
 alias ..='cd ..'
@@ -228,16 +217,6 @@ if [[ $(command -v brew) ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# fzf
-# ------------------------------------------------------------------------------
-if [[ $(command -v brew) ]]; then
-  if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
-    # shellcheck source=/dev/null
-    [ -f ~/.fzf.zsh ] && . "$HOME/.fzf.zsh"
-  fi
-fi
-
-# ------------------------------------------------------------------------------
 # bat
 # ------------------------------------------------------------------------------
 if [[ $(command -v bat) ]]; then
@@ -279,6 +258,14 @@ eval "$(direnv hook zsh)"
 if command -v xsel &> /dev/null; then
   alias pbcopy='xsel --clipboard --input'
   alias pbpaste='xsel --clipboard --output'
+fi
+
+# fzf
+if [[ $(command -v brew) ]]; then
+  if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
+    # shellcheck source=/dev/null
+    [ -f "$HOME/.fzf.zsh" ] && . "$HOME/.fzf.zsh"
+  fi
 fi
 
 # Starship ... https://starship.rs/ja-jp/guide/

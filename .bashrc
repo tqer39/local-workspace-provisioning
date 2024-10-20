@@ -208,12 +208,6 @@ ctrl+d\t\t:ターミナルを強制終了
 "'
 
 # ------------------------------------------------------------------------------
-# fzf
-# ------------------------------------------------------------------------------
-# shellcheck source=/dev/null
-[ -f "$HOME/.fzf.bash" ] && . ~/.fzf.bash
-
-# ------------------------------------------------------------------------------
 # mysql-client
 # ------------------------------------------------------------------------------
 if [[ $(command -v brew) ]]; then
@@ -243,16 +237,6 @@ if [[ $(command -v brew) ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# fzf
-# ------------------------------------------------------------------------------
-if [[ $(command -v brew) ]]; then
-  if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
-    # shellcheck source=/dev/null
-    [ -f ~/.fzf.zsh ] && . "$HOME/.fzf.zsh"
-  fi
-fi
-
-# ------------------------------------------------------------------------------
 # bat
 # ------------------------------------------------------------------------------
 if [[ $(command -v bat) ]]; then
@@ -278,6 +262,14 @@ eval "$(direnv hook zsh)"
 if command -v xsel &> /dev/null; then
   alias pbcopy='xsel --clipboard --input'
   alias pbpaste='xsel --clipboard --output'
+fi
+
+# fzf
+if [[ $(command -v brew) ]]; then
+  if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
+    # shellcheck source=/dev/null
+    [ -f "$HOME/.fzf.bash" ] && . $HOME/.fzf.bash
+  fi
 fi
 
 # Starship ... # see https://starship.rs/ja-jp/guide/
