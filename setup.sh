@@ -317,6 +317,7 @@ starship --version
 
 # zsh のインストール確認
 install_if_missing "zsh" "$SUDO brew install zsh"
+echo "zsh version: $(zsh --version)"
 
 # デフォルトシェルを zsh に変更 (CI環境ではスキップ)
 if [ "$CI" != "true" ]; then
