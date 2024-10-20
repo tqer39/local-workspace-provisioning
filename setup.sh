@@ -213,6 +213,8 @@ if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
     git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
 fi
 
+anyenv init
+
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
     echo "anyenv を初期化します..."
