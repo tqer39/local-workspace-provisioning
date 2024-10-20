@@ -225,10 +225,6 @@ else
     echo "anyenv は既に初期化されています。"
 fi
 
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 1
-
 # シェルに anyenv のパスを追加（dotfiles で管理されている前提）
 # eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
 
@@ -243,6 +239,10 @@ for env in "${ENVS[@]}"; do
         echo "$env は既にインストールされています。"
     fi
 done
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 1
 
 # Rancher Desktop のインストール
 echo "Rancher Desktop をインストールします..."
