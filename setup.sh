@@ -210,11 +210,17 @@ elif [ "$SHELL" == "/bin/zsh" ]; then
     echo "source ~/.zshrc" >> "$HOME/.zshrc"
 fi
 
-# eza
-install_if_missing "eza" "brew install eza"
+# bat
+install_if_missing "bat" "brew install bat"
 
 # fzf
 install_if_missing "fzf" "brew install fzf"
+
+# eza
+install_if_missing "eza" "brew install eza"
+
+# fd
+install_if_missing "fd" "brew install fd"
 
 # z
 install_if_missing "z" "brew install z"
