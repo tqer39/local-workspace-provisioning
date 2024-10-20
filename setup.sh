@@ -179,31 +179,14 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
-# Brave ブラウザのインストール
-echo "Brave ブラウザをインストールします..."
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        # Brave の GPG キーを追加
-        $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
-            https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
-
-        # Brave のリポジトリを追加
-        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
-        https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
-
-        # パッケージリストを更新
-        $SUDO $PACKAGE_MANAGER update
-
-        # Brave ブラウザをインストール
-        $SUDO $PACKAGE_MANAGER install -y brave-browser
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        $SUDO dnf install dnf-plugins-core
-        $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
-        $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
-        $SUDO dnf install -y brave-browser
-    else
-        echo "Brave のインストール方法が不明です。手動でインストールしてください。"
-    fi
+# デフォルトのシェルが bash なら .bashrc を読み込み、zsh なら .zshrc を読み込むように設定
+if [ "$SHELL" == "/bin/bash" ]; then
+    echo "デフォルトのシェルが bash です。.bashrc を読み込むように設定します。"
+    echo "source ~/.bashrc" >> "$HOME/.bash_profile"
+elif [ "$SHELL" == "/bin/zsh" ]; then
+    echo "デフォルトのシェルが zsh です。.zshrc を読み込むように設定します。"
+    echo "source ~/.zshrc" >> "$HOME/.zshrc"
+fi
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask brave-browser
 else
