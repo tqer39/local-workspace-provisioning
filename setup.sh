@@ -206,9 +206,14 @@ echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
 anyenv --version
 git clone https://github.com/anyenv/anyenv ~/.anyenv
+echo 'anyenv init'
+anyenv init
+echo 'anyenv install --init'
 anyenv install --init
+echo 'exec $SHELL -l'
+exec $SHELL -l
+echo 'anyenv install -l'
 anyenv install -l
-eval $(anyenv install -)
 
 # anyenv-install プラグインのインストール
 # if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
