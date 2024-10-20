@@ -268,6 +268,37 @@ if [[ $(command -v brew) ]]; then
   fi
 fi
 
+# git
+if command -v git &> /dev/null; then
+  alias g='git'
+  alias gb='git branch'
+  alias ga='git add'
+  alias gc='git commit -am'
+  alias gca='git commit --amend'
+  alias gd='git diff'
+  alias gds='git diff --staged'
+  alias gf='git fetch'
+  alias gm='git merge'
+  alias gr="git rebase"
+  alias grc="git rebase --continue"
+  alias gra="git rebase --abort"
+  alias gpl='git pull'
+  alias gps='git push'
+  alias gpso='git push origin'
+  alias gstt='git status'
+  alias gsts='git stash'
+  alias gsw='git switch'
+  alias gswc='git switch -c'
+  alias gl='git log --oneline'
+  alias gbm='git branch --merged'
+  alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
+fi
+
+# bat
+if command -v bat; then
+  alias cat="bat"
+fi
+
 # Starship ... https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要
 if command -v starship &> /dev/null; then
