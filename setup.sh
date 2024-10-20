@@ -209,6 +209,44 @@ elif [ "$SHELL" == "/bin/zsh" ]; then
     echo "source ~/.zshrc" >> "$HOME/.zshrc"
 fi
 
+# HackGenNerd Font
+echo "HackGenNerd Font をインストールします..."
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        # バージョン指定
+        HACKGEN_VERSION="2.9.0"
+        DL_PATH="$HOME/Downloads"
+        mkdir -p "$HOME/.local/share/fonts"
+        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}" -d "$DL_PATH"
+        # ユーザーにインストール
+        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" ~/.local/share/fonts/
+        # すべてのユーザーにインストール
+        sudo cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
+        # インストーラとディレクトリを削除
+        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
+
+        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
+        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
+        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}" -d "$DL_PATH"
+        # ユーザーにインストール
+        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* ~/.local/share/fonts
+        # すべてのユーザーにインストール
+        sudo cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
+        # インストーラとディレクトリを削除
+        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
+
+        # フォントのキャッシュを更新
+        fc-cache -vf
+    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+        $SUDO yum install -y
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    brew tap homebrew/cask-fonts
+    brew install --cask font-hackgen-nerd-font
+fi
+
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 0
@@ -462,44 +500,6 @@ else
     echo "1Password は既にインストールされています。"
 fi
 echo "1password version: $(1password --version)"
-
-# HackGenNerd Font
-echo "HackGenNerd Font をインストールします..."
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        # バージョン指定
-        HACKGEN_VERSION="2.9.0"
-        DL_PATH="$HOME/Downloads"
-        mkdir -p "$HOME/.local/share/fonts"
-        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
-        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}" -d "$DL_PATH"
-        # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" ~/.local/share/fonts/
-        # すべてのユーザーにインストール
-        sudo cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
-        # インストーラとディレクトリを削除
-        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
-
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
-        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}" -d "$DL_PATH"
-        # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* ~/.local/share/fonts
-        # すべてのユーザーにインストール
-        sudo cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
-        # インストーラとディレクトリを削除
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
-
-        # フォントのキャッシュを更新
-        fc-cache -vf
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        $SUDO yum install -y
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew tap homebrew/cask-fonts
-    brew install --cask font-hackgen-nerd-font
-fi
 
 echo "セットアップが完了しました！"
 
