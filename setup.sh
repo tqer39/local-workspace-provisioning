@@ -179,6 +179,27 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# zsh
+install_if_missing "zsh" "$SUDO brew install zsh"
+echo "zsh version: $(zsh --version)"
+
+# デフォルトシェルを zsh に変更 (CI環境ではスキップ)
+if [ "$CI" != "true" ]; then
+    CURRENT_SHELL=$(basename "$SHELL")
+    if [ "$CURRENT_SHELL" != "zsh" ]; then
+        ZSH_PATH=$(which zsh)
+        if chsh -s "$ZSH_PATH"; then
+            echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
+        else
+            echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
+        fi
+    else
+        echo "デフォルトのシェルは既に zsh です。"
+    fi
+else
+    echo "CI環境ではデフォルトシェルの変更をスキップします。"
+fi
+
 # デフォルトのシェルが bash なら .bashrc を読み込み、zsh なら .zshrc を読み込むように設定
 if [ "$SHELL" == "/bin/bash" ]; then
     echo "デフォルトのシェルが bash です。.bashrc を読み込むように設定します。"
@@ -225,27 +246,6 @@ direnv --version
 echo "starship をインストールします..."
 install_if_missing "starship" "brew install starship"
 starship --version
-
-# zsh
-install_if_missing "zsh" "$SUDO brew install zsh"
-echo "zsh version: $(zsh --version)"
-
-# デフォルトシェルを zsh に変更 (CI環境ではスキップ)
-if [ "$CI" != "true" ]; then
-    CURRENT_SHELL=$(basename "$SHELL")
-    if [ "$CURRENT_SHELL" != "zsh" ]; then
-        ZSH_PATH=$(which zsh)
-        if chsh -s "$ZSH_PATH"; then
-            echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
-        else
-            echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
-        fi
-    else
-        echo "デフォルトのシェルは既に zsh です。"
-    fi
-else
-    echo "CI環境ではデフォルトシェルの変更をスキップします。"
-fi
 
 # anyenv
 echo "anyenv をインストールします..."
@@ -462,6 +462,44 @@ else
     echo "1Password は既にインストールされています。"
 fi
 echo "1password version: $(1password --version)"
+
+# HackGenNerd Font
+echo "HackGenNerd Font をインストールします..."
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        # バージョン指定
+        HACKGEN_VERSION="2.9.0"
+        DL_PATH="$HOME/Downloads"
+        mkdir -p "$HOME/.local/share/fonts"
+        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}" -d "$DL_PATH"
+        # ユーザーにインストール
+        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/*" ~/.local/share/fonts/
+        # すべてのユーザーにインストール
+        sudo cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
+        # インストーラとディレクトリを削除
+        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
+
+        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
+        wget $DL_PATH "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
+        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}" -d "$DL_PATH"
+        # ユーザーにインストール
+        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* ~/.local/share/fonts
+        # すべてのユーザーにインストール
+        sudo cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* /usr/local/share/fonts/
+        # インストーラとディレクトリを削除
+        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
+
+        # フォントのキャッシュを更新
+        fc-cache -vf
+    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+        $SUDO yum install -y
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    brew tap homebrew/cask-fonts
+    brew install --cask font-hackgen-nerd-font
+fi
 
 echo "セットアップが完了しました！"
 
