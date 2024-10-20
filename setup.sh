@@ -38,7 +38,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     elif [ -f /etc/redhat-release ]; then
         PACKAGE_MANAGER="yum"
     else
-        echo "サポートされていないLinuxディストリビューションです。手動で必要なパッケージをインストールしてください。"
+        echo "❌ サポートされていないLinuxディストリビューションです。手動で必要なパッケージをインストールしてください。"
         exit 1
     fi
 fi
@@ -57,7 +57,7 @@ install_if_missing() {
         fi
 
         if ! command -v "$cmd" &> /dev/null; then
-            echo "$cmd のインストールに失敗しました。手動でインストールしてください。"
+            echo "❌ $cmd のインストールに失敗しました。手動でインストールしてください。"
             exit 1
         else
             echo "$cmd --version: $($cmd --version)"
@@ -90,7 +90,7 @@ if ! command -v brew &> /dev/null; then
     fi
     # brew がインストールされたか確認
     if ! command -v brew &> /dev/null; then
-        echo "Homebrew のインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ Homebrew のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ Homebrew のインストールが完了しました。"
@@ -143,7 +143,7 @@ else
         echo "dotfiles を $DOTFILES_DIR にクローンします..."
         git clone "$REPO_URL" "$DOTFILES_DIR"
         if [ $? -ne 0 ]; then
-            echo "リポジトリのクローンに失敗しました。"
+            echo "❌ リポジトリのクローンに失敗しました。"
             exit 1
         fi
     else
@@ -174,10 +174,10 @@ for file in "${DOTFILES[@]}"; do
         if [ $? -eq 0 ]; then
             echo "✅ シンボリックリンクを作成しました: $target_file"
         else
-            echo "シンボリックリンクの作成に失敗しました: $target_file"
+            echo "❌ シンボリックリンクの作成に失敗しました: $target_file"
         fi
     else
-        echo "ファイルが存在しません: $source_file"
+        echo "❌ ファイルが存在しません: $source_file"
     fi
 done
 
@@ -192,7 +192,7 @@ if [ "$CI" != "true" ]; then
         if chsh -s "$ZSH_PATH"; then
             echo "✅ デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
         else
-            echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
+            echo "❌ デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
         fi
     else
         echo "✅ デフォルトのシェルは既に zsh です。"
@@ -232,7 +232,7 @@ if ! command -v aws &> /dev/null; then
     fi
 
     if ! command -v aws &> /dev/null; then
-        echo "AWS CLI のインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ AWS CLI のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ AWS CLI のインストールが完了しました。"
@@ -294,7 +294,13 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             $SUDO yum install xclip
         fi
-        echo "✅ pbcopy/pbpaste のセットアップをしました"
+
+        if ! command -v pbcopy &> /dev/null; then
+            echo "❌ pbcopy/pbpaste のセットアップに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ pbcopy/pbpaste のセットアップをしました"
+        fi
     else
         echo "✅ pbcopy/pbpaste は既にインストールされています。"
     fi
@@ -323,7 +329,7 @@ if ! command -v code &> /dev/null; then
     fi
 
     if ! command -v code &> /dev/null; then
-        echo "Visual Studio Code のインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ Visual Studio Code のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ Visual Studio Code のインストールが完了しました。"
@@ -354,7 +360,7 @@ if ! command -v hyper &> /dev/null; then
     fi
 
     if ! command -v hyper &> /dev/null; then
-        echo "Hyper.js のインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ Hyper.js のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ Hyper.js のインストールが完了しました。"
@@ -377,11 +383,12 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
             $SUDO curl -fsSL https://download.opensuse.org/repositories/isv:Rancher:stable/rpm.repo -o /etc/yum.repos.d/rancher-desktop.repo
             $SUDO yum install -y rancher-desktop
         else
-            echo "Rancher Desktop のインストール方法が不明です。手動でインストールしてください。"
+            echo "❌ Rancher Desktop のインストール方法が不明です。手動でインストールしてください。"
             exit 1
         fi
+
         if ! command -v rancher-desktop &> /dev/null; then
-            echo "Rancher Desktop のインストールに失敗しました。手動でインストールしてください。"
+            echo "❌ Rancher Desktop のインストールに失敗しました。手動でインストールしてください。"
             exit 1
         else
             echo "✅ Rancher Desktop のインストールが完了しました。"
@@ -393,7 +400,7 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     # macOS の場合
     brew install --cask rancher
 else
-    echo "サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
+    echo "❌ サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
 fi
 
 # Google Chrome
@@ -416,7 +423,7 @@ if ! command -v google-chrome &> /dev/null; then
     fi
 
     if ! command -v google-chrome &> /dev/null; then
-        echo "Google Chrome のインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ Google Chrome のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ Google Chrome のインストールが完了しました。"
@@ -448,11 +455,11 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
         $SUDO dnf install -y brave-browser
     else
-        echo "Brave のインストール方法が不明です。手動でインストールしてください。"
+        echo "❌ Brave のインストール方法が不明です。手動でインストールしてください。"
     fi
 
     if ! command -v brave-browser &> /dev/null; then
-        echo "Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ Brave ブラウザのインストールが完了しました。"
@@ -460,7 +467,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask brave-browser
 else
-    echo "サポートされていないOSです。Brave のインストールをスキップします。"
+    echo "❌ サポートされていないOSです。Brave のインストールをスキップします。"
 fi
 echo "brave-browser version: $(brave-browser --version)"
 
@@ -482,7 +489,7 @@ if ! command -v 1password &> /dev/null; then
         fi
 
         if ! command -v 1password &> /dev/null; then
-            echo "1Password のインストールに失敗しました。手動でインストールしてください。"
+            echo "❌ 1Password のインストールに失敗しました。手動でインストールしてください。"
             exit 1
         else
             echo "✅ 1Password のインストールが完了しました。"
@@ -490,7 +497,7 @@ if ! command -v 1password &> /dev/null; then
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
         brew install --cask 1password
     else
-        echo "サポートされていないOSです。1Password のインストールをスキップします。"
+        echo "❌ サポートされていないOSです。1Password のインストールをスキップします。"
     fi
 else
     echo "✅ 1Password は既にインストールされています。"
@@ -558,10 +565,10 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
 
     # アプリの存在有無でインストールされたかどうかをチェック
     if [ ! -e /Applications/DeskPad.app ]; then
-        echo "✅ deskpad のインストールに失敗しました。手動でインストールしてください。"
+        echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
-        echo "deskpad のインストールが完了しました。"
+        echo "✅ deskpad のインストールが完了しました。"
     fi
 fi
 
