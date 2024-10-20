@@ -387,7 +387,7 @@ echo "Rancher Desktop をインストールします..."
 if [[ "$OS_TYPE" == "Linux" ]]; then
     # Linux の場合
     if ! command -v rancher-desktop &> /dev/null; then
-        echo "Rancher Desktop をインストールします。"
+        echo "Rancher Desktop がインストールされていません。インストールを試みます。"
         # Debian/Ubuntu 系の場合
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl -fsSL https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/Release.key | $SUDO gpg --dearmor -o /usr/share/keyrings/rancher-desktop-keyring.gpg
