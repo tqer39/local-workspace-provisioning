@@ -209,7 +209,20 @@ elif [ "$SHELL" == "/bin/zsh" ]; then
     echo "source ~/.zshrc" >> "$HOME/.zshrc"
 fi
 
-
+# pbcopy/pbpaste のセットアップ
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if ! command -v pbcopy &> /dev/null; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            $SUDO $PACKAGE_MANAGER install -y xsel
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            $SUDO yum install xclip
+        fi
+        echo "pbcopy のセットアップをしました"
+    else
+        echo "pbcopy は既にインストールされています。"
+    fi
+    # macOS では pbcopy/pbpaste がデフォルトで使える
+fi
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
