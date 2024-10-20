@@ -304,7 +304,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
             $SUDO yum install xclip
         fi
 
-        if ! command -v pbcopy &> /dev/null; then
+        if ! command -v xsel &> /dev/null; then
             echo "❌ pbcopy/pbpaste のセットアップに失敗しました。手動でインストールしてください。"
             exit 1
         else
