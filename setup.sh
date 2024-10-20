@@ -554,7 +554,6 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         $SUDO yum install -y
     fi
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew tap homebrew/cask-fonts
     brew install --cask font-hackgen-nerd
 
     # フォントのインストール確認
