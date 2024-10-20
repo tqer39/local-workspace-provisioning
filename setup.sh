@@ -206,6 +206,12 @@ echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
 anyenv --version
 
+# anyenv-install プラグインのインストール
+if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
+    echo "anyenv-install プラグインをインストールします..."
+    git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
+fi
+
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
     echo "anyenv を初期化します..."
@@ -217,12 +223,6 @@ if [ ! -d "$HOME/.anyenv" ]; then
     exec $SHELL -l
 else
     echo "anyenv は既に初期化されています。"
-fi
-
-# anyenv-install プラグインのインストール
-if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
-    echo "anyenv-install プラグインをインストールします..."
-    git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
 fi
 
 # 処理完了
