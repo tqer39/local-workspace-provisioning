@@ -219,7 +219,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 
         # HackGen_NF のダウンロードとインストール
         wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
+        unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "$DL_PATH"
         # ユーザーにインストール
         mkdir -p "$HOME/.local/share/fonts"
         cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
@@ -229,7 +229,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 
         # HackGen のダウンロードとインストール
         wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
+        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
         # ユーザーにインストール
         cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
         # インストーラとディレクトリを削除
