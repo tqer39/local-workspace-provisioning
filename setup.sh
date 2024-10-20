@@ -181,21 +181,30 @@ done
 # Hyper.js のインストール
 echo "Hyper.js をインストールします..."
 
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        # 依存パッケージのインストール
-        $SUDO $PACKAGE_MANAGER update
-        $SUDO $PACKAGE_MANAGER install -y libnotify4
-        # Hyper.js のインストール
-        DL_PATH="$HOME/Downloads"
-        wget -P $DL_PATH https://releases.hyper.is/download/deb
-        $SUDO dpkg -i "${DL_PATH}/deb"
-        rm -rf "${DL_PATH}/deb"
-    else
-        $SUDO snap install hyper --classic
+if ! command -v hyper &> /dev/null; then
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            # 依存パッケージのインストール
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y libnotify4
+            # Hyper.js のインストール
+            DL_PATH="$HOME/Downloads"
+            wget -P $DL_PATH https://releases.hyper.is/download/deb
+            $SUDO dpkg -i "${DL_PATH}/deb"
+            rm -rf "${DL_PATH}/deb"
+        else
+            $SUDO snap install hyper --classic
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask hyper
     fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask hyper
+
+    if ! command -v hyper &> /dev/null; then
+        echo "Hyper.js のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "Hyper.js のインストールが完了しました。"
+    fi
 fi
 
 # 処理完了
