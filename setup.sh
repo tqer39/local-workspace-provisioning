@@ -216,7 +216,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         # バージョン指定
         HACKGEN_VERSION="2.9.0"
         DL_PATH="$HOME/Downloads"
-        wget -O "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
         # ユーザーにインストール
         mkdir -p "$HOME/.local/share/fonts"
@@ -225,7 +225,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
         rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
 
-        wget -O "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
+        wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
         # ユーザーにインストール
         cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
