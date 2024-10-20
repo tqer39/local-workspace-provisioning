@@ -11,14 +11,14 @@ on:
 
 jobs:
   test-ubuntu:
-    timeout-minutes: 10
+    timeout-minutes: 20
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
     - uses: ./.github/actions/setup-script
 
   test-macos:
-    timeout-minutes: 10
+    timeout-minutes: 20
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
