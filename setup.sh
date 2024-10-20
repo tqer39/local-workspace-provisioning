@@ -61,11 +61,11 @@ install_if_missing() {
             exit 1
         else
             echo "$cmd --version: $($cmd --version)"
-            echo "$cmd のインストールが完了しました。"
+            echo "✅ $cmd のインストールが完了しました。"
         fi
     else
         echo "$cmd --version: $($cmd --version)"
-        echo "$cmd は既にインストールされています。"
+        echo "✅ $cmd は既にインストールされています。"
     fi
 }
 
@@ -77,7 +77,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         install_if_missing "curl" "$SUDO yum install -y curl"
     fi
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    echo "macOSでは通常curlがプリインストールされています。"
+    echo "✅ macOSでは通常curlがプリインストールされています。"
 fi
 
 # brew のインストール確認
@@ -93,7 +93,7 @@ if ! command -v brew &> /dev/null; then
         echo "Homebrew のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
-        echo "Homebrew のインストールが完了しました。"
+        echo "✅ Homebrew のインストールが完了しました。"
         if [[ "$OS_TYPE" == "Linux" ]]; then
             # Linuxbrew の場合、ビルドに必要なパッケージをインストール
             if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
@@ -105,7 +105,7 @@ if ! command -v brew &> /dev/null; then
         fi
     fi
 else
-    echo "Homebrew は既にインストールされています。"
+    echo "✅ Homebrew は既にインストールされています。"
 fi
 
 # git のインストール確認
@@ -119,7 +119,7 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v git &> /dev/null; then
         install_if_missing "git" "brew install git"
     else
-        echo "git は既にインストールされています。"
+        echo "✅ git は既にインストールされています。"
     fi
 fi
 
@@ -172,7 +172,7 @@ for file in "${DOTFILES[@]}"; do
     if [ -e "$source_file" ]; then
         ln -sf "$source_file" "$target_file"
         if [ $? -eq 0 ]; then
-            echo "シンボリックリンクを作成しました: $target_file"
+            echo "✅ シンボリックリンクを作成しました: $target_file"
         else
             echo "シンボリックリンクの作成に失敗しました: $target_file"
         fi
@@ -190,12 +190,12 @@ if [ "$CI" != "true" ]; then
     if [ "$CURRENT_SHELL" != "zsh" ]; then
         ZSH_PATH=$(which zsh)
         if chsh -s "$ZSH_PATH"; then
-            echo "デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
+            echo "✅ デフォルトのシェルを zsh ($ZSH_PATH) に変更しました。"
         else
             echo "デフォルトのシェルの変更に失敗しました。管理者権限が必要な場合があります。"
         fi
     else
-        echo "デフォルトのシェルは既に zsh です。"
+        echo "✅ デフォルトのシェルは既に zsh です。"
     fi
 else
     echo "CI環境ではデフォルトシェルの変更をスキップします。"
@@ -203,10 +203,10 @@ fi
 
 # デフォルトのシェルが bash なら .bashrc を読み込み、zsh なら .zshrc を読み込むように設定
 if [ "$SHELL" == "/bin/bash" ]; then
-    echo "デフォルトのシェルが bash です。.bashrc を読み込むように設定します。"
+    echo "✅ デフォルトのシェルが bash です。.bashrc を読み込むように設定します。"
     echo "source ~/.bashrc" >> "$HOME/.bash_profile"
 elif [ "$SHELL" == "/bin/zsh" ]; then
-    echo "デフォルトのシェルが zsh です。.zshrc を読み込むように設定します。"
+    echo "✅ デフォルトのシェルが zsh です。.zshrc を読み込むように設定します。"
     echo "source ~/.zshrc" >> "$HOME/.zshrc"
 fi
 
@@ -235,10 +235,10 @@ if ! command -v aws &> /dev/null; then
         echo "AWS CLI のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
-        echo "AWS CLI のインストールが完了しました。"
+        echo "✅ AWS CLI のインストールが完了しました。"
     fi
 else
-    echo "AWS CLI は既にインストールされています。"
+    echo "✅ AWS CLI は既にインストールされています。"
 fi
 echo "aws --version: $(aws --version)"
 
@@ -280,7 +280,7 @@ for env in "${ENVS[@]}"; do
         echo "$env をインストールします..."
         anyenv install "$env"
     else
-        echo "$env は既にインストールされています。"
+        echo "✅ $env は既にインストールされています。"
     fi
     eval "$(anyenv init -)"
     $env --version
@@ -294,9 +294,9 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             $SUDO yum install xclip
         fi
-        echo "pbcopy のセットアップをしました"
+        echo "✅ pbcopy/pbpaste のセットアップをしました"
     else
-        echo "pbcopy は既にインストールされています。"
+        echo "✅ pbcopy/pbpaste は既にインストールされています。"
     fi
     # macOS では pbcopy/pbpaste がデフォルトで使える
 fi
@@ -326,10 +326,10 @@ if ! command -v code &> /dev/null; then
         echo "Visual Studio Code のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
-        echo "Visual Studio Code のインストールが完了しました。"
+        echo "✅ Visual Studio Code のインストールが完了しました。"
     fi
 else
-    echo "Visual Studio Code は既にインストールされています。"
+    echo "✅ Visual Studio Code は既にインストールされています。"
 fi
 
 # Hyper.js
@@ -357,7 +357,7 @@ if ! command -v hyper &> /dev/null; then
         echo "Hyper.js のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
-        echo "Hyper.js のインストールが完了しました。"
+        echo "✅ Hyper.js のインストールが完了しました。"
     fi
 fi
 
@@ -384,10 +384,10 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
             echo "Rancher Desktop のインストールに失敗しました。手動でインストールしてください。"
             exit 1
         else
-            echo "Rancher Desktop のインストールが完了しました。"
+            echo "✅ Rancher Desktop のインストールが完了しました。"
         fi
     else
-        echo "Rancher Desktop は既にインストールされています。"
+        echo "✅ Rancher Desktop は既にインストールされています。"
     fi
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     # macOS の場合
@@ -419,10 +419,10 @@ if ! command -v google-chrome &> /dev/null; then
         echo "Google Chrome のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
-        echo "Google Chrome のインストールが完了しました。"
+        echo "✅ Google Chrome のインストールが完了しました。"
     fi
 else
-    echo "Google Chrome は既にインストールされています。"
+    echo "✅ Google Chrome は既にインストールされています。"
 fi
 
 # Brave
@@ -449,6 +449,13 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         $SUDO dnf install -y brave-browser
     else
         echo "Brave のインストール方法が不明です。手動でインストールしてください。"
+    fi
+
+    if ! command -v brave-browser &> /dev/null; then
+        echo "Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ Brave ブラウザのインストールが完了しました。"
     fi
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask brave-browser
@@ -478,7 +485,7 @@ if ! command -v 1password &> /dev/null; then
             echo "1Password のインストールに失敗しました。手動でインストールしてください。"
             exit 1
         else
-            echo "1Password のインストールが完了しました。"
+            echo "✅ 1Password のインストールが完了しました。"
         fi
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
         brew install --cask 1password
@@ -486,7 +493,7 @@ if ! command -v 1password &> /dev/null; then
         echo "サポートされていないOSです。1Password のインストールをスキップします。"
     fi
 else
-    echo "1Password は既にインストールされています。"
+    echo "✅ 1Password は既にインストールされています。"
 fi
 echo "1password version: $(1password --version)"
 
@@ -551,7 +558,7 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
 
     # アプリの存在有無でインストールされたかどうかをチェック
     if [ ! -e /Applications/DeskPad.app ]; then
-        echo "deskpad のインストールに失敗しました。手動でインストールしてください。"
+        echo "✅ deskpad のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "deskpad のインストールが完了しました。"
