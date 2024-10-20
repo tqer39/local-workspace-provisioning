@@ -241,6 +241,7 @@ for env in "${ENVS[@]}"; do
     else
         echo "$env は既にインストールされています。"
     fi
+    $env --version
 done
 
 # 処理完了
