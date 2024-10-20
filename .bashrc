@@ -219,7 +219,6 @@ if [[ $(command -v brew) ]]; then
   fi
 fi
 
-
 # git
 if command -v git &> /dev/null; then
   alias g='git'
