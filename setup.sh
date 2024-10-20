@@ -243,6 +243,7 @@ for env in "${ENVS[@]}"; do
     else
         echo "$env は既にインストールされています。"
     fi
+    eval "$(anyenv init -)"
     $env --version
 done
 
