@@ -205,11 +205,11 @@ fi
 echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
 anyenv --version
-git clone https://github.com/anyenv/anyenv ~/.anyenv
-echo 'anyenv init'
-anyenv init
-echo 'anyenv install --init'
-anyenv install --init
+# git clone https://github.com/anyenv/anyenv ~/.anyenv
+# echo 'anyenv init'
+# anyenv init
+echo 'anyenv install --force-init'
+anyenv install --force-init
 # echo 'exec $SHELL -l'
 # exec $SHELL -l
 echo 'source ~/.bashrc'
