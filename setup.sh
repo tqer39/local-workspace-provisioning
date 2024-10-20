@@ -206,35 +206,9 @@ elif [ "$SHELL" == "/bin/zsh" ]; then
     echo "source ~/.zshrc" >> "$HOME/.zshrc"
 fi
 
-# pbcopy/pbpaste のセットアップ
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if ! command -v pbcopy &> /dev/null; then
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            $SUDO $PACKAGE_MANAGER install -y xsel
-        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            $SUDO yum install xclip
-        fi
-        echo "pbcopy のセットアップをしました"
-    else
-        echo "pbcopy は既にインストールされています。"
-    fi
-    # macOS では pbcopy/pbpaste がデフォルトで使える
-fi
-
-# deskpad のインストール ※macOS のみ
-if [[ "$OS_TYPE" == "Darwin" ]]; then
-    if ! command -v deskpad &> /dev/null; then
-        brew install deskpad
-    fi
-
-    # アプリの存在有無でインストールされたかどうかをチェック
-    if [ ! -e /Applications/DeskPad.app ]; then
-        echo "deskpad のインストールに失敗しました。手動でインストールしてください。"
-        exit 1
-    else
-        echo "deskpad のインストールが完了しました。"
-    fi
-fi
+# eza
+install_if_missing "eza" "$SUDO brew install eza"
+echo "zsh version: $(eza --version)"
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
@@ -300,6 +274,21 @@ for env in "${ENVS[@]}"; do
     eval "$(anyenv init -)"
     $env --version
 done
+
+# pbcopy/pbpaste のセットアップ
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if ! command -v pbcopy &> /dev/null; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            $SUDO $PACKAGE_MANAGER install -y xsel
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            $SUDO yum install xclip
+        fi
+        echo "pbcopy のセットアップをしました"
+    else
+        echo "pbcopy は既にインストールされています。"
+    fi
+    # macOS では pbcopy/pbpaste がデフォルトで使える
+fi
 
 # Visual Studio Code
 echo "Visual Studio Code をインストールします..."
@@ -542,6 +531,21 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 fi
 echo "HackGenNerd Font のインストールが完了しました。"
+
+# deskpad のインストール ※macOS のみ
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if ! command -v deskpad &> /dev/null; then
+        brew install deskpad
+    fi
+
+    # アプリの存在有無でインストールされたかどうかをチェック
+    if [ ! -e /Applications/DeskPad.app ]; then
+        echo "deskpad のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "deskpad のインストールが完了しました。"
+    fi
+fi
 
 echo "セットアップが完了しました！"
 
