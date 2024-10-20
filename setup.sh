@@ -346,25 +346,6 @@ anyenv install -l
 export PATH="$HOME/.anyenv/bin:$PATH"
 eval "$(anyenv init -)"
 
-# anyenv-in stall プラグインのインストール
-# if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
-#     echo "anyenv-install プラグインをインストールします..."
-#     git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
-# fi
-
-# anyenv の初期化
-if [ ! -d "$HOME/.anyenv" ]; then
-    echo "anyenv を初期化します..."
-    anyenv install --init
-    if ! anyenv init --no-rehash &> /dev/null; then
-        echo "anyenv の初期化に失敗しました。"
-        exit 1
-    fi
-    exec $SHELL -l
-else
-    echo "anyenv は既に初期化されています。"
-fi
-
 # シェルに anyenv のパスを追加（dotfiles で管理されている前提）
 # eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
 
