@@ -1,88 +1,113 @@
 #!/bin/bash
 
-# ------------------------------------------------------------------------------
-# zinit
-# ------------------------------------------------------------------------------
-# Added by Zinit's installer
-if [[ ! -f $HOME/.local/share/zinit/zinit.git/zinit.zsh ]]; then
-  print -P "%F{33} %F{220}Installing %F{33}ZDHARMA-CONTINUUM%F{220} Initiative Plugin Manager (%F{33}zdharma-continuum/zinit%F{220})…%f"
-  command mkdir -p "$HOME/.local/share/zinit"
-  command chmod g-rwX "$HOME/.local/share/zinit"
-  command git clone https://github.com/zdharma-continuum/zinit "$HOME/.local/share/zinit/zinit.git"
-  print -P "%F{33} %F{34}Installation successful.%f%b" || \
-  print -P "%F{160} The clone has failed.%f%b"
+# ~/.bashrc: executed by bash(1) for non-login shells.
+# see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
+# for examples
+
+# If not running interactively, don't do anything
+[ -z "$PS1" ] && return
+
+# don't put duplicate lines in the history. See bash(1) for more options
+# ... or force ignoredups and ignorespace
+HISTCONTROL=ignoredups:ignorespace
+
+# append to the history file, don't overwrite it
+shopt -s histappend
+
+# for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
+HISTSIZE=1000
+HISTFILESIZE=2000
+
+# check the window size after each command and, if necessary,
+# update the values of LINES and COLUMNS.
+shopt -s checkwinsize
+
+# make less more friendly for non-text input files, see lesspipe(1)
+[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+  debian_chroot=$(cat /etc/debian_chroot)
 fi
 
-# shellcheck source=/dev/null
-. "$HOME/.local/share/zinit/zinit.git/zinit.zsh"
-autoload -Uz _zinit
-(( ${+_comps} )) && _comps["$(zinit)"]=_zinit
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+  xterm-color) color_prompt=yes;;
+esac
 
-# Load a few important annexes, without Turbo
-# (this is currently required for annexes)
-zinit light-mode for \
-  zdharma-continuum/zinit-annex-as-monitor \
-  zdharma-continuum/zinit-annex-bin-gem-node \
-  zdharma-continuum/zinit-annex-patch-dl \
-  zdharma-continuum/zinit-annex-rust
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+#force_color_prompt=yes
 
-### End of Zinit's installer chunk
-
-# zinit: plugins
-# 入力補完
-zinit light zsh-users/zsh-completions
-zinit light zsh-users/zsh-autosuggestions
-
-# シンタックスハイライト
-zinit light zdharma-continuum/fast-syntax-highlighting
-
-# 履歴ファイルの保存先
-export HISTFILE="$HOME/.zsh_history"
-export HISTSIZE=100000
-export SAVEHIST=100000
-setopt extended_history
-
-# debug
-# echo $PATH
-# which anyenv
-# which starship
-
-
-# macOSを判定する関数
-is_macos() {
-  if [ "$(uname)" = "Darwin" ]; then
-    return 0  # 成功（真）
-  else
-    return 1  # 失敗（偽）
-  fi
-}
-
-# Ubuntuを判定する関数
-is_ubuntu() {
-  if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    if [ "$ID" = "ubuntu" ]; then
-      return 0  # 成功（真）
+if [ -n "$force_color_prompt" ]; then
+  if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+	# We have color support; assume it's compliant with Ecma-48
+	# (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+	# a case would tend to support setf rather than setaf.)
+	color_prompt=yes
+    else
+	color_prompt=
     fi
-  fi
-  return 1  # 失敗（偽）
-}
+fi
 
-# その他のLinuxディストリビューションを判定する関数
-is_linux() {
-  if [ "$(uname)" = "Linux" ]; then
-    return 0  # 成功（真）
+if [ "$color_prompt" = yes ]; then
+  PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+else
+  PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+fi
+unset color_prompt force_color_prompt
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+  PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+  ;;
+*)
+  ;;
+esac
+
+# enable color support of ls and also add handy aliases
+if [ -x /usr/bin/dircolors ]; then
+  if test -r "$HOME/.dircolors";then
+    eval "$(dircolors -b ~/.dircolors)"
   else
-    return 1  # 失敗（偽）
+    eval "$(dircolors -b)"
   fi
-}
+  alias ls='ls --color=auto'
+  #alias dir='dir --color=auto'
+  #alias vdir='vdir --color=auto'
 
-# ubuntu なら実行する
-if [[ is_ubuntu ]]; then
-  alias update='sudo apt update && sudo apt upgrade -y'
-  alias install='sudo apt install'
-  alias remove='sudo apt remove'
-  alias search='apt search'
+  alias grep='grep --color=auto'
+  alias fgrep='fgrep --color=auto'
+  alias egrep='egrep --color=auto'
+fi
+
+# some more ls aliases
+alias ll='ls -alF'
+alias la='ls -A'
+alias l='ls -CF'
+
+# Add an "alert" alias for long running commands.  Use like so:
+#   sleep 10; alert
+alias alert='notify-send --urgency=low -i "$([ $? = 0 ] && echo terminal || echo error)" "$(history|tail -n1|sed -e '\''s/^\s*[0-9]\+\s*//;s/[;&|]\s*alert$//'\'')"'
+
+# Alias definitions.
+# You may want to put all your additions into a separate file like
+# ~/.bash_aliases, instead of adding them here directly.
+# See /usr/share/doc/bash-doc/examples in the bash-doc package.
+
+if [ -f "$HOME/.bash_aliases" ]; then
+  # shellcheck source=/dev/null
+  . "$HOME/.bash_aliases"
+fi
+
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ] && ! shopt -oq posix; then
+  # shellcheck source=/dev/null
+  . /etc/bash_completion
 fi
 
 # ------------------------------------------------------------------------------
@@ -120,19 +145,9 @@ if [[ $(command -v pre-commit) ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# go
-# ------------------------------------------------------------------------------
-export GOPATH="${HOME}/go"
-# export GOPATH=$HOME/go
-
-# export PATH="${GOPATH}:${PATH}"
-
-# ------------------------------------------------------------------------------
 # Rancher Desktop
 # ------------------------------------------------------------------------------
-### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/home/tqer39/.rd/bin:$PATH"
-### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # shortcut
 alias ..='cd ..'
@@ -174,7 +189,6 @@ if [[ $(command -v git) ]]; then
 fi
 
 # anyenv
-# 挙動がおかしいときは chsh, $SHELL あたりを確認。$SHELL がちがう shell なら os reboot
 export PATH="$HOME/.anyenv/bin:$PATH"
 eval "$(anyenv init -)"
 
@@ -191,7 +205,7 @@ fi
 if [[ $(command -v brew) ]]; then
   if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
     # shellcheck source=/dev/null
-    [ -f "$HOME/.fzf.zsh" ] && . "$HOME/.fzf.zsh"
+    [ -f "$HOME/.fzf.bash" ] && . $HOME/.fzf.bash
   fi
 fi
 
@@ -242,12 +256,6 @@ if [[ $(command -v eza) ]]; then
   alias l='clear && ls'
 fi
 
-# Starship ... https://starship.rs/ja-jp/guide/
-# ※ 一番最後の行に設定が必要
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
-fi
-
 # openjdk
 if [[ $(command -v brew) ]]; then
   if [ "$(brew list | grep -c "^openjdk@*.*$")" -gt 0 ]; then
@@ -277,4 +285,10 @@ if [[ $(command -v terraform) ]]; then
   alias tfsl='terraform state list'
 fi
 
-echo "zsh..."
+# Starship ... # see https://starship.rs/ja-jp/guide/
+# ※ 一番最後の行に設定が必要
+if command -v starship &> /dev/null; then
+  eval "$(starship init bash)"
+fi
+
+echo "bash..."
