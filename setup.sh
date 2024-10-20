@@ -227,8 +227,8 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
         brew install --cask deskpad
     fi
 
-    # アプリの存在有無でインストールされたかどうかをチェックしたい
-    if ! command -v deskpad &> /dev/null; then
+    # アプリの存在有無でインストールされたかどうかをチェック
+    if [ ! -e /Applications/DeskPad.app ]; then
         echo "deskpad のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
