@@ -179,6 +179,42 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# 1Password のインストール
+echo "1Password をインストールします..."
+if ! command -v 1password &> /dev/null; then
+    echo "1Password をインストールします..."
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO
+            echo 'deb [arch=amd64] https://downloads.1password.com/linux/debian/amd64 stable main' | $SUDO tee /etc/apt/sources.list.d/1password.list
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y 1password
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            rpm --import https://downloads.1password.com/linux/keys/1password.asc
+            $SUDO sh -c 'echo -e "[1password]\nname=1Password\nbaseurl=https://downloads.1password.com/linux/rpm\nenabled=1\ngpgcheck=1\ngpgkey=https://downloads.1password.com/linux/keys/1password.asc" > /etc/yum.repos.d/1password.repo'
+            $SUDO yum check-update
+            $SUDO yum install -y 1password
+        fi
+
+        if ! command -v 1password &> /dev/null; then
+            echo "1Password のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "1Password のインストールが完了しました。"
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask 1password
+    else
+        echo "サポートされていないOSです。1Password のインストールをスキップします。"
+    fi
+else
+    echo "1Password は既にインストールされています。"
+fi
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 0
+
 # Visual Studio Code のインストール
 echo "Visual Studio Code をインストールします..."
 if ! command -v code &> /dev/null; then
@@ -209,10 +245,6 @@ if ! command -v code &> /dev/null; then
 else
     echo "Visual Studio Code は既にインストールされています。"
 fi
-
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 0
 
 # Hyper.js のインストール
 echo "Hyper.js をインストールします..."
