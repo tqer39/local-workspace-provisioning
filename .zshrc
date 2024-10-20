@@ -260,15 +260,6 @@ export GOPATH="${HOME}/go"
 export PATH="/home/tqer39/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
-# ------------------------------------------------------------------------------
-# Starship
-# ------------------------------------------------------------------------------
-# see https://starship.rs/ja-jp/guide/
-# ※ 一番最後の行に設定が必要
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
-fi
-
 
 # ------------------------------------------------------------------------------
 # pyenv
@@ -284,5 +275,11 @@ eval "$(anyenv init -)"
 
 # direnv
 eval "$(direnv hook zsh)"
+
+# Starship ... https://starship.rs/ja-jp/guide/
+# ※ 一番最後の行に設定が必要
+if command -v starship &> /dev/null; then
+  eval "$(starship init zsh)"
+fi
 
 echo "zsh..."
