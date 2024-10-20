@@ -235,6 +235,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
         # フォントのキャッシュを更新
         fc-cache -vf
+
         # フォントのインストール確認
         if fc-list | grep -i "HackGen"; then
             echo "✅ HackGenNerd Font が正常にインストールされました。"
@@ -248,6 +249,14 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew tap homebrew/cask-fonts
     brew install --cask font-hackgen-nerd-font
+
+    # フォントのインストール確認
+    if fc-list | grep -i "HackGen"; then
+        echo "✅ HackGenNerd Font が正常にインストールされました。"
+    else
+        echo "❌ HackGenNerd Font のインストールに失敗しました。"
+        exit 1
+    fi
 fi
 
 # 処理完了
