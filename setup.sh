@@ -227,6 +227,20 @@ echo "GitHub CLI をインストールします..."
 install_if_missing "gh" "brew install gh"
 gh --version
 
+
+# direnv のインストール
+echo "direnv をインストールします..."
+install_if_missing "direnv" "brew install direnv"
+direnv --version
+
+# direnv の初期化（dotfiles で管理されている前提）
+# eval "$(direnv hook zsh)" は .zshrc に含まれている前提
+
+# starship のインストール
+echo "starship をインストールします..."
+install_if_missing "starship" "brew install starship"
+starship --version
+
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 1
@@ -335,17 +349,6 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
 else
     echo "サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
 fi
-
-# direnv のインストール
-echo "direnv をインストールします..."
-install_if_missing "direnv" "brew install direnv"
-
-# direnv の初期化（dotfiles で管理されている前提）
-# eval "$(direnv hook zsh)" は .zshrc に含まれている前提
-
-# starship のインストール
-echo "starship をインストールします..."
-install_if_missing "starship" "brew install starship"
 
 # starship の設定ファイルを作成またはシンボリックリンク（dotfiles で管理している前提）
 STARSHIP_CONFIG="$HOME/.config/starship.toml"
