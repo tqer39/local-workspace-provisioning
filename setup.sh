@@ -179,6 +179,42 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# Brave ブラウザのインストール
+echo "Brave ブラウザをインストールします..."
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        # Brave の GPG キーを追加
+        $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+            https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+
+        # Brave のリポジトリを追加
+        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
+        https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
+
+        # パッケージリストを更新
+        $SUDO $PACKAGE_MANAGER update
+
+        # Brave ブラウザをインストール
+        $SUDO $PACKAGE_MANAGER install -y brave-browser
+    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+        $SUDO dnf install dnf-plugins-core
+        $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
+        $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+        $SUDO dnf install -y brave-browser
+    else
+        echo "Brave のインストール方法が不明です。手動でインストールしてください。"
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    brew install --cask brave-browser
+else
+    echo "サポートされていないOSです。Brave のインストールをスキップします。"
+fi
+echo "brave-browser version: $(brave-browser --version)"
+
+# 処理完了
+echo "============= すべての処理が完了しました ============="
+exit 0
+
 # 1Password のインストール
 echo "1Password をインストールします..."
 if ! command -v 1password &> /dev/null; then
@@ -211,10 +247,6 @@ else
     echo "1Password は既にインストールされています。"
 fi
 echo "1password version: $(1password --version)"
-
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 0
 
 # Visual Studio Code のインストール
 echo "Visual Studio Code をインストールします..."
