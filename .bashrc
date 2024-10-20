@@ -122,21 +122,6 @@ alias d='cd ~/Desktop'
 alias work='cd ~/workspace'
 
 # ------------------------------------------------------------------------------
-# terraform
-# ------------------------------------------------------------------------------
-if [[ $(command -v terraform) ]]; then
-  alias tf='terraform'
-  alias tfi='terraform init'
-  alias tfi='terraform init --auto-approve'
-  alias tff='terraform fmt'
-  alias tfp='terraform plan'
-  alias tfa='terraform apply'
-  alias tfi='terraform import'
-  alias tfaa='terraform apply --auto-approve'
-  alias tfsl='terraform state list'
-fi
-
-# ------------------------------------------------------------------------------
 # \shellcheck
 # ------------------------------------------------------------------------------
 if [[ $(command -v shellcheck) ]]; then
@@ -260,6 +245,19 @@ if [[ $(command -v brew) ]]; then
     PATH="$(brew --prefix mysql-client)/bin:$PATH"
     export PATH
   fi
+fi
+
+# terraform
+if [[ $(command -v terraform) ]]; then
+  alias tf='terraform'
+  alias tfi='terraform init'
+  alias tfi='terraform init --auto-approve'
+  alias tff='terraform fmt'
+  alias tfp='terraform plan'
+  alias tfa='terraform apply'
+  alias tfi='terraform import'
+  alias tfaa='terraform apply --auto-approve'
+  alias tfsl='terraform state list'
 fi
 
 # Starship ... # see https://starship.rs/ja-jp/guide/
