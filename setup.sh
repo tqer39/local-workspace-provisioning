@@ -155,6 +155,7 @@ echo "シンボリックリンクを作成します..."
 DOTFILES=(
     ".bashrc"
     ".bash_profile"
+    ".gitconfig"
     ".zshrc"
     ".config/starship.toml"
     # 他の dotfile を追加
@@ -177,7 +178,7 @@ for file in "${DOTFILES[@]}"; do
 done
 
 # zsh
-install_if_missing "zsh" "$SUDO brew install zsh"
+install_if_missing "zsh" "brew install zsh"
 echo "zsh version: $(zsh --version)"
 
 # デフォルトシェルを zsh に変更 (CI環境ではスキップ)
@@ -207,7 +208,7 @@ elif [ "$SHELL" == "/bin/zsh" ]; then
 fi
 
 # eza
-install_if_missing "eza" "$SUDO brew install eza"
+install_if_missing "eza" "brew install eza"
 echo "zsh version: $(eza --version)"
 
 # 処理完了
