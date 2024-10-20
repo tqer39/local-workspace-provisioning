@@ -109,18 +109,27 @@ else
 fi
 
 # git のインストール確認
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        install_if_missing "git" "$SUDO $PACKAGE_MANAGER update && $SUDO $PACKAGE_MANAGER install -y git"
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        install_if_missing "git" "$SUDO yum install -y git"
+if ! command -v git &> /dev/null; then
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            install_if_missing "git" "$SUDO $PACKAGE_MANAGER update && $SUDO $PACKAGE_MANAGER install -y git"
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            install_if_missing "git" "$SUDO yum install -y git"
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        if ! command -v git &> /dev/null; then
+            install_if_missing "git" "brew install git"
+        fi
     fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
+
     if ! command -v git &> /dev/null; then
-        install_if_missing "git" "brew install git"
+        echo "❌ git のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
     else
-        echo "✅ git は既にインストールされています。"
+        echo "✅ git のインストールが完了しました。"
     fi
+else
+    echo "✅ git は既にインストールされています。"
 fi
 
 # 必要なパッケージのインストール（Linuxbrew の場合、パスを通す必要があるかもしれません）
@@ -128,7 +137,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-# ~/workspace ディレクトリを作成
+# workspace ディレクトリを作成
 if [ ! -d "$WORKSPACE" ]; then
     echo "$WORKSPACE を作成します..."
     mkdir -p "$WORKSPACE"
@@ -157,11 +166,11 @@ echo "シンボリックリンクを作成します..."
 
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
-    ".bashrc"
+    ".config/starship.toml"
     ".bash_profile"
+    ".bashrc"
     ".gitconfig"
     ".zshrc"
-    ".config/starship.toml"
     # 他の dotfile を追加
 )
 
@@ -365,13 +374,14 @@ if ! command -v hyper &> /dev/null; then
     else
         echo "✅ Hyper.js のインストールが完了しました。"
     fi
+else
+    echo "✅ Hyper.js は既にインストールされています。"
 fi
 
 # Rancher Desktop
 echo "Rancher Desktop をインストールします..."
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    # Linux の場合
-    if ! command -v rancher-desktop &> /dev/null; then
+if ! command -v rancher-desktop &> /dev/null; then
+    if [[ "$OS_TYPE" == "Linux" ]]; then
         echo "Rancher Desktop がインストールされていません。インストールを試みます。"
         # Debian/Ubuntu 系の場合
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
@@ -382,9 +392,6 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             $SUDO curl -fsSL https://download.opensuse.org/repositories/isv:Rancher:stable/rpm.repo -o /etc/yum.repos.d/rancher-desktop.repo
             $SUDO yum install -y rancher-desktop
-        else
-            echo "❌ Rancher Desktop のインストール方法が不明です。手動でインストールしてください。"
-            exit 1
         fi
 
         if ! command -v rancher-desktop &> /dev/null; then
@@ -393,14 +400,11 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         else
             echo "✅ Rancher Desktop のインストールが完了しました。"
         fi
-    else
-        echo "✅ Rancher Desktop は既にインストールされています。"
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask rancher
     fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    # macOS の場合
-    brew install --cask rancher
 else
-    echo "❌ サポートされていないOSです。Rancher Desktop のインストールをスキップします。"
+    echo "✅ Rancher Desktop は既にインストールされています。"
 fi
 
 # Google Chrome
