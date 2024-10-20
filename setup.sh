@@ -205,14 +205,13 @@ fi
 echo "anyenv をインストールします..."
 install_if_missing "anyenv" "brew install anyenv"
 anyenv --version
+anyeenv install --list
 
 # anyenv-install プラグインのインストール
 if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
     echo "anyenv-install プラグインをインストールします..."
     git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
 fi
-
-anyenv install --list
 
 # anyenv の初期化
 if [ ! -d "$HOME/.anyenv" ]; then
