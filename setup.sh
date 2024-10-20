@@ -212,8 +212,8 @@ echo 'anyenv install --force-init'
 anyenv install --force-init
 # echo 'exec $SHELL -l'
 # exec $SHELL -l
-echo 'source ~/.bashrc'
-source "$HOME/.bashrc"
+# echo 'source ~/.bashrc'
+# source "$HOME/.bashrc"
 echo 'anyenv install -l'
 anyenv install -l
 
