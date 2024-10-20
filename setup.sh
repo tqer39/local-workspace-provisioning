@@ -208,10 +208,10 @@ anyenv --version
 anyeenv install --list
 
 # anyenv-install プラグインのインストール
-if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
-    echo "anyenv-install プラグインをインストールします..."
-    git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
-fi
+# if [ ! -d "$(anyenv root)/plugins/anyenv-install" ]; then
+#     echo "anyenv-install プラグインをインストールします..."
+#     git clone https://github.com/anyenv/anyenv-install.git "$(anyenv root)/plugins/anyenv-install"
+# fi
 
 anyenv init
 

@@ -54,4 +54,4 @@ if [[ $(command -v brew) ]]; then
 fi
 
 # anyenv
-eval "$(anyenv init -)"
+export PATH="$HOME/.anyenv/bin:$PATH"

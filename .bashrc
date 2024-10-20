@@ -275,7 +275,6 @@ eval "$(starship init bash)"
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 
 # anyenv
-export PATH="$HOME/.anyenv/bin:$PATH"
 eval "$(anyenv init -)"
 
 # if [ -e "$HOME/.anyenv" ]; then
