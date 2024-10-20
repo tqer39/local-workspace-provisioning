@@ -207,6 +207,22 @@ if ! command -v hyper &> /dev/null; then
     fi
 fi
 
+# aws cli のインストール
+echo "AWS CLI をインストールします..."
+install_if_missing "aws" "brew install awscli"
+
+# aws-vault のインストール
+echo "aws-vault をインストールします..."
+install_if_missing "aws-vault" "brew install --cask aws-vault"
+
+# jq のインストール
+echo "jq をインストールします..."
+install_if_missing "jq" "brew install jq"
+
+# gh (GitHub CLI) のインストール
+echo "GitHub CLI をインストールします..."
+install_if_missing "gh" "brew install gh"
+
 # 処理完了
 echo "============= すべての処理が完了しました ============="
 exit 1
@@ -334,22 +350,6 @@ if [ ! -e "$STARSHIP_CONFIG" ]; then
     ln -sf "$DOTFILES_DIR/starship.toml" "$STARSHIP_CONFIG"
     echo "starship の設定ファイルをリンクしました: $STARSHIP_CONFIG"
 fi
-
-# aws cli のインストール
-echo "AWS CLI をインストールします..."
-install_if_missing "aws" "brew install awscli"
-
-# aws-vault のインストール
-echo "aws-vault をインストールします..."
-install_if_missing "aws-vault" "brew install --cask aws-vault"
-
-# jq のインストール
-echo "jq をインストールします..."
-install_if_missing "jq" "brew install jq"
-
-# gh (GitHub CLI) のインストール
-echo "GitHub CLI をインストールします..."
-install_if_missing "gh" "brew install gh"
 
 # Visual Studio Code のインストール
 echo "Visual Studio Code をインストールします..."
