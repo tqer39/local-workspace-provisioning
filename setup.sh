@@ -303,7 +303,7 @@ eval "$(anyenv init -)"
 # シェルに anyenv のパスを追加（dotfiles で管理されている前提）
 # eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
 
-# nodenv, pyenv, tfenv のインストール
+# **env のインストール
 ENVS=("nodenv" "pyenv" "tfenv")
 
 for env in "${ENVS[@]}"; do
