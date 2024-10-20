@@ -242,10 +242,6 @@ else
 fi
 echo "aws --version: $(aws --version)"
 
-# 処理完了
-echo "============= すべての処理が完了しました ============="
-exit 0
-
 # aws-vault
 install_if_missing "aws-vault" "brew install aws-vault"
 
@@ -571,3 +567,6 @@ elif
     # 再起動の提案
     echo "変更を反映するために、ログアウトして再度ログインするか、システムを再起動することをおすすめします。"
 fi
+
+# 処理完了
+exit 0
