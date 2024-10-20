@@ -80,6 +80,27 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
     echo "✅ macOSでは通常curlがプリインストールされています。"
 fi
 
+# pbcopy/pbpaste のセットアップ
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if ! command -v pbcopy &> /dev/null; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            $SUDO $PACKAGE_MANAGER install -y xsel
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            $SUDO yum install xclip
+        fi
+
+        if ! command -v xsel &> /dev/null; then
+            echo "❌ pbcopy/pbpaste のセットアップに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ pbcopy/pbpaste のセットアップをしました"
+        fi
+    else
+        echo "✅ pbcopy/pbpaste は既にインストールされています。"
+    fi
+    # macOS では pbcopy/pbpaste がデフォルトで使える
+fi
+
 # brew のインストール確認
 if ! command -v brew &> /dev/null; then
     echo "Homebrew がインストールされていません。インストールを試みます。"
@@ -294,27 +315,6 @@ for env in "${ENVS[@]}"; do
     eval "$(anyenv init -)"
     $env --version
 done
-
-# pbcopy/pbpaste のセットアップ
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if ! command -v pbcopy &> /dev/null; then
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            $SUDO $PACKAGE_MANAGER install -y xsel
-        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            $SUDO yum install xclip
-        fi
-
-        if ! command -v xsel &> /dev/null; then
-            echo "❌ pbcopy/pbpaste のセットアップに失敗しました。手動でインストールしてください。"
-            exit 1
-        else
-            echo "✅ pbcopy/pbpaste のセットアップをしました"
-        fi
-    else
-        echo "✅ pbcopy/pbpaste は既にインストールされています。"
-    fi
-    # macOS では pbcopy/pbpaste がデフォルトで使える
-fi
 
 # Visual Studio Code
 echo "Visual Studio Code をインストールします..."
