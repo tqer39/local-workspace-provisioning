@@ -243,6 +243,7 @@ ENVS=("nodenv" "pyenv" "tfenv")
 for env in "${ENVS[@]}"; do
     if [ ! -d "$HOME/.anyenv/envs/$env" ]; then
         echo "$env をインストールします..."
+        anyenv install --init
         anyenv install "$env"
     else
         echo "$env は既にインストールされています。"
