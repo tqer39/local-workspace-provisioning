@@ -210,6 +210,7 @@ if ! command -v 1password &> /dev/null; then
 else
     echo "1Password は既にインストールされています。"
 fi
+echo "1password version: $(1password --version)"
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
@@ -218,7 +219,7 @@ exit 0
 # Visual Studio Code のインストール
 echo "Visual Studio Code をインストールします..."
 if ! command -v code &> /dev/null; then
-    echo "Visual Studio Code をインストールします。"
+    echo "Visual Studio Code がインストールされていません。インストールを試みます。"　
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl https://packages.microsoft.com/keys/microsoft.asc | $SUDO gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
@@ -248,8 +249,8 @@ fi
 
 # Hyper.js のインストール
 echo "Hyper.js をインストールします..."
-
 if ! command -v hyper &> /dev/null; then
+    echo "Hyper.js がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             # 依存パッケージのインストール
@@ -278,22 +279,23 @@ fi
 # aws cli のインストール
 echo "AWS CLI をインストールします..."
 install_if_missing "aws" "brew install awscli"
-aws --version
+echo "aws version: $(aws --version)"
 
 # aws-vault のインストール
 echo "aws-vault をインストールします..."
 install_if_missing "aws-vault" "brew install aws-vault"
-aws-vault --version
+echo "aws-vault version: $(aws-vault --version)"
+
 
 # jq のインストール
 echo "jq をインストールします..."
 install_if_missing "jq" "brew install jq"
-jq --version
+echo "jq version: $(jq --version)"
 
 # gh (GitHub CLI) のインストール
 echo "GitHub CLI をインストールします..."
 install_if_missing "gh" "brew install gh"
-gh --version
+echo "gh version: $(gh --version)"
 
 
 # direnv のインストール
