@@ -556,8 +556,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
     brew install --cask font-hackgen-nerd
 
-    # フォントのインストール確認
-    if ls /Library/Fonts/HackGen*.ttf &> /dev/null; then
+    if [ "$?" -eq 0 ]; then
         echo "✅ HackGenNerd Font が正常にインストールされました。"
     else
         echo "❌ HackGenNerd Font のインストールに失敗しました。"
