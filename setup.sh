@@ -182,7 +182,7 @@ done
 # 1Password のインストール
 echo "1Password をインストールします..."
 if ! command -v 1password &> /dev/null; then
-    echo "1Password をインストールします..."
+    echo "1Password がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO
