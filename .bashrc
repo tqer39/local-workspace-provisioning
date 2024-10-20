@@ -181,16 +181,6 @@ if [[ $(command -v pre-commit) ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# openjdk
-# ------------------------------------------------------------------------------
-if [[ $(command -v brew) ]]; then
-  if [ "$(brew list | grep -c "^openjdk@*.*$")" -gt 0 ]; then
-    PATH="$(brew --prefix openjdk@11)/bin:$PATH"
-    export PATH
-  fi
-fi
-
-# ------------------------------------------------------------------------------
 # Rancher Desktop
 # ------------------------------------------------------------------------------
 export PATH="/home/tqer39/.rd/bin:$PATH"
@@ -264,6 +254,14 @@ if [[ $(command -v eza) ]]; then
   alias eta='eza -T -a -I "node_modules|.git|.cache" --color=always --icons | less -r'
   alias lta=eta
   alias l='clear && ls'
+fi
+
+# openjdk
+if [[ $(command -v brew) ]]; then
+  if [ "$(brew list | grep -c "^openjdk@*.*$")" -gt 0 ]; then
+    PATH="$(brew --prefix openjdk@11)/bin:$PATH"
+    export PATH
+  fi
 fi
 
 # Starship ... # see https://starship.rs/ja-jp/guide/

@@ -189,23 +189,6 @@ if [[ $(command -v pre-commit) ]]; then
 fi
 
 # ------------------------------------------------------------------------------
-# openjdk
-# ------------------------------------------------------------------------------
-if [[ $(command -v brew) ]]; then
-  if [ "$(brew list | grep -c "^openjdk@*.*$")" -gt 0 ]; then
-    PATH="$(brew --prefix openjdk@11)/bin:$PATH"
-    export PATH
-  fi
-fi
-
-# ------------------------------------------------------------------------------
-# bat
-# ------------------------------------------------------------------------------
-if [[ $(command -v bat) ]]; then
-  alias cat="bat"
-fi
-
-# ------------------------------------------------------------------------------
 # go
 # ------------------------------------------------------------------------------
 export GOPATH="${HOME}/go"
@@ -293,6 +276,14 @@ fi
 # ※ 一番最後の行に設定が必要
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
+fi
+
+# openjdk
+if [[ $(command -v brew) ]]; then
+  if [ "$(brew list | grep -c "^openjdk@*.*$")" -gt 0 ]; then
+    PATH="$(brew --prefix openjdk@11)/bin:$PATH"
+    export PATH
+  fi
 fi
 
 echo "zsh..."
