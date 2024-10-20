@@ -285,3 +285,5 @@ eval "$(anyenv init -)"
 #         eval "$(anyenv init -)"
 #     fi
 # fi
+
+echo "bash..."
