@@ -210,18 +210,22 @@ fi
 # aws cli のインストール
 echo "AWS CLI をインストールします..."
 install_if_missing "aws" "brew install awscli"
+aws --version
 
 # aws-vault のインストール
 echo "aws-vault をインストールします..."
 install_if_missing "aws-vault" "brew install --cask aws-vault"
+aws-vault --version
 
 # jq のインストール
 echo "jq をインストールします..."
 install_if_missing "jq" "brew install jq"
+jq --version
 
 # gh (GitHub CLI) のインストール
 echo "GitHub CLI をインストールします..."
 install_if_missing "gh" "brew install gh"
+gh --version
 
 # 処理完了
 echo "============= すべての処理が完了しました ============="
