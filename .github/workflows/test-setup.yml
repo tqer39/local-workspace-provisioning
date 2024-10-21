@@ -30,7 +30,7 @@ jobs:
       - name: Download HackGenNerd Font
         if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
         run: |
-          wget -P ${{ env.DL_PATH }} "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
+          wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
       - uses: ./.github/actions/setup-script
 
   test-macos:
