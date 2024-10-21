@@ -193,7 +193,7 @@ export PATH="$HOME/.anyenv/bin:$PATH"
 eval "$(anyenv init -)"
 
 # direnv
-eval "$(direnv hook zsh)"
+eval "$(direnv hook bash)"
 
 # pbcopy/pbpaste
 if command -v xsel &> /dev/null; then

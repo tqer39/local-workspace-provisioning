@@ -304,7 +304,12 @@ install_if_missing "gh" "brew install gh"
 
 # direnv
 install_if_missing "direnv" "brew install direnv"
-eval "$(direnv hook zsh)"
+# bash を使っているなら direnv hook bash にする。zsh を使っているなら direnv hook zsh にする。
+if [ "$SHELL" == "/bin/bash" ]; then
+    eval "$(direnv hook bash)"
+elif [ "$SHELL" == "/bin/zsh" ]; then
+    eval "$(direnv hook zsh)"
+fi
 
 # direnv の初期化（dotfiles で管理されている前提）
 # eval "$(direnv hook zsh)" は .zshrc に含まれている前提
