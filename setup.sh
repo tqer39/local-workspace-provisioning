@@ -523,16 +523,24 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         HACKGEN_VERSION="2.9.0"
         DL_PATH="$HOME/Downloads"
 
-        # HackGen_NF のダウンロードとインストール
-        wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        # CI のときは事前にダウンロードしてキャッシュしてるのでスキップ
+        if [ "$CI" == "true" ]; then
+            echo "CI環境で実行されているため、ダウンロードをスキップします。"
+        else
+            # HackGen_NF のダウンロードとインストール
+            wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+        fi
         unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "$DL_PATH"
         # ユーザーにインストール
         mkdir -p "$HOME/.local/share/fonts"
         cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
-        # インストーラとディレクトリを削除
-        rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
 
+        if [ "$CI" != "true" ]; then
+            # インストーラとディレクトリを削除
+            rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
+            rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
+        fi
+        
         # HackGen のダウンロードとインストール
         wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
