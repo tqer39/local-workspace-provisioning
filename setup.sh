@@ -277,9 +277,9 @@ echo "aws --version: $(aws --version)"
 if ! command -v aws-vault &> /dev/null; then
     echo "aws-vault がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
-        brew install --cask aws-vault
+        brew install aws-vault
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
-        brew install --cask  aws-vault
+        brew install --cask aws-vault
     else
         echo "❌ サポートされていないOSです。aws-vault のインストールをスキップします。"
     fi
