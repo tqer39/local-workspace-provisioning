@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ex
+
 # 作業ディレクトリの設定
 OWNER="tqer39"  # あなたのGitHubのユーザー名に変更してください
 WORKSPACE="$HOME/workspace"
