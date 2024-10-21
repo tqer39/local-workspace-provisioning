@@ -560,7 +560,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         if [ "$CI" != "true" ]; then
             # インストーラとディレクトリを削除
             rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
-            rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
+            rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
         fi
 
         # HackGen のダウンロードとインストール
