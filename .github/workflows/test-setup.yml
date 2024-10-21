@@ -24,9 +24,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip
-          key: ${{ runner.os }}-hackgen-nf-${{ hashFiles('${{ env.DL_PATH }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip') }}
+          key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hackgen-nf-
+            ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
       - name: Download HackGenNerd Font
         if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
         run: |
