@@ -456,6 +456,8 @@ if ! command -v google-chrome &> /dev/null; then
         else
             echo "✅ Google Chrome のインストールが完了しました。"
         fi
+    else
+        echo "❌ サポートされていないOSです。Google Chrome のインストールをスキップします。"
     fi
 else
     echo "✅ Google Chrome は既にインストールされています。"
