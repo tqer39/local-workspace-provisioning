@@ -274,7 +274,25 @@ fi
 echo "aws --version: $(aws --version)"
 
 # aws-vault
-install_if_missing "aws-vault" "brew install aws-vault"
+if ! command -v aws-vault &> /dev/null; then
+    echo "aws-vault がインストールされていません。インストールを試みます。"
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        brew install --cask aws-vault
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        brew install --cask  aws-vault
+    else
+        echo "❌ サポートされていないOSです。aws-vault のインストールをスキップします。"
+    fi
+
+    if ! command -v aws-vault &> /dev/null; then
+        echo "❌ aws-vault のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ aws-vault のインストールが完了しました。"
+    fi
+else
+    echo "✅ aws-vault は既にインストールされています。"
+fi
 
 # jq
 install_if_missing "jq" "brew install jq"
@@ -540,7 +558,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
             rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
             rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
         fi
-        
+
         # HackGen のダウンロードとインストール
         wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
         unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
