@@ -18,6 +18,3 @@ runs:
     - name: セットアップスクリプトを実行
       run: ./${{ inputs.script }}
       shell: bash
-    - name: Enable Gatekeeper
-      run: spctl --master-enable
-      shell: bash
