@@ -31,6 +31,18 @@ jobs:
         if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
+      - name: Cache HackGen
+        id: cache-hackgen
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
+          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+      - name: Download HackGen
+        if: steps.cache-hackgen.outputs.cache-hit != 'true'
+        run: |
+          wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip"
       - uses: ./.github/actions/setup-script
 
   test-macos:
