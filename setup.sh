@@ -379,9 +379,13 @@ if ! command -v hyper &> /dev/null; then
             $SUDO $PACKAGE_MANAGER install -y libnotify4
             # Hyper.js のインストール
             DL_PATH="$HOME/Downloads"
-            wget -P $DL_PATH https://releases.hyper.is/download/deb
+            if [ $CI != "true" ]; then
+                wget -P $DL_PATH https://releases.hyper.is/download/deb
+            fi
             $SUDO dpkg -i "${DL_PATH}/deb"
-            rm -rf "${DL_PATH}/deb"
+            if [ $CI != "true" ]; then
+                rm -rf "${DL_PATH}/deb"
+            fi
         else
             $SUDO snap install hyper --classic
         fi
