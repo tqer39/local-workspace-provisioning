@@ -549,31 +549,31 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
         if [ "$CI" == "true" ]; then
             echo "CI環境で実行されているため、ダウンロードをスキップします。"
         else
-            # HackGen_NF のダウンロードとインストール
+            # HackGen_NF
             wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+            # HackGen
+            wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
         fi
+
         unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "$DL_PATH"
+        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
+
         # ユーザーにインストール
         mkdir -p "$HOME/.local/share/fonts"
         cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
+        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
 
         if [ "$CI" != "true" ]; then
             # インストーラとディレクトリを削除
             rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
             rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+            rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
+            rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
         fi
-
-        # HackGen のダウンロードとインストール
-        wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
-        # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
-        # インストーラとディレクトリを削除
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
 
         # フォントのキャッシュを更新
         fc-cache -vf
+
         # フォントのインストール確認
         if fc-list | grep -i "HackGen"; then
             echo "✅ HackGenNerd Font が正常にインストールされました。"
