@@ -10,8 +10,8 @@ on:
   workflow_dispatch:
 
 env:
-  HACKGEN_VERSION: "2.9.0"
   DL_PATH: "$HOME/Downloads"
+  HACKGEN_VERSION: "2.9.0"
 
 jobs:
   test-ubuntu:
@@ -47,6 +47,20 @@ jobs:
         if: steps.cache-hackgen.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip"
+
+      - name: Cache Hyper.js
+        id: cache-hyper
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DL_PATH }}/hyper_${{ env.HYPER_VERSION }}_amd64.deb
+          key: ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
+          restore-keys: |
+            ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
+
+      - name: Download Hyper.js
+        if: steps.cache-hyper.outputs.cache-hit != 'true'
+        run: |
+          wget -P "${{ env.DL_PATH }}" "https://releases.hyper.is/download/deb"
 
       - uses: ./.github/actions/setup-script
 
