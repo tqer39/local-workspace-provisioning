@@ -50,6 +50,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: ./.github/actions/setup-script
       - name: Enable Gatekeeper
         run: sudo spctl --master-enable
+      - uses: ./.github/actions/setup-script
