@@ -52,10 +52,10 @@ jobs:
         id: cache-hyper
         uses: actions/cache@v4
         with:
-          path: ${{ env.DL_PATH }}/hyper_${{ env.HYPER_VERSION }}_amd64.deb
-          key: ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
+          path: ${{ env.DL_PATH }}/deb
+          key: ${{ runner.os }}-hyper-js
           restore-keys: |
-            ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
+            ${{ runner.os }}-hyper-js
 
       - name: Download Hyper.js
         if: steps.cache-hyper.outputs.cache-hit != 'true'
