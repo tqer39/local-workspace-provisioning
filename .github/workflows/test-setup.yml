@@ -19,6 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
         uses: actions/cache@v4
@@ -27,10 +28,12 @@ jobs:
           key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}
           restore-keys: |
             ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}
+
       - name: Download HackGenNerd Font
         if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
+
       - name: Cache HackGen
         id: cache-hackgen
         uses: actions/cache@v4
@@ -39,10 +42,12 @@ jobs:
           key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
           restore-keys: |
             ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+
       - name: Download HackGen
         if: steps.cache-hackgen.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip"
+
       - uses: ./.github/actions/setup-script
 
   test-macos:
@@ -50,6 +55,7 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
         uses: actions/cache@v4
@@ -58,10 +64,12 @@ jobs:
           key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}
           restore-keys: |
             ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}
+
       - name: Download HackGenNerd Font
         if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
+
       - name: Cache HackGen
         id: cache-hackgen
         uses: actions/cache@v4
@@ -70,10 +78,13 @@ jobs:
           key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
           restore-keys: |
             ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+
       - name: Download HackGen
         if: steps.cache-hackgen.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip"
+
       - name: Enable Gatekeeper
         run: sudo spctl --master-enable
+
       - uses: ./.github/actions/setup-script
