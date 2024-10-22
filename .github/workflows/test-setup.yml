@@ -77,6 +77,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up environment variables
+        run: |
+          echo "DL_PATH=$HOME/Downloads" >> $GITHUB_ENV
+          echo "HACKGEN_VERSION=2.9.0" >> $GITHUB_ENV
+          echo "HYPER_VERSION=3.4.1" >> $GITHUB_ENV
+
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
         uses: actions/cache@v4
@@ -96,9 +102,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
-          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
 
       - name: Download HackGen
         if: steps.cache-hackgen.outputs.cache-hit != 'true'
@@ -110,9 +116,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/deb
-          key: ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
+          key: ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
+            ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
 
       - name: Download Hyper.js
         if: steps.cache-hyper.outputs.cache-hit != 'true'
