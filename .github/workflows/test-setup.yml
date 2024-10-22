@@ -109,7 +109,7 @@ jobs:
         id: cache-hyper
         uses: actions/cache@v4
         with:
-          path: ${{ env.DL_PATH }}/hyper_${{ env.HYPER_VERSION }}_amd64.deb
+          path: ${{ env.DL_PATH }}/deb
           key: ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
           restore-keys: |
             ${{ runner.os }}-hyper-${{ env.HYPER_VERSION }}
