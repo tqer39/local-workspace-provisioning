@@ -12,6 +12,7 @@ on:
 env:
   DL_PATH: "$HOME/Downloads"
   HACKGEN_VERSION: "2.9.0"
+  HYPER_VERSION: "3.4.1"
 
 jobs:
   test-ubuntu:
@@ -53,9 +54,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/deb
-          key: ${{ runner.os }}-hyper-js
+          key: ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hyper-js
+            ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
 
       - name: Download Hyper.js
         if: steps.cache-hyper.outputs.cache-hit != 'true'
