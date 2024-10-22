@@ -21,6 +21,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Set up environment variables
+        run: |
+          echo "DL_PATH=$HOME/Downloads" >> $GITHUB_ENV
+          echo "HACKGEN_VERSION=2.9.0" >> $GITHUB_ENV
+          echo "HYPER_VERSION=3.4.1" >> $GITHUB_ENV
+
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
         uses: actions/cache@v4
