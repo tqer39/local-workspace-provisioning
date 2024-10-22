@@ -46,9 +46,9 @@ jobs:
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
-          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
 
       - name: Download HackGen
         if: steps.cache-hackgen.outputs.cache-hit != 'true'
