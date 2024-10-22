@@ -383,7 +383,9 @@ if ! command -v hyper &> /dev/null; then
             $SUDO $PACKAGE_MANAGER update
             $SUDO $PACKAGE_MANAGER install -y libnotify4
             # Hyper.js のインストール
-            DL_PATH="$HOME/Downloads"
+            if [ -z "$DL_PATH" ]; then
+                DL_PATH="$HOME/Downloads"
+            fi
             if [ $CI != "true" ]; then
                 wget -P $DL_PATH https://releases.hyper.is/download/deb
             fi
@@ -551,8 +553,12 @@ echo "HackGenNerd Font をインストールします..."
 if [[ "$OS_TYPE" == "Linux" ]]; then
     if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
         # バージョン指定
-        HACKGEN_VERSION="2.9.0"
-        DL_PATH="$HOME/Downloads"
+        if [ -z "$HACKGEN_VERSION" ]; then
+            HACKGEN_VERSION="2.9.0"
+        fi
+        if [ -z "$DL_PATH" ]; then
+            DL_PATH="$HOME/Downloads"
+        fi
 
         # CI のときは事前にダウンロードしてキャッシュしてるのでスキップ
         if [ "$CI" == "true" ]; then
