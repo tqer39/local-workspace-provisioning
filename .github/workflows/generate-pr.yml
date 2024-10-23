@@ -38,7 +38,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python generate_pr_description.py > pr_output.txt
+          python .github/workflows/scripts/generate_pr_description.py > pr_output.txt
 
       - name: Update PR Title and Description
         env:
