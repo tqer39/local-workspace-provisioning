@@ -3,6 +3,8 @@ name: Generate PR Description
 
 on:
   pull_request:
+    branches:
+      - main
     types: [opened, edited]
 
 jobs:
