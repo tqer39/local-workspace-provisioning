@@ -27,14 +27,6 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "requirements**.txt"
 
-      - name: Cache uv packages
-        uses: actions/cache@v3
-        with:
-          path: ~/.uv
-          key: ${{ runner.os }}-uv-${{ hashFiles('**/uv.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-uv-
-
       - name: Generate PR Title and Description
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
