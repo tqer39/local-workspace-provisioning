@@ -16,11 +16,14 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
 
-      - name: Install uv
+      - name: pip upgrade
         run: |
           python -m pip install --upgrade pip
-          curl -LsSf https://astral.sh/uv/install.sh | sh
-          uv -V
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          version: "0.4.26"
 
       - name: Cache uv packages
         uses: actions/cache@v3
