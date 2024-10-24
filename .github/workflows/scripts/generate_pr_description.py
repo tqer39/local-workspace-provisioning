@@ -1,10 +1,17 @@
+import sys
 from openai import OpenAI
 import subprocess
 import os
 
+# OpenAI API キーの設定
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    print("Error: OPENAI_API_KEY is not set.")
+    sys.exit(1)
+
 # OpenAI API Key 設定
 client = OpenAI(
-    api_key = os.getenv('OPENAI_API_KEY')
+    api_key = os.getenv(api_key)
 )
 
 # Git の diff を取得
