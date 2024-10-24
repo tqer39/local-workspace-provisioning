@@ -22,7 +22,7 @@ def generate_pr_description(changes):
     prompt = f"Generate a pull request title and description for the following changes: {changes}"
 
     chat_completion = client.chat.completions.create(
-        model="gpt-4o-mini",
+        model="gpt-4o",
         messages=[
             {
                 "role": "user",
