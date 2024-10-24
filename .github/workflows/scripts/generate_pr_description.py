@@ -1,5 +1,6 @@
 import openai
 import subprocess
+import os
 
 # OpenAI API Key 設定
 openai.api_key = os.getenv('OPENAI_API_KEY')
