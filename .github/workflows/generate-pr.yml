@@ -29,17 +29,13 @@ jobs:
 
       - name: Install dependencies with uv
         run: |
-          uv add -r requirements.txt
+          uv pip install -r requirements.txt
 
       - name: Generate PR Title and Description
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python .github/workflows/scripts/generate_pr_description.py > pr_output.txt
-
-      - name: Install dependencies with uv
-        run: |
-          uv pip install -r requirements.txt
 
       - name: Update PR Title and Description
         env:
