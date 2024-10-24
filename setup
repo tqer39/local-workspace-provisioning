@@ -197,7 +197,6 @@ DOTFILES=(
     ".gitconfig"
     ".hyper.js"
     ".zshrc"
-    # 他の dotfile を追加
 )
 
 for file in "${DOTFILES[@]}"; do
