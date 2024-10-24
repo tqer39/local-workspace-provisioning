@@ -320,7 +320,7 @@ install_if_missing "starship" "brew install starship"
 # anyenv
 install_if_missing "anyenv" "brew install anyenv"
 if [ ! -d "$HOME/.anyenv" ]; then
-    git clone https://github.com/anyenv/anyenv ~/.anyenv
+    git clone https://github.com/anyenv/anyenv "$HOME/.anyenv"
 fi
 anyenv install --force-init
 anyenv install -l
