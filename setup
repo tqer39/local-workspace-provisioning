@@ -507,17 +507,24 @@ if ! command -v brave-browser &> /dev/null; then
       else
           echo "❌ Brave のインストール方法が不明です。手動でインストールしてください。"
       fi
+
+      if ! command -v brave-browser &> /dev/null; then
+          echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+          exit 1
+      else
+          echo "✅ Brave ブラウザのインストールが完了しました。"
+      fi
   elif [[ "$OS_TYPE" == "Darwin" ]]; then
       brew install --cask brave-browser
+
+      if ! -e '/Applications/Brave Browser.app'  &> /dev/null; then
+          echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+          exit 1
+      else
+          echo "✅ Brave ブラウザのインストールが完了しました。"
+      fi
   else
       echo "❌ サポートされていないOSです。Brave のインストールをスキップします。"
-  fi
-
-  if ! command -v brave-browser &> /dev/null; then
-      echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
-      exit 1
-  else
-      echo "✅ Brave ブラウザのインストールが完了しました。"
   fi
 fi
 echo "brave-browser version: $(brave-browser --version)"
