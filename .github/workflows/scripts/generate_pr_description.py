@@ -18,8 +18,13 @@ def generate_pr_description(changes):
     prompt = f"Generate a pull request title and description for the following changes: {changes}"
 
     chat_completion = client.chat.completions.create(
-        model="gpt-4",
-        messages=[{"role": "system", "content": prompt}],
+        model="gpt-4o-mini",
+        messages=[
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
         temperature=1,
         max_tokens=2048,
         top_p=1,
@@ -37,6 +42,11 @@ def generate_pr_description(changes):
 
 # Git の diff を取得
 changes = get_git_diff()
+
+print(changes)
+
+# 終了
+exit
 
 # PR タイトルと説明を生成
 if changes:
