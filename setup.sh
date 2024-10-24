@@ -14,7 +14,7 @@ if [ -n "$CI" ]; then
     echo "CI環境で実行されています。"
 else
     echo "CI環境で実行されていません。"
-    $CI = "false"
+    CI="false"
 fi
 
 # OSタイプの取得
