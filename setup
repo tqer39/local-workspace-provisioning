@@ -202,7 +202,11 @@ DOTFILES=(
 )
 
 for file in "${DOTFILES[@]}"; do
-    source_file="$WORKSPACE/$file"
+    if [ $CI == "true" ]; then
+        source_file="$WORKSPACE/$file"
+    else
+        source_file="$WORKSPACE/$REPO_NAME/$file"
+    fi
     target_file="$HOME/$file"
     if [ -e "$source_file" ]; then
         ln -sf "$source_file" "$target_file"
