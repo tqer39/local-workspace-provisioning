@@ -29,7 +29,7 @@ jobs:
 
       - name: Install dependencies with uv
         run: |
-          uv pip install -r requirements.txt
+          uv pip install -r requirements.txt --system
 
       - name: Generate PR Title and Description
         env:
