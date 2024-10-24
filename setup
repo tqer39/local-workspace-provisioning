@@ -650,6 +650,8 @@ if [ $CI != "true" ]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             # pyenv install 3.12.1 で必要なパッケージ
             echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y libcrypt-dev
             brew install tcl-tk
             # uv
             echo "uv をインストールします..."
@@ -658,7 +660,10 @@ if [ $CI != "true" ]; then
             fi
             # pyenv
             echo "pyenv install -s を実行します..."
+            # 一度 unlink しないとエラーになる see https://mainmokeybusiness.com/post/pyenv_install_error/
+            brew unlink pkg-config
             pyenv install -s
+            brew link pkg-config
         fi
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
         # pyenv install 3.12.1 で必要なパッケージ
