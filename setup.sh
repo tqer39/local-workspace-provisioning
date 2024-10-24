@@ -12,11 +12,9 @@ REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
 # CI環境で実行されているか確認
 if [ -n "$CI" ]; then
     echo "CI環境で実行されています。"
-
-    # GUIアプリケーションのインストールをスキップ
-    INSTALL_GUI_APPS=false
 else
-    INSTALL_GUI_APPS=true
+    echo "CI環境で実行されていません。"
+    $CI = "false"
 fi
 
 # OSタイプの取得
