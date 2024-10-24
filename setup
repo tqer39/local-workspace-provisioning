@@ -179,6 +179,7 @@ else
         fi
     else
         echo "dotfiles は既に存在します。最新の変更を取得します..."
+        git -C "$WORKSPACE/$REPO_NAME" switch main
         git -C "$WORKSPACE/$REPO_NAME" pull
     fi
 fi
