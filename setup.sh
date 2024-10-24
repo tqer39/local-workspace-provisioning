@@ -626,6 +626,17 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 fi
 
+# その他の utility のインストール
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+        # pyenv install 3.12.1 で必要なパッケージ
+        brew install tcl-tk
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    # pyenv install 3.12.1 で必要なパッケージ
+    brew install tcl-tk
+fi
+
 echo "セットアップが完了しました！"
 
 if [ "$CI" == "true" ]; then
