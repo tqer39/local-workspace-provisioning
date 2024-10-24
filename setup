@@ -482,40 +482,43 @@ fi
 
 # Brave
 echo "Brave ブラウザをインストールします..."
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        # Brave の GPG キーを追加
-        $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
-            https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+if ! command -v brave-browser &> /dev/null; then
+  echo "Brave ブラウザがインストールされていません。インストールを試みます。"
+  if [[ "$OS_TYPE" == "Linux" ]]; then
+      if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+          # Brave の GPG キーを追加
+          $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+              https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 
-        # Brave のリポジトリを追加
-        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
-        https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
+          # Brave のリポジトリを追加
+          echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
+          https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
 
-        # パッケージリストを更新
-        $SUDO $PACKAGE_MANAGER update
+          # パッケージリストを更新
+          $SUDO $PACKAGE_MANAGER update
 
-        # Brave ブラウザをインストール
-        $SUDO $PACKAGE_MANAGER install -y brave-browser
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        $SUDO dnf install dnf-plugins-core
-        $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
-        $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
-        $SUDO dnf install -y brave-browser
-    else
-        echo "❌ Brave のインストール方法が不明です。手動でインストールしてください。"
-    fi
+          # Brave ブラウザをインストール
+          $SUDO $PACKAGE_MANAGER install -y brave-browser
+      elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+          $SUDO dnf install dnf-plugins-core
+          $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
+          $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+          $SUDO dnf install -y brave-browser
+      else
+          echo "❌ Brave のインストール方法が不明です。手動でインストールしてください。"
+      fi
+  elif [[ "$OS_TYPE" == "Darwin" ]]; then
+      brew install --cask brave-browser
+  else
+      echo "❌ サポートされていないOSです。Brave のインストールをスキップします。"
+  fi
 
-    if ! command -v brave-browser &> /dev/null; then
-        echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
-        exit 1
-    else
-        echo "✅ Brave ブラウザのインストールが完了しました。"
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask brave-browser
-else
-    echo "❌ サポートされていないOSです。Brave のインストールをスキップします。"
+  if ! command -v brave-browser &> /dev/null; then
+      echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+      exit 1
+  else
+      echo "✅ Brave ブラウザのインストールが完了しました。"
+  fi
 fi
 echo "brave-browser version: $(brave-browser --version)"
 
