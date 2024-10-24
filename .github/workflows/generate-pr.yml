@@ -27,6 +27,10 @@ jobs:
           enable-cache: true
           cache-dependency-glob: "requirements**.txt"
 
+      - name: Install dependencies with uv
+        run: |
+          uv add -r requirements.txt
+
       - name: Generate PR Title and Description
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
