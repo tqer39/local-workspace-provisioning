@@ -626,15 +626,30 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 fi
 
-# その他の utility のインストール
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+# ローカル専用の utility のインストール
+if [ $CI != "true" ]; then
+    echo "ローカル専用の utility をインストールします..."
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            # pyenv install 3.12.1 で必要なパッケージ
+            brew install tcl-tk
+            # uv
+            if ! command -v uv &> /dev/null; then
+                curl -LsSf https://astral.sh/uv/install.sh | sh
+            fi
+            # pyenv
+            pyenv install -s
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
         # pyenv install 3.12.1 で必要なパッケージ
         brew install tcl-tk
+        # uv
+        if ! command -v uv &> /dev/null; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+        fi
+        # pyenv
+        pyenv install -s
     fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    # pyenv install 3.12.1 で必要なパッケージ
-    brew install tcl-tk
 fi
 
 echo "セットアップが完了しました！"
