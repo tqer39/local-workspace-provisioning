@@ -1,68 +1,71 @@
-import sys
-from openai import OpenAI
-import subprocess
+#!/usr/bin/env python3
 import os
+import subprocess
+import openai
+import sys
 
 # OpenAI API キーの設定
-api_key = os.getenv("OPENAI_API_KEY")
-if not api_key:
+openai.api_key = os.getenv("OPENAI_API_KEY")
+if not openai.api_key:
     print("Error: OPENAI_API_KEY is not set.")
     sys.exit(1)
 
-# OpenAI API Key 設定
-client = OpenAI(
-    api_key = os.getenv(api_key)
+# 最新の origin/main を取得
+subprocess.run(['git', 'fetch', 'origin'], check=True)
+
+# origin/main と現在のブランチ間のコミットログを取得
+result = subprocess.run(
+    ['git', 'log', 'origin/main..HEAD', '--pretty=format:%h %s'],
+    stdout=subprocess.PIPE,
+    check=True,
+    text=True
 )
+commit_logs = result.stdout.strip()
 
-# Git の diff を取得
-def get_git_diff():
-    # Fetch the latest changes from origin
-    subprocess.run(['git', 'fetch', 'origin'], check=True)
+if not commit_logs:
+    print("No new commits detected.")
+    sys.exit(0)
 
-    # Get the diff between origin/main and the current branch (HEAD)
-    result = subprocess.run(['git', 'diff', 'origin/main...HEAD', '--name-only'], stdout=subprocess.PIPE, check=True)
-    changes = result.stdout.decode('utf-8').strip()
-    return changes
+# OpenAI API へのプロンプトを作成
+system_message = "あなたは優秀なソフトウェアエンジニアです。"
+user_message = f"""
+以下のコミットログを読んで、わかりやすいプルリクエストのタイトルと詳細な説明を日本語で作成してください。
 
-# OpenAI API を使用して PR のタイトルと説明を生成
-def generate_pr_description(changes):
-    prompt = f"Generate a pull request title and description for the following changes: {changes}"
+コミットログ:
+{commit_logs}
 
-    chat_completion = client.chat.completions.create(
-        model="gpt-4o",
+出力形式:
+タイトル: プルリクエストのタイトル
+説明:
+- 変更点の概要
+- 技術的な詳細や注意点
+"""
+
+try:
+    response = openai.ChatCompletion.create(
+        model="gpt-4",
         messages=[
-            {
-                "role": "user",
-                "content": prompt
-            }
+            {"role": "system", "content": system_message},
+            {"role": "user", "content": user_message}
         ],
-        temperature=1,
-        max_tokens=2048,
-        top_p=1,
-        frequency_penalty=0,
-        presence_penalty=0
+        max_tokens=500,
+        temperature=0.5,
     )
+    completion = response.choices[0].message.content.strip()
+except Exception as e:
+    print(f"Error calling OpenAI API: {e}")
+    sys.exit(1)
 
-    # 結果を取得して整形
-    completion = chat_completion['choices'][0]['message']['content']
-    lines = completion.split("\n")
-    pr_title = lines[0]
-    pr_body = "\n".join(lines[1:])
+# PR タイトルと説明を抽出
+lines = completion.strip().split('\n', 1)
+pr_title_line = lines[0].strip()
+pr_body = lines[1].strip() if len(lines) > 1 else ''
 
-    return pr_title, pr_body
-
-# Git の diff を取得
-changes = get_git_diff()
-
-print(changes)
-
-# 終了
-exit
-
-# PR タイトルと説明を生成
-if changes:
-    pr_title, pr_body = generate_pr_description(changes)
-    print(f"PR Title: {pr_title}")
-    print(f"PR Body:\n{pr_body}")
+# タイトルの前に "タイトル:" が含まれている場合、それを除去
+if pr_title_line.startswith("タイトル:"):
+    pr_title = pr_title_line.replace("タイトル:", "").strip()
 else:
-    print("No changes detected.")
+    pr_title = pr_title_line
+
+# 結果を出力
+print(f"{pr_title}\n\n{pr_body}")
