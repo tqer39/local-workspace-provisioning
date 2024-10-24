@@ -520,7 +520,7 @@ if ! command -v brave-browser &> /dev/null; then
   elif [[ "$OS_TYPE" == "Darwin" ]]; then
       brew install --cask brave-browser
 
-      if ! -e '/Applications/Brave Browser.app'  &> /dev/null; then
+      if [ ! -d "/Applications/Brave Browser.app" ] &> /dev/null; then
           echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
           exit 1
       else
@@ -645,7 +645,7 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 
     # アプリの存在有無でインストールされたかどうかをチェック
-    if [ ! -e /Applications/DeskPad.app ]; then
+    if [ ! -d "/Applications/DeskPad.app" ]; then
         echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
