@@ -215,6 +215,9 @@ for file in "${DOTFILES[@]}"; do
     fi
 done
 
+# 中断
+exit 1
+
 # zsh
 install_if_missing "zsh" "brew install zsh"
 
