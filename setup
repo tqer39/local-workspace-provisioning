@@ -167,7 +167,9 @@ fi
 # リポジトリをクローンまたは既存のリポジトリを使用
 if [ "$CI" == "true" ]; then
     echo "CI環境で実行されています。既存のリポジトリを使用します。"
-    DOTFILES_DIR="$GITHUB_WORKSPACE"
+    if [ -n "$GITHUB_WORKSPACE" ]; then
+      DOTFILES_DIR="$GITHUB_WORKSPACE"
+    fi
 else
     if [ ! -d "$DOTFILES_DIR" ]; then
         echo "dotfiles を $DOTFILES_DIR にクローンします..."
