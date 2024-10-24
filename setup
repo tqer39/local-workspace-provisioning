@@ -6,7 +6,6 @@ set -ex
 OWNER="tqer39"  # あなたのGitHubのユーザー名に変更してください
 WORKSPACE="$HOME/workspace"
 REPO_NAME="local-workspace-provisioning"
-DOTFILES_DIR="${WORKSPACE}/${REPO_NAME}"
 REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
 
 # CI環境で実行されているか確認
@@ -168,19 +167,19 @@ fi
 if [ "$CI" == "true" ]; then
     echo "CI環境で実行されています。既存のリポジトリを使用します。"
     if [ -n "$GITHUB_WORKSPACE" ]; then
-      DOTFILES_DIR="$GITHUB_WORKSPACE"
+      WORKSPACE="$GITHUB_WORKSPACE"
     fi
 else
-    if [ ! -d "$DOTFILES_DIR" ]; then
-        echo "dotfiles を $DOTFILES_DIR にクローンします..."
-        git clone "$REPO_URL" "$DOTFILES_DIR"
+    if [ ! -d "$WORKSPACE" ]; then
+        echo "${REPO_NAME} を ${WORKSPACE} にクローンします..."
+        git clone "$REPO_URL" "$WORKSPACE"
         if [ $? -ne 0 ]; then
             echo "❌ リポジトリのクローンに失敗しました。"
             exit 1
         fi
     else
         echo "dotfiles は既に存在します。最新の変更を取得します..."
-        git -C "$DOTFILES_DIR" pull
+        git -C "$WORKSPACE" pull
     fi
 fi
 
@@ -202,7 +201,7 @@ DOTFILES=(
 )
 
 for file in "${DOTFILES[@]}"; do
-    source_file="$DOTFILES_DIR/$file"
+    source_file="$WORKSPACE/$file"
     target_file="$HOME/$file"
 
     if [ -e "$source_file" ]; then
