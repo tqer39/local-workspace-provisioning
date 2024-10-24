@@ -635,22 +635,28 @@ if [ $CI != "true" ]; then
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             # pyenv install 3.12.1 で必要なパッケージ
+            echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
             brew install tcl-tk
             # uv
+            echo "uv をインストールします..."
             if ! command -v uv &> /dev/null; then
                 curl -LsSf https://astral.sh/uv/install.sh | sh
             fi
             # pyenv
+            echo "pyenv install -s を実行します..."
             pyenv install -s
         fi
     elif [[ "$OS_TYPE" == "Darwin" ]]; then
         # pyenv install 3.12.1 で必要なパッケージ
+        echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
         brew install tcl-tk
         # uv
+        echo "uv をインストールします..."
         if ! command -v uv &> /dev/null; then
             curl -LsSf https://astral.sh/uv/install.sh | sh
         fi
         # pyenv
+        echo "pyenv install -s を実行します..."
         pyenv install -s
     fi
 fi
