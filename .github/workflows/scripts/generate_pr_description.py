@@ -1,13 +1,15 @@
-import openai
+from openai import OpenAI
 import subprocess
 import os
 
 # OpenAI API Key 設定
-openai.api_key = os.getenv('OPENAI_API_KEY')
+client = OpenAI(
+    api_key = os.getenv('OPENAI_API_KEY')
+)
 
 # Git の diff を取得
 def get_git_diff():
-    result = subprocess.run(['git', 'diff', '--name-only'], stdout=subprocess.PIPE)
+    result = subprocess.run(['git', 'diff'], stdout=subprocess.PIPE)
     changes = result.stdout.decode('utf-8').strip()
     return changes
 
@@ -15,7 +17,7 @@ def get_git_diff():
 def generate_pr_description(changes):
     prompt = f"Generate a pull request title and description for the following changes: {changes}"
 
-    response = openai.ChatCompletion.create(
+    chat_completion = client.chat.completions.create(
         model="gpt-4",
         messages=[{"role": "system", "content": prompt}],
         temperature=1,
@@ -26,7 +28,7 @@ def generate_pr_description(changes):
     )
 
     # 結果を取得して整形
-    completion = response['choices'][0]['message']['content']
+    completion = chat_completion['choices'][0]['message']['content']
     lines = completion.split("\n")
     pr_title = lines[0]
     pr_body = "\n".join(lines[1:])
