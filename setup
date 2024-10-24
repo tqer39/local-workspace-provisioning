@@ -185,6 +185,9 @@ fi
 # dotfiles のシンボリックリンクを作成
 echo "シンボリックリンクを作成します..."
 
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.config/git"
+
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
     ".config/git/ignore"
