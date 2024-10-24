@@ -9,7 +9,11 @@ client = OpenAI(
 
 # Git の diff を取得
 def get_git_diff():
-    result = subprocess.run(['git', 'diff'], stdout=subprocess.PIPE)
+    # Fetch the latest changes from origin
+    subprocess.run(['git', 'fetch', 'origin'], check=True)
+
+    # Get the diff between origin/main and the current branch (HEAD)
+    result = subprocess.run(['git', 'diff', 'origin/main...HEAD', '--name-only'], stdout=subprocess.PIPE, check=True)
     changes = result.stdout.decode('utf-8').strip()
     return changes
 
