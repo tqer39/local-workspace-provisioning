@@ -1,20 +1,19 @@
 #!/bin/bash
 
+set -ex
+
 # 作業ディレクトリの設定
 OWNER="tqer39"  # あなたのGitHubのユーザー名に変更してください
 WORKSPACE="$HOME/workspace"
 REPO_NAME="local-workspace-provisioning"
-DOTFILES_DIR="${WORKSPACE}/${REPO_NAME}"
 REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
 
 # CI環境で実行されているか確認
 if [ -n "$CI" ]; then
     echo "CI環境で実行されています。"
-
-    # GUIアプリケーションのインストールをスキップ
-    INSTALL_GUI_APPS=false
 else
-    INSTALL_GUI_APPS=true
+    echo "CI環境で実行されていません。"
+    CI="false"
 fi
 
 # OSタイプの取得
@@ -167,39 +166,47 @@ fi
 # リポジトリをクローンまたは既存のリポジトリを使用
 if [ "$CI" == "true" ]; then
     echo "CI環境で実行されています。既存のリポジトリを使用します。"
-    DOTFILES_DIR="$GITHUB_WORKSPACE"
+    if [ -n "$GITHUB_WORKSPACE" ]; then
+      WORKSPACE="$GITHUB_WORKSPACE"
+    fi
 else
-    if [ ! -d "$DOTFILES_DIR" ]; then
-        echo "dotfiles を $DOTFILES_DIR にクローンします..."
-        git clone "$REPO_URL" "$DOTFILES_DIR"
+    if [ ! -d "$WORKSPACE" ]; then
+        echo "${REPO_NAME} を ${WORKSPACE} にクローンします..."
+        git clone "$REPO_URL" "$WORKSPACE"
         if [ $? -ne 0 ]; then
             echo "❌ リポジトリのクローンに失敗しました。"
             exit 1
         fi
     else
         echo "dotfiles は既に存在します。最新の変更を取得します..."
-        git -C "$DOTFILES_DIR" pull
+        git -C "$WORKSPACE/$REPO_NAME" pull
     fi
 fi
 
 # dotfiles のシンボリックリンクを作成
 echo "シンボリックリンクを作成します..."
 
+mkdir -p "$HOME/.config"
+mkdir -p "$HOME/.config/git"
+
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
+    ".config/git/ignore"
     ".config/starship.toml"
     ".bash_profile"
     ".bashrc"
     ".gitconfig"
     ".hyper.js"
     ".zshrc"
-    # 他の dotfile を追加
 )
 
 for file in "${DOTFILES[@]}"; do
-    source_file="$DOTFILES_DIR/$file"
+    if [ $CI == "true" ]; then
+        source_file="$WORKSPACE/$file"
+    else
+        source_file="$WORKSPACE/$REPO_NAME/$file"
+    fi
     target_file="$HOME/$file"
-
     if [ -e "$source_file" ]; then
         ln -sf "$source_file" "$target_file"
         if [ $? -eq 0 ]; then
@@ -302,7 +309,12 @@ install_if_missing "gh" "brew install gh"
 
 # direnv
 install_if_missing "direnv" "brew install direnv"
-eval "$(direnv hook zsh)"
+# bash を使っているなら direnv hook bash にする。zsh を使っているなら direnv hook zsh にする。
+if [ "$SHELL" == "/bin/bash" ]; then
+    eval "$(direnv hook bash)"
+elif [ "$SHELL" == "/bin/zsh" ]; then
+    eval "$(direnv hook zsh)"
+fi
 
 # direnv の初期化（dotfiles で管理されている前提）
 # eval "$(direnv hook zsh)" は .zshrc に含まれている前提
@@ -312,8 +324,10 @@ install_if_missing "starship" "brew install starship"
 
 # anyenv
 install_if_missing "anyenv" "brew install anyenv"
-git clone https://github.com/anyenv/anyenv ~/.anyenv
-anyenv install --force-init
+if [ ! -d "$HOME/.anyenv" ]; then
+    git clone https://github.com/anyenv/anyenv "$HOME/.anyenv"
+    anyenv install --force-init
+fi
 anyenv install -l
 export PATH="$HOME/.anyenv/bin:$PATH"
 eval "$(anyenv init -)"
@@ -376,10 +390,16 @@ if ! command -v hyper &> /dev/null; then
             $SUDO $PACKAGE_MANAGER update
             $SUDO $PACKAGE_MANAGER install -y libnotify4
             # Hyper.js のインストール
-            DL_PATH="$HOME/Downloads"
-            wget -P $DL_PATH https://releases.hyper.is/download/deb
+            if [ -z "$DL_PATH" ]; then
+                DL_PATH="$HOME/Downloads"
+            fi
+            if [ $CI != "true" ]; then
+                wget -P $DL_PATH https://releases.hyper.is/download/deb
+            fi
             $SUDO dpkg -i "${DL_PATH}/deb"
-            rm -rf "${DL_PATH}/deb"
+            if [ $CI != "true" ]; then
+                rm -rf "${DL_PATH}/deb"
+            fi
         else
             $SUDO snap install hyper --classic
         fi
@@ -465,40 +485,50 @@ fi
 
 # Brave
 echo "Brave ブラウザをインストールします..."
-if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        # Brave の GPG キーを追加
-        $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
-            https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
+if ! command -v brave-browser &> /dev/null; then
+  echo "Brave ブラウザがインストールされていません。インストールを試みます。"
+  if [[ "$OS_TYPE" == "Linux" ]]; then
+      if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+          # Brave の GPG キーを追加
+          $SUDO curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg \
+              https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg
 
-        # Brave のリポジトリを追加
-        echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
-        https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
+          # Brave のリポジトリを追加
+          echo "deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] \
+          https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
 
-        # パッケージリストを更新
-        $SUDO $PACKAGE_MANAGER update
+          # パッケージリストを更新
+          $SUDO $PACKAGE_MANAGER update
 
-        # Brave ブラウザをインストール
-        $SUDO $PACKAGE_MANAGER install -y brave-browser
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        $SUDO dnf install dnf-plugins-core
-        $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
-        $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
-        $SUDO dnf install -y brave-browser
-    else
-        echo "❌ Brave のインストール方法が不明です。手動でインストールしてください。"
-    fi
+          # Brave ブラウザをインストール
+          $SUDO $PACKAGE_MANAGER install -y brave-browser
+      elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+          $SUDO dnf install dnf-plugins-core
+          $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
+          $SUDO rpm --import https://brave-browser-rpm-release.s3.brave.com/brave-core.asc
+          $SUDO dnf install -y brave-browser
+      else
+          echo "❌ Brave のインストール方法が不明です。手動でインストールしてください。"
+      fi
 
-    if ! command -v brave-browser &> /dev/null; then
-        echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
-        exit 1
-    else
-        echo "✅ Brave ブラウザのインストールが完了しました。"
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask brave-browser
-else
-    echo "❌ サポートされていないOSです。Brave のインストールをスキップします。"
+      if ! command -v brave-browser &> /dev/null; then
+          echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+          exit 1
+      else
+          echo "✅ Brave ブラウザのインストールが完了しました。"
+      fi
+  elif [[ "$OS_TYPE" == "Darwin" ]]; then
+      brew install --cask brave-browser
+
+      if [ ! -d "/Applications/Brave Browser.app" ] &> /dev/null; then
+          echo "❌ Brave ブラウザのインストールに失敗しました。手動でインストールしてください。"
+          exit 1
+      else
+          echo "✅ Brave ブラウザのインストールが完了しました。"
+      fi
+  else
+      echo "❌ サポートされていないOSです。Brave のインストールをスキップします。"
+  fi
 fi
 echo "brave-browser version: $(brave-browser --version)"
 
@@ -538,58 +568,72 @@ echo "1password version: $(1password --version)"
 # HackGenNerd Font
 echo "HackGenNerd Font をインストールします..."
 if [[ "$OS_TYPE" == "Linux" ]]; then
-    if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        # バージョン指定
-        HACKGEN_VERSION="2.9.0"
-        DL_PATH="$HOME/Downloads"
+    if fc-list | grep -i "HackGen"; then
+        echo "✅ HackGenNerd Font は既にインストールされています。"
+    else
+        echo "HackGenNerd Font がインストールされていません。インストールを試みます。"
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            # バージョン指定
+            if [ -z "$HACKGEN_VERSION" ]; then
+                HACKGEN_VERSION="2.9.0"
+            fi
+            if [ -z "$DL_PATH" ]; then
+                DL_PATH="$HOME/Downloads"
+            fi
 
-        # CI のときは事前にダウンロードしてキャッシュしてるのでスキップ
-        if [ "$CI" == "true" ]; then
-            echo "CI環境で実行されているため、ダウンロードをスキップします。"
-        else
-            # HackGen_NF のダウンロードとインストール
-            wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+            # CI のときは事前にダウンロードしてキャッシュしてるのでスキップ
+            if [ "$CI" == "true" ]; then
+                echo "CI環境で実行されているため、ダウンロードをスキップします。"
+            else
+                # HackGen_NF
+                wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+                # HackGen
+                wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
+            fi
+
+            unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "$DL_PATH"
+            unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
+
+            # ユーザーにインストール
+            mkdir -p "$HOME/.local/share/fonts"
+            cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
+            cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
+
+            if [ "$CI" != "true" ]; then
+                # インストーラとディレクトリを削除
+                rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
+                rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip"
+                rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
+                rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
+            fi
+
+            # フォントのキャッシュを更新
+            fc-cache -vf
+
+            # フォントのインストール確認
+            if fc-list | grep -i "HackGen"; then
+                echo "✅ HackGenNerd Font が正常にインストールされました。"
+            else
+                echo "❌ HackGenNerd Font のインストールに失敗しました。"
+                exit 1
+            fi
+        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
+            $SUDO yum install -y
         fi
-        unzip -o "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}.zip" -d "$DL_PATH"
-        # ユーザーにインストール
-        mkdir -p "$HOME/.local/share/fonts"
-        cp -r "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
+    fi
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    if brew list --cask | grep -i "font-hackgen-nerd"; then
+        echo "✅ HackGenNerd Font は既にインストールされています。"
+    else
+        echo "HackGenNerd Font がインストールされていません。インストールを試みます。"
+        brew install --cask font-hackgen-nerd
 
-        if [ "$CI" != "true" ]; then
-            # インストーラとディレクトリを削除
-            rm -rf "${DL_PATH}/HackGen_NF_v${HACKGEN_VERSION}"
-            rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
-        fi
-
-        # HackGen のダウンロードとインストール
-        wget -P "$DL_PATH" "https://github.com/yuru7/HackGen/releases/download/v${HACKGEN_VERSION}/HackGen_v${HACKGEN_VERSION}.zip"
-        unzip -o "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip" -d  "$DL_PATH"
-        # ユーザーにインストール
-        cp -r "${DL_PATH}/HackGen_v${HACKGEN_VERSION}/"* "$HOME/.local/share/fonts/"
-        # インストーラとディレクトリを削除
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}"
-        rm -rf "${DL_PATH}/HackGen_v${HACKGEN_VERSION}.zip"
-
-        # フォントのキャッシュを更新
-        fc-cache -vf
-        # フォントのインストール確認
-        if fc-list | grep -i "HackGen"; then
+        if [ "$?" -eq 0 ]; then
             echo "✅ HackGenNerd Font が正常にインストールされました。"
         else
             echo "❌ HackGenNerd Font のインストールに失敗しました。"
             exit 1
         fi
-    elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-        $SUDO yum install -y
-    fi
-elif [[ "$OS_TYPE" == "Darwin" ]]; then
-    brew install --cask font-hackgen-nerd
-
-    if [ "$?" -eq 0 ]; then
-        echo "✅ HackGenNerd Font が正常にインストールされました。"
-    else
-        echo "❌ HackGenNerd Font のインストールに失敗しました。"
-        exit 1
     fi
 fi
 echo "HackGenNerd Font のインストールが完了しました。"
@@ -601,11 +645,48 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 
     # アプリの存在有無でインストールされたかどうかをチェック
-    if [ ! -e /Applications/DeskPad.app ]; then
+    if [ ! -d "/Applications/DeskPad.app" ]; then
         echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
         exit 1
     else
         echo "✅ deskpad のインストールが完了しました。"
+    fi
+fi
+
+# ローカル専用の utility のインストール
+if [ $CI != "true" ]; then
+    echo "ローカル専用の utility をインストールします..."
+    if [[ "$OS_TYPE" == "Linux" ]]; then
+        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
+            # pyenv install 3.12.1 で必要なパッケージ
+            echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
+            $SUDO $PACKAGE_MANAGER update
+            $SUDO $PACKAGE_MANAGER install -y libcrypt-dev
+            brew install tcl-tk
+            # uv
+            echo "uv をインストールします..."
+            if ! command -v uv &> /dev/null; then
+                curl -LsSf https://astral.sh/uv/install.sh | sh
+            fi
+            # pyenv
+            echo "pyenv install -s を実行します..."
+            # 一度 unlink しないとエラーになる see https://mainmokeybusiness.com/post/pyenv_install_error/
+            brew unlink pkg-config
+            pyenv install -s
+            brew link pkg-config
+        fi
+    elif [[ "$OS_TYPE" == "Darwin" ]]; then
+        # pyenv install 3.12.1 で必要なパッケージ
+        echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
+        brew install tcl-tk
+        # uv
+        echo "uv をインストールします..."
+        if ! command -v uv &> /dev/null; then
+            curl -LsSf https://astral.sh/uv/install.sh | sh
+        fi
+        # pyenv
+        echo "pyenv install -s を実行します..."
+        pyenv install -s
     fi
 fi
 
