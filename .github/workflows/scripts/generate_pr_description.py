@@ -2,7 +2,7 @@ import openai
 import subprocess
 
 # OpenAI API Key 設定
-openai.api_key = "your-openai-api-key"
+openai.api_key = os.getenv('OPENAI_API_KEY')
 
 # Git の diff を取得
 def get_git_diff():
