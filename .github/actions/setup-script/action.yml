@@ -6,7 +6,7 @@ description: Runs the setup script and performs checks
 inputs:
   script:
     description: 'The setup script to run'
-    default: 'setup.sh'
+    default: 'setup'
     required: true
 
 runs:
