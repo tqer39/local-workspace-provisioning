@@ -189,6 +189,7 @@ echo "シンボリックリンクを作成します..."
 
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
+    ".config/git/ignore"
     ".config/starship.toml"
     ".bash_profile"
     ".bashrc"
