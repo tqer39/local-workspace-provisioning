@@ -3,7 +3,9 @@ import os
 import subprocess
 
 # OpenAI API キーを設定
-openai.api_key = os.getenv("OPENAI_API_KEY")
+api_key = os.getenv("OPENAI_API_KEY")
+if not api_key:
+    raise ValueError("API key is not set.")
 
 # プロンプトの準備
 def create_prompt(commit_logs):
