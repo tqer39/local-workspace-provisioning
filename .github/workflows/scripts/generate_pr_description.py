@@ -37,7 +37,7 @@ def generate_pr_description(commit_logs):
             {"role": "system", "content": "あなたは優秀なソフトウェアエンジニアです。"},
             {"role": "user", "content": prompt},
         ],
-        max_tokens=500,
+        max_tokens=1000,  # トークン数を減らす
         temperature=0.5,
     )
 
@@ -46,7 +46,7 @@ def generate_pr_description(commit_logs):
 
 # Git コミットログとファイルの差分の取得
 def get_commit_logs_and_diffs():
-    result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD'], capture_output=True, text=True)
+    result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD', '-n', '5'], capture_output=True, text=True)  # コミットログの数を制限
     commit_logs = result.stdout.strip().split('\n')
 
     if not commit_logs or commit_logs == ['']:
