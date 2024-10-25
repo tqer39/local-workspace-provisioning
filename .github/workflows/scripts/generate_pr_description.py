@@ -32,20 +32,20 @@ def generate_pr_description(commit_logs):
     prompt = create_prompt(commit_logs)
 
     response = client.chat.completions.create(
-        model="gpt-4",  # GPT-3.5の場合は "gpt-3.5-turbo" に変更
+        model="gpt-4o",  # GPT-3.5の場合は "gpt-3.5-turbo" に変更
         messages=[
             {"role": "system", "content": "あなたは優秀なソフトウェアエンジニアです。"},
             {"role": "user", "content": prompt},
         ],
-        max_tokens=2000,
-        temperature=0.5,
+        max_tokens=1000,
+        temperature=0.1,
     )
 
     return response.choices[0].message.content.strip()
 
 # Git コミットログとファイルの差分の取得
 def get_commit_logs_and_diffs():
-    result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD', '-n', '50'], capture_output=True, text=True)  # コミットログの数を制限
+    result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD', '-n', '70'], capture_output=True, text=True)  # コミットログの数を制限
     commit_logs = result.stdout.strip().split('\n')
 
     if not commit_logs or commit_logs == ['']:
