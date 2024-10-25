@@ -45,6 +45,9 @@ def generate_pr_description(commit_logs):
 
 # Git コミットログとファイルの差分の取得
 def get_commit_logs_and_diffs():
+    # リモートの変更を取得
+    subprocess.run(['git', 'fetch', 'origin'], check=True)
+
     result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD', '-n', '70'], capture_output=True, text=True)  # コミットログの数を制限
     commit_logs = result.stdout.strip().split('\n')
 
