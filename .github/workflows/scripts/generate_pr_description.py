@@ -41,7 +41,7 @@ def generate_pr_description(commit_logs):
         temperature=0.5,
     )
 
-    return response.choices[0].message['content'].strip()
+    return response.choices[0].message.content.strip()
 
 # Git コミットログとファイルの差分の取得
 def get_commit_logs_and_diffs():
