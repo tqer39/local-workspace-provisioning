@@ -4,14 +4,15 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
+  # pull_request:
+  #   branches:
+  #     - main
   workflow_dispatch:
 
 env:
-  HACKGEN_VERSION: "2.9.0"
   DL_PATH: "$HOME/Downloads"
+  HACKGEN_VERSION: "2.9.0"
+  HYPER_VERSION: "3.4.1"
 
 jobs:
   test-ubuntu:
@@ -19,30 +20,55 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up environment variables
+        run: |
+          echo "DL_PATH=$HOME/Downloads" >> $GITHUB_ENV
+          echo "HACKGEN_VERSION=2.9.0" >> $GITHUB_ENV
+          echo "HYPER_VERSION=3.4.1" >> $GITHUB_ENV
+
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip
-          key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}
+          key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}
+            ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
+
       - name: Download HackGenNerd Font
         if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
+
       - name: Cache HackGen
         id: cache-hackgen
         uses: actions/cache@v4
         with:
           path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
-          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
           restore-keys: |
-            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}
+            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
+
       - name: Download HackGen
         if: steps.cache-hackgen.outputs.cache-hit != 'true'
         run: |
           wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip"
+
+      - name: Cache Hyper.js
+        id: cache-hyper
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DL_PATH }}/deb
+          key: ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
+          restore-keys: |
+            ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
+
+      - name: Download Hyper.js
+        if: steps.cache-hyper.outputs.cache-hit != 'true'
+        run: |
+          wget -P "${{ env.DL_PATH }}" "https://releases.hyper.is/download/deb"
+
       - uses: ./.github/actions/setup-script
 
   test-macos:
@@ -50,6 +76,56 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Set up environment variables
+        run: |
+          echo "DL_PATH=$HOME/Downloads" >> $GITHUB_ENV
+          echo "HACKGEN_VERSION=2.9.0" >> $GITHUB_ENV
+          echo "HYPER_VERSION=3.4.1" >> $GITHUB_ENV
+
+      - name: Cache HackGenNerd Font
+        id: cache-hackgen-nf
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DL_PATH }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip
+          key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
+          restore-keys: |
+            ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
+
+      - name: Download HackGenNerd Font
+        if: steps.cache-hackgen-nf.outputs.cache-hit != 'true'
+        run: |
+          wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip"
+
+      - name: Cache HackGen
+        id: cache-hackgen
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
+          key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
+          restore-keys: |
+            ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
+
+      - name: Download HackGen
+        if: steps.cache-hackgen.outputs.cache-hit != 'true'
+        run: |
+          wget -P "${{ env.DL_PATH }}" "https://github.com/yuru7/HackGen/releases/download/v${{ env.HACKGEN_VERSION }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip"
+
+      - name: Cache Hyper.js
+        id: cache-hyper
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.DL_PATH }}/deb
+          key: ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
+          restore-keys: |
+            ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
+
+      - name: Download Hyper.js
+        if: steps.cache-hyper.outputs.cache-hit != 'true'
+        run: |
+          wget -P "${{ env.DL_PATH }}" "https://releases.hyper.is/download/deb"
+
       - name: Enable Gatekeeper
         run: sudo spctl --master-enable
+
       - uses: ./.github/actions/setup-script
