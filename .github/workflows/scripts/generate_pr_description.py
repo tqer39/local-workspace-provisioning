@@ -8,9 +8,9 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 # プロンプトの準備
 def create_prompt(commit_logs):
     return f"""
-    以下のコミットログを読んで、わかりやすいプルリクエストのタイトルと詳細な説明を日本語で作成してください。
+    以下のコミットログとファイルの差分を読んで、わかりやすいプルリクエストのタイトルと詳細な説明を日本語で作成してください。
 
-    コミットログ:
+    コミットログとファイルの差分:
     {commit_logs}
 
     出力形式:
@@ -37,18 +37,25 @@ def generate_pr_description(commit_logs):
     # 応答の解析
     return response['choices'][0]['message']['content'].strip()
 
-# Git コミットログの取得
-def get_commit_logs():
-    result = subprocess.run(['git', 'log', 'origin/main..HEAD', '--pretty=format:%h %s'],
-                            stdout=subprocess.PIPE, text=True)
-    return result.stdout.strip()
+# Git コミットログと差分の取得
+def get_commit_logs_and_diffs():
+    result = subprocess.run(['git', 'log', 'origin/main..HEAD', '--pretty=format:%h %s'], stdout=subprocess.PIPE, text=True)
+    commits = result.stdout.strip().split('\n')
+
+    logs_and_diffs = []
+    for commit in commits:
+        commit_hash = commit.split()[0]
+        diff_result = subprocess.run(['git', 'diff', f'{commit_hash}~1', commit_hash], stdout=subprocess.PIPE, text=True)
+        logs_and_diffs.append(f"{commit}\n{diff_result.stdout.strip()}")
+
+    return "\n\n".join(logs_and_diffs)
 
 # メインロジック
 if __name__ == "__main__":
-    commit_logs = get_commit_logs()
+    commit_logs_and_diffs = get_commit_logs_and_diffs()
 
-    if commit_logs:
-        pr_description = generate_pr_description(commit_logs)
+    if commit_logs_and_diffs:
+        pr_description = generate_pr_description(commit_logs_and_diffs)
         print(pr_description)
     else:
         print("No new commits detected.")
