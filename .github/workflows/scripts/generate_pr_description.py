@@ -1,4 +1,4 @@
-import openai
+from openai import OpenAI
 import os
 import subprocess
 
@@ -6,6 +6,11 @@ import subprocess
 api_key = os.getenv("OPENAI_API_KEY")
 if not api_key:
     raise ValueError("API key is not set.")
+
+client = OpenAI(
+    # This is the default and can be omitted
+    api_key = os.getenv("OPENAI_API_KEY")
+)
 
 # プロンプトの準備
 def create_prompt(commit_logs):
@@ -26,7 +31,7 @@ def create_prompt(commit_logs):
 def generate_pr_description(commit_logs):
     prompt = create_prompt(commit_logs)
 
-    response = openai.ChatCompletion.create(
+    response = client.chat.completions.create(
         model="gpt-4",  # GPT-3.5の場合は "gpt-3.5-turbo" に変更
         messages=[
             {"role": "system", "content": "あなたは優秀なソフトウェアエンジニアです。"},
