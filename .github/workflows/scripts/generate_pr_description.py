@@ -37,7 +37,7 @@ def generate_pr_description(commit_logs):
             {"role": "system", "content": "あなたは優秀なソフトウェアエンジニアです。"},
             {"role": "user", "content": prompt},
         ],
-        max_tokens=1000,  # トークン数を減らす
+        max_tokens=2000,
         temperature=0.5,
     )
 
