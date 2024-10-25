@@ -44,16 +44,20 @@ def generate_pr_description(commit_logs):
     # 応答の解析
     return response['choices'][0]['message']['content'].strip()
 
-# Git コミットログと差分の取得
+# Git コミットログとファイルの差分の取得
 def get_commit_logs_and_diffs():
-    result = subprocess.run(['git', 'log', 'origin/main..HEAD', '--pretty=format:%h %s'], stdout=subprocess.PIPE, text=True)
-    commits = result.stdout.strip().split('\n')
+    result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD'], capture_output=True, text=True)
+    commit_logs = result.stdout.strip().split('\n')
+
+    if not commit_logs or commit_logs == ['']:
+        return ""
 
     logs_and_diffs = []
-    for commit in commits:
+    for commit in commit_logs:
         commit_hash = commit.split()[0]
-        diff_result = subprocess.run(['git', 'diff', f'{commit_hash}~1', commit_hash], stdout=subprocess.PIPE, text=True)
-        logs_and_diffs.append(f"{commit}\n{diff_result.stdout.strip()}")
+        if commit_hash:
+            diff_result = subprocess.run(['git', 'diff', commit_hash + '^!', '--'], capture_output=True, text=True)
+            logs_and_diffs.append(f"Commit: {commit}\nDiff:\n{diff_result.stdout}")
 
     return "\n\n".join(logs_and_diffs)
 
