@@ -7,7 +7,7 @@ module.exports = {
     fontSize: 14,
 
     // Font family with optional fallbacks
-    fontFamily: 'HackGenNerd Console, Menlo, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace',
+    fontFamily: 'HackGen Console NF, Menlo, "DejaVu Sans Mono", Consolas, "Lucida Console", monospace',
 
     // Default shell to run when Hyper starts
     shell: '/bin/zsh',
