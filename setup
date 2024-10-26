@@ -178,8 +178,8 @@ else
             exit 1
         fi
     else
-        echo "dotfiles は既に存在します。最新の変更を取得します..."
-        git -C "$WORKSPACE/$REPO_NAME" pull
+        echo "dotfiles は既に存在します。ローカルのリポジトリに移動します..."
+        cd "$WORKSPACE/$REPO_NAME"
     fi
 fi
 
