@@ -124,6 +124,7 @@ alias dl='cd ~/Downloads'
 alias d='cd ~/Desktop'
 alias work='cd ~/workspace'
 alias apt-u='sudo apt update && sudo apt upgrade -y'
+alias brew-u='brew update && brew upgrade'
 
 # brew
 eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
