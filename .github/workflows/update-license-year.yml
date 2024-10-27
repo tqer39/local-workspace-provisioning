@@ -58,5 +58,6 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.branch_name }}
+          branch: "update-license-year"
+          branch-suffix: "${current_year}"
           base: "main"
