@@ -4,6 +4,10 @@ on:
   push:
     branches:
       - main
+    paths:
+      - '.github/workflows/test-setup.yml'
+      - '.github/actions/setup-script/action.yml'
+      - 'setup'
   pull_request:
     branches:
       - main
