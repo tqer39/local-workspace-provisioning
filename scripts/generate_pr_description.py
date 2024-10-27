@@ -26,7 +26,7 @@ def create_prompt(commit_logs):
         - コミットログとファイルを読んで、変更点の概要と技術的な詳細や注意点を記述してください。
             - なければ項目ごと出力しないでください。
             - 嘘を書かないでください。
-        - リストで表現する場合はそのリストの項目の戦闘に適切な emoji をつけてください。
+        - リストで表現する場合はそのリストの項目の先頭に適切な emoji をつけてください。
         - https://github.com/orgs/community/discussions/16925 を参考に必要に応じて NOTE, TIPS, IMPORTANT, WARNING, CAUTION を使用してください。
 
     ## コミットログとファイルの差分
