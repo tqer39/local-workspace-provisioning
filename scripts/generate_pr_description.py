@@ -19,7 +19,7 @@ def create_prompt(commit_logs):
 
     - 以下のコミットログとファイルの差分を読んで、理解し易いプルリクエストのタイトルと詳細な説明を日本語で作成してください。
     - Markdown 形式で記述してください。
-        - ただし出力内容の1行目は例外です。`# ` などは不要です。
+        - ただし出力内容の1行目は例外です。# などは不要です。
         - ファイル名はバッククオートで囲んでください。
         - https://github.com/orgs/community/discussions/16925 を参考にしてください。
             - 内容に応じて NOTE, TIPS, IMPORTANT, WARNING, CAUTION を使用してください。
