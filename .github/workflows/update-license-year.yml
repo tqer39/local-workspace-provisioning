@@ -34,7 +34,7 @@ jobs:
 
       - name: Create new branch
         run: |
-          branch_name="update-license-year-${current_year}"
+          branch_name="update-license-year"
           echo "branch_name=$branch_name" >> $GITHUB_ENV
           git checkout -b "$branch_name"
 
