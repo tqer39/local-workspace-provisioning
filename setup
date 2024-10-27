@@ -258,6 +258,9 @@ install_if_missing "eza" "brew install eza"
 # fd
 install_if_missing "fd" "brew install fd"
 
+# ruff
+install_if_missing "ruff" "brew install ruff"
+
 # ripgrep
 if ! command -v rp &> /dev/null; then
     echo "ripgrep がインストールされていません。インストールを試みます。"
