@@ -34,7 +34,7 @@ jobs:
 
       - name: Create new branch
         run: |
-          branch_name="update-license-year"
+          branch_name="update-license-year-${current_year}"
           echo "branch_name=$branch_name" >> $GITHUB_ENV
           git checkout -b "$branch_name"
 
@@ -60,5 +60,5 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "update-license-year"
+          branch: ${{ env.branch_name }}
           base: "main"
