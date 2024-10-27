@@ -57,17 +57,6 @@ is_macos() {
   fi
 }
 
-# Ubuntuを判定する関数
-is_ubuntu() {
-  if [ -f /etc/os-release ]; then
-    . /etc/os-release
-    if [ "$ID" = "ubuntu" ]; then
-      return 0  # 成功（真）
-    fi
-  fi
-  return 1  # 失敗（偽）
-}
-
 # その他のLinuxディストリビューションを判定する関数
 is_linux() {
   if [ "$(uname)" = "Linux" ]; then
@@ -76,14 +65,6 @@ is_linux() {
     return 1  # 失敗（偽）
   fi
 }
-
-# ubuntu なら実行する
-if [[ is_ubuntu ]]; then
-  alias update='sudo apt update && sudo apt upgrade -y'
-  alias install='sudo apt install'
-  alias remove='sudo apt remove'
-  alias search='apt search'
-fi
 
 # ------------------------------------------------------------------------------
 # \shellcheck

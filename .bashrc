@@ -208,7 +208,7 @@ fi
 if [[ $(command -v brew) ]]; then
   if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
     # shellcheck source=/dev/null
-    [ -f "$HOME/.fzf.bash" ] && . $HOME/.fzf.bash
+    [ -f "$HOME/.fzf.bash" ] && . "$HOME/.fzf.bash"
   fi
 fi
 

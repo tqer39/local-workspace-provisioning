@@ -71,7 +71,7 @@ install_if_missing() {
 # curl のインストール確認
 if [[ "$OS_TYPE" == "Linux" ]]; then
     if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-        install_if_missing "curl" "$SUDO $PACKAGE_MANAGER update && $SUDO $PACKAGE_MANAGER install -y curl"
+        install_if_missing "curl" "$SUDO "$PACKAGE_MANAGER" update && $SUDO "$PACKAGE_MANAGER" install -y curl"
     elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
         install_if_missing "curl" "$SUDO yum install -y curl"
     fi
@@ -83,7 +83,7 @@ fi
 if [[ "$OS_TYPE" == "Linux" ]]; then
     if ! command -v pbcopy &> /dev/null; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            $SUDO $PACKAGE_MANAGER install -y xsel
+            $SUDO "$PACKAGE_MANAGER" install -y xsel
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             $SUDO yum install xclip
         fi
@@ -117,8 +117,8 @@ if ! command -v brew &> /dev/null; then
         if [[ "$OS_TYPE" == "Linux" ]]; then
             # Linuxbrew の場合、ビルドに必要なパッケージをインストール
             if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-                $SUDO $PACKAGE_MANAGER update
-                $SUDO $PACKAGE_MANAGER install -y build-essential
+                $SUDO "$PACKAGE_MANAGER" update
+                $SUDO "$PACKAGE_MANAGER" install -y build-essential
             elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
                 $SUDO yum install -y gcc make
             fi
@@ -132,7 +132,7 @@ fi
 if ! command -v git &> /dev/null; then
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            install_if_missing "git" "$SUDO $PACKAGE_MANAGER update && $SUDO $PACKAGE_MANAGER install -y git"
+            install_if_missing "git" "$SUDO "$PACKAGE_MANAGER" update && $SUDO "$PACKAGE_MANAGER" install -y git"
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             install_if_missing "git" "$SUDO yum install -y git"
         fi
@@ -372,8 +372,8 @@ if ! command -v code &> /dev/null; then
             curl https://packages.microsoft.com/keys/microsoft.asc | $SUDO gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/packages.microsoft.gpg] \
             https://packages.microsoft.com/repos/code stable main" | $SUDO tee /etc/apt/sources.list.d/vscode.list
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y code
+            $SUDO "$PACKAGE_MANAGER" update
+            $SUDO "$PACKAGE_MANAGER" install -y code
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             rpm --import https://packages.microsoft.com/keys/microsoft.asc
             $SUDO sh -c 'echo -e "[code]\nname=Visual Studio Code\nbaseurl=https://packages.microsoft.com/yumrepos/vscode\nenabled=1\ngpgcheck=1\ngpgkey=https://packages.microsoft.com/keys/microsoft.asc" > /etc/yum.repos.d/vscode.repo'
@@ -401,17 +401,17 @@ if ! command -v hyper &> /dev/null; then
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             # 依存パッケージのインストール
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y libnotify4
+            $SUDO "$PACKAGE_MANAGER" update
+            $SUDO "$PACKAGE_MANAGER" install -y libnotify4
             # Hyper.js のインストール
             if [ -z "$DL_PATH" ]; then
                 DL_PATH="$HOME/Downloads"
             fi
-            if [ $CI != "true" ]; then
+            if [ "$CI" != "true" ]; then
                 wget -P $DL_PATH https://releases.hyper.is/download/deb
             fi
             $SUDO dpkg -i "${DL_PATH}/deb"
-            if [ $CI != "true" ]; then
+            if [ "$CI" != "true" ]; then
                 rm -rf "${DL_PATH}/deb"
             fi
         else
@@ -440,8 +440,8 @@ if ! command -v rancher-desktop &> /dev/null; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl -fsSL https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/Release.key | $SUDO gpg --dearmor -o /usr/share/keyrings/rancher-desktop-keyring.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/rancher-desktop-keyring.gpg] https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/ /" | $SUDO tee /etc/apt/sources.list.d/rancher-desktop.list
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y rancher-desktop
+            $SUDO "$PACKAGE_MANAGER" update
+            $SUDO "$PACKAGE_MANAGER" install -y rancher-desktop
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             $SUDO curl -fsSL https://download.opensuse.org/repositories/isv:Rancher:stable/rpm.repo -o /etc/yum.repos.d/rancher-desktop.repo
             $SUDO yum install -y rancher-desktop
@@ -468,8 +468,8 @@ if ! command -v google-chrome &> /dev/null; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl -fsSL https://dl.google.com/linux/linux_signing_key.pub | $SUDO gpg --dearmor -o /usr/share/keyrings/google-linux-keyring.gpg
             echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/google-linux-keyring.gpg] http://dl.google.com/linux/chrome/deb/ stable main" | $SUDO tee /etc/apt/sources.list.d/google-chrome.list
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y google-chrome-stable
+            $SUDO "$PACKAGE_MANAGER" update
+            $SUDO "$PACKAGE_MANAGER" install -y google-chrome-stable
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             $SUDO sh -c 'echo -e "[google-chrome]\nname=Google Chrome\nbaseurl=http://dl.google.com/linux/chrome/rpm/stable/x86_64\nenabled=1\ngpgcheck=1\ngpgkey=https://dl.google.com/linux/linux_signing_key.pub" > /etc/yum.repos.d/google-chrome.repo'
             $SUDO yum check-update
@@ -512,10 +512,10 @@ if ! command -v brave-browser &> /dev/null; then
           https://brave-browser-apt-release.s3.brave.com/ stable main" | $SUDO tee /etc/apt/sources.list.d/brave-browser-release.list
 
           # パッケージリストを更新
-          $SUDO $PACKAGE_MANAGER update
+          $SUDO "$PACKAGE_MANAGER" update
 
           # Brave ブラウザをインストール
-          $SUDO $PACKAGE_MANAGER install -y brave-browser
+          $SUDO "$PACKAGE_MANAGER" install -y brave-browser
       elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
           $SUDO dnf install dnf-plugins-core
           $SUDO dnf config-manager --add-repo https://brave-browser-rpm-release.s3.brave.com/x86_64/
@@ -554,8 +554,8 @@ if ! command -v 1password &> /dev/null; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO apt-key add -
             echo 'deb [arch=amd64] https://downloads.1password.com/linux/debian/amd64 stable main' | $SUDO tee /etc/apt/sources.list.d/1password.list
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y 1password
+            $SUDO "$PACKAGE_MANAGER" update
+            $SUDO "$PACKAGE_MANAGER" install -y 1password
         elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
             curl -sS https://downloads.1password.com/linux/keys/1password.asc | $SUDO rpm --import -
             $SUDO sh -c 'echo -e "[1password]\nname=1Password\nbaseurl=https://downloads.1password.com/linux/rpm\nenabled=1\ngpgcheck=1\ngpgkey=https://downloads.1password.com/linux/keys/1password.asc" > /etc/yum.repos.d/1password.repo'
@@ -668,14 +668,14 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
 fi
 
 # ローカル専用の utility のインストール
-if [ $CI != "true" ]; then
+if [ "$CI" != "true" ]; then
     echo "ローカル専用の utility をインストールします..."
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             # pyenv install 3.12.1 で必要なパッケージ
             echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
-            $SUDO $PACKAGE_MANAGER update
-            $SUDO $PACKAGE_MANAGER install -y libcrypt-dev
+            $SUDO "$PACKAGE_MANAGER" update
+            $SUDO "$PACKAGE_MANAGER" install -y libcrypt-dev
             brew install tcl-tk
             # uv
             echo "uv をインストールします..."
