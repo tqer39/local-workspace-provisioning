@@ -58,5 +58,5 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: $branch_name
+          branch: ${{ env.branch_name }}
           base: "main"
