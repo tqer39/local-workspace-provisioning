@@ -37,7 +37,6 @@ sequenceDiagram
   User->>User: dotfiles の設定
 ```
 
-
 ## セットアップ内容
 
 ### インストールされるソフトウェア
