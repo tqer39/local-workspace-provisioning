@@ -7,3 +7,8 @@ requires-python = ">=3.12"
 dependencies = [
   "openai==1.52.2",
 ]
+
+[tool.ruff]
+line-length = 88
+select = ["E", "F", "W", "C"]
+ignore = ["E501"]  # 長い行を無視する場合

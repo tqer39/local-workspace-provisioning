@@ -9,8 +9,9 @@ if not api_key:
 
 client = OpenAI(
     # This is the default and can be omitted
-    api_key = os.getenv("OPENAI_API_KEY")
+    api_key=os.getenv("OPENAI_API_KEY")
 )
+
 
 # プロンプトの準備
 def create_prompt(commit_logs):
@@ -61,6 +62,7 @@ def create_prompt(commit_logs):
     - 詳細な説明B
     """
 
+
 # OpenAI API でのリクエスト
 def generate_pr_description(commit_logs):
     prompt = create_prompt(commit_logs)
@@ -77,25 +79,35 @@ def generate_pr_description(commit_logs):
 
     return response.choices[0].message.content.strip()
 
+
 # Git コミットログとファイルの差分の取得
 def get_commit_logs_and_diffs():
     # リモートの変更を取得
-    subprocess.run(['git', 'fetch', 'origin'], check=True)
+    subprocess.run(["git", "fetch", "origin"], check=True)
 
-    result = subprocess.run(['git', 'log', '--pretty=format:%H %s', 'origin/main..HEAD', '-n', '70'], capture_output=True, text=True)  # コミットログの数を制限
-    commit_logs = result.stdout.strip().split('\n')
+    result = subprocess.run(
+        ["git", "log", "--pretty=format:%H %s", "origin/main..HEAD", "-n", "70"],
+        capture_output=True,
+        text=True,
+    )  # コミットログの数を制限
+    commit_logs = result.stdout.strip().split("\n")
 
-    if not commit_logs or commit_logs == ['']:
+    if not commit_logs or commit_logs == [""]:
         return ""
 
     logs_and_diffs = []
     for commit in commit_logs:
         commit_hash = commit.split()[0]
         if commit_hash:
-            diff_result = subprocess.run(['git', 'diff', commit_hash + '^!', '--'], capture_output=True, text=True)
+            diff_result = subprocess.run(
+                ["git", "diff", commit_hash + "^!", "--"],
+                capture_output=True,
+                text=True,
+            )
             logs_and_diffs.append(f"Commit: {commit}\nDiff:\n{diff_result.stdout}")
 
     return "\n\n".join(logs_and_diffs)
+
 
 # メインロジック
 if __name__ == "__main__":
