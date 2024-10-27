@@ -53,6 +53,7 @@ sequenceDiagram
 - [jq](https://stedolan.github.io/jq/)
 - [Rancher Desktop](https://rancherdesktop.io/)
 - [ripgrep](https://github.com/BurntSushi/ripgrep)
+- [ruff](https://github.com/astral-sh/ruff)
 - [Starship](https://starship.rs/)
 - [Visual Studio Code](https://code.visualstudio.com/)
 - [zsh](https://www.zsh.org/)
