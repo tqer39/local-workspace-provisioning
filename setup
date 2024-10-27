@@ -178,8 +178,8 @@ else
             exit 1
         fi
     else
-        echo "dotfiles は既に存在します。最新の変更を取得します..."
-        git -C "$WORKSPACE/$REPO_NAME" pull
+        echo "dotfiles は既に存在します。ローカルのリポジトリに移動します..."
+        cd "$WORKSPACE/$REPO_NAME"
     fi
 fi
 
@@ -259,6 +259,20 @@ install_if_missing "eza" "brew install eza"
 
 # fd
 install_if_missing "fd" "brew install fd"
+
+# ripgrep
+if ! command -v rp &> /dev/null; then
+    echo "ripgrep がインストールされていません。インストールを試みます。"
+    brew install ripgrep
+    if ! command -v rg &> /dev/null; then
+        echo "❌ ripgrep のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ ripgrep のインストールが完了しました。"
+    fi
+else
+    echo "✅ ripgrep は既にインストールされています。"
+fi
 
 # aws cli
 if ! command -v aws &> /dev/null; then

@@ -14,6 +14,8 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 全ての履歴を取得するように設定
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -37,7 +39,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python .github/workflows/scripts/generate_pr_description.py > pr_output.txt
+          python scripts/generate_pr_description.py > pr_output.txt
           cat pr_output.txt
 
       - name: Update PR Title and Description

@@ -1,16 +1,16 @@
-# Repository Description
+# このリポジトリの説明
 
-This repository contains a shell script for provisioning a local development environment.
+ローカルの開発環境をプロビジョニングするための Shell スクリプトです。
 
-## Setup Instructions
+## セットアップ方法
 
 ```bash
 curl -sL https://setup.tqer39.dev | bash
 ```
 
-## Setup Contents
+## セットアップ内容
 
-### Installed Software
+### インストールされるソフトウェア
 
 - [bat](https://github.com/sharkdp/bat)
 - [Brave](https://brave.com/ja/)
@@ -30,7 +30,7 @@ curl -sL https://setup.tqer39.dev | bash
 
 ### dotfiles
 
-Place dotfiles using symbolic links.
+symbolic link で dotfiles を配置します。
 
 - `.config/git/ignore`
 - `.config/starship.toml`
