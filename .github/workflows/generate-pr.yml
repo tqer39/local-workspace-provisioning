@@ -10,6 +10,7 @@ jobs:
   generate-pr-description:
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    if: github.event.pull_request.user.login != 'renovate'
     permissions:
       pull-requests: write
     steps:
