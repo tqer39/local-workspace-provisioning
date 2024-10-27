@@ -1,0 +1,54 @@
+---
+name: Update License Year
+
+on:
+  schedule:
+    - cron: "0 0 1 1 *"  # 毎年1月1日に実行
+  workflow_dispatch:
+
+jobs:
+  commit-changes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Make changes (e.g., update LICENSE year)
+        run: |
+          current_year=$(date +"%Y")
+          sed -i "s/[0-9]\{4\}/$current_year/g" LICENSE
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Create a new branch
+        run: |
+          branch_name="feature/update-license-year-$(date +'%Y%m%d-%H%M%S')"
+          git checkout -b "$branch_name"
+
+      - name: Commit changes
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            git add LICENSE
+            git commit -m "Update License year to $current_year"
+          else
+            echo "No changes to commit"
+          fi
+
+      - name: Push changes to new branch
+        run: |
+          git push -u origin "$branch_name"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "$branch_name"
+          base: "main"
