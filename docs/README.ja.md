@@ -21,25 +21,20 @@ curl -sL https://setup.tqer39.dev | bash
 
 ```mermaid
 sequenceDiagram
-    participant User
-    participant Cloudflare
-    participant CloudDomains
-    participant GitHub
-    participant GCP
-    participant setup.tqer39.dev
-    participant bash
+  participant User
+  participant Cloudflare
+  participant CloudDomains
+  participant GitHub
+  participant setup.tqer39.dev
 
-    User->>Cloudflare: https://setup.tqer39.dev
-    Cloudflare->>Cloudflare: ルール追加
-    Cloudflare->>setup.tqer39.dev: リダイレクト
-    setup.tqer39.dev->>GitHub: setup.sh
-    GitHub->>setup.tqer39.dev: setup.sh
-    setup.tqer39.dev->>bash: setup.sh
-    bash->>CloudDomains: 取得
-    CloudDomains->>Cloudflare: 定義
-    Cloudflare->>Cloudflare: SSL/TLS
-    Cloudflare->>Cloudflare: NS レコード
-    Cloudflare->>User: 完了
+  User->>Cloudflare: https://setup.tqer39.dev
+  Cloudflare->>Cloudflare: ルール追加
+  Cloudflare->>setup.tqer39.dev: リダイレクト
+  setup.tqer39.dev->>GitHub: setup.sh
+  GitHub->>setup.tqer39.dev: setup.sh
+  setup.tqer39.dev->>User: setup.sh
+  User->>User: ソフトウェアのインストール
+  User->>User: dotfiles の設定
 ```
 
 
