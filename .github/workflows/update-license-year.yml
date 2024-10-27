@@ -19,6 +19,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Generate GitHub App Token
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GHA_APP_ID }}
+          private-key: ${{ secrets.GHA_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: Make changes (e.g., update LICENSE year)
         run: |
           current_year=$(date +"%Y")
@@ -53,7 +61,7 @@ jobs:
 
       - name: Create Pull Request
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
         run: |
           gh auth setup-git
           gh pr create --title "Update License year to $current_year" --body "This PR updates the license year to $current_year." --head "$branch_name" --base "main"
