@@ -53,6 +53,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Ensure branch is pushed
+        run: |
+          git fetch origin
+          git branch -r
+
       - name: Wait for branch to be available
         run: sleep 5
 
