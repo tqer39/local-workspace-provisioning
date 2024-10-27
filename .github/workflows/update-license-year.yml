@@ -51,6 +51,9 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Wait for branch to be available
+        run: sleep 5
+
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@v7
         with:
