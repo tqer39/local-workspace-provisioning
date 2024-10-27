@@ -22,11 +22,6 @@ repos:
         args: ['--fix=lf']
       - id: trailing-whitespace
 
-  - repo: https://github.com/adrienverge/yamllint.git
-    rev: v1.32.0
-    hooks:
-      - id: yamllint
-
   - repo: https://github.com/streetsidesoftware/cspell-cli
     rev: v6.31.0
     hooks:
