@@ -8,6 +8,41 @@
 curl -sL https://setup.tqer39.dev | bash
 ```
 
+## ハイレベルアーキテクチャ
+
+1. Google Cloud Platform (GCP) の Cloud Domains で `tqer39.dev` のドメインを取得
+2. Cloudflare で tqer39.dev のドメインを定義
+   1. SSL/TLS が自動的に発行される
+   2. NS レコードを発行して Cloud Domains に設定
+3. Cloudflare のルールを追加し、`https://setup.tqer39.dev/*` へアクセスすると `setup` へリダイレクトさせる
+4. cURL で `https://setup.tqer39.dev` へアクセスすると、このリポジトリの `setup.sh` プレーンテキストで読み込まれ、bash で実行される
+
+### シーケンス図
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Cloudflare
+    participant CloudDomains
+    participant GitHub
+    participant GCP
+    participant setup.tqer39.dev
+    participant bash
+
+    User->>Cloudflare: https://setup.tqer39.dev
+    Cloudflare->>Cloudflare: ルール追加
+    Cloudflare->>setup.tqer39.dev: リダイレクト
+    setup.tqer39.dev->>GitHub: setup.sh
+    GitHub->>setup.tqer39.dev: setup.sh
+    setup.tqer39.dev->>bash: setup.sh
+    bash->>CloudDomains: 取得
+    CloudDomains->>Cloudflare: 定義
+    Cloudflare->>Cloudflare: SSL/TLS
+    Cloudflare->>Cloudflare: NS レコード
+    Cloudflare->>User: 完了
+```
+
+
 ## セットアップ内容
 
 ### インストールされるソフトウェア
