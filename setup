@@ -207,7 +207,7 @@ for file in "${DOTFILES[@]}"; do
     fi
     target_file="$HOME/$file"
     if [ -e "$source_file" ]; then
-        if ! ln -sf "$source_file" "$target_file"; then
+        if ln -sf "$source_file" "$target_file"; then
             echo "✅ シンボリックリンクを作成しました: $target_file"
         else
             echo "❌ シンボリックリンクの作成に失敗しました: $target_file"
