@@ -19,6 +19,7 @@ jobs:
       - name: Make changes (e.g., update LICENSE year)
         run: |
           current_year=$(date +"%Y")
+          echo "current_year=$current_year" >> $GITHUB_ENV
           sed -i "s/[0-9]\{4\}/$current_year/g" LICENSE
 
       - name: Configure Git
@@ -29,7 +30,6 @@ jobs:
       - name: Create a new branch
         run: |
           branch_name="feature/update-license-year-$(date +'%Y%m%d-%H%M%S')"
-          echo "branch_name=$branch_name" >> $GITHUB_ENV
           git checkout -b "$branch_name"
 
       - name: Commit changes
@@ -51,5 +51,5 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          branch: "${{ env.branch_name }}"
+          branch: $branch_name
           base: "main"
