@@ -22,26 +22,21 @@ jobs:
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Make changes (e.g., update LICENSE year)
         run: |
           current_year=$(date +"%Y")
           echo "current_year=$current_year" >> $GITHUB_ENV
+          sed -i "s/[0-9]\{4\}/$current_year/g" LICENSE
 
       - name: Configure Git
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Update LICENSE year
-        run: |
-          sed -i "s/[0-9]\{4\}/$current_year/g" LICENSE
-
       - name: Create new branch
         run: |
-          branch_name="update-license-year-${current_year}"
+          branch_name="update-license-year-$current_year"
           echo "branch_name=$branch_name" >> $GITHUB_ENV
           git checkout -b "$branch_name"
 
@@ -49,28 +44,20 @@ jobs:
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add LICENSE
-            git commit -m "Update License year to ${current_year}"
+            git commit -m "Update License year to $current_year"
           else
             echo "No changes to commit"
           fi
 
-      - name: Push changes to new branch
+      - name: Push changes
         run: |
-          git push -fu origin "$branch_name"
+          git push -u origin "$branch_name"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Ensure branch is pushed
-        run: |
-          git fetch origin
-          git branch -r
-
-      - name: Wait for branch to be available
-        run: sleep 5
-
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: ${{ env.branch_name }}
-          base: "main"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh auth setup-git
+          gh pr create --title "Update License year to $current_year" --body "This PR updates the license year to $current_year." --head "$branch_name" --base "main"
