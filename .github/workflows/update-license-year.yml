@@ -51,5 +51,9 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+<<<<<<< Updated upstream
           branch: $branch_name
+=======
+          branch: "${{ env.branch_name }}"
+>>>>>>> Stashed changes
           base: "main"
