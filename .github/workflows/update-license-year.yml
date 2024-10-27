@@ -16,6 +16,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Generate GitHub App Token
+        id: app_token
+        uses: actions/create-github-app-token@v1
+        with:
+          app-id: ${{ secrets.GHA_APP_ID }}
+          private-key: ${{ secrets.GHA_PRIVATE_KEY }}
+          owner: ${{ github.repository_owner }}
+
       - name: Make changes (e.g., update LICENSE year)
         run: |
           current_year=$(date +"%Y")
@@ -27,9 +35,10 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Create a new branch
+      - name: Create new branch
         run: |
-          branch_name="feature/update-license-year-$(date +'%Y%m%d-%H%M%S')"
+          branch_name="update-license-year-$current_year"
+          echo "branch_name=$branch_name" >> $GITHUB_ENV
           git checkout -b "$branch_name"
 
       - name: Commit changes
@@ -41,15 +50,15 @@ jobs:
             echo "No changes to commit"
           fi
 
-      - name: Push changes to new branch
+      - name: Push changes
         run: |
-          git push -u origin "$branch_name"
+          git push -fu origin "$branch_name"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
-          branch: $branch_name
-          base: "main"
+        env:
+          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
+        run: |
+          gh auth setup-git
+          gh pr create --title "Update License year to $current_year" --body "This PR updates the license year to $current_year." --head "$branch_name" --base "main"
