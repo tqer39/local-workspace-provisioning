@@ -187,6 +187,8 @@ if [[ $(command -v git) ]]; then
   alias gl='git log --oneline'
   alias gbm='git branch --merged'
   alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
+  alias gchp='git cherry-pick'
+  alias gnewb='git new-feature-branch'
 fi
 
 # anyenv
@@ -206,7 +208,7 @@ fi
 if [[ $(command -v brew) ]]; then
   if [ "$(brew list | grep -c "^fzf@*.*$")" -gt 0 ]; then
     # shellcheck source=/dev/null
-    [ -f "$HOME/.fzf.bash" ] && . $HOME/.fzf.bash
+    [ -f "$HOME/.fzf.bash" ] && . "$HOME/.fzf.bash"
   fi
 fi
 

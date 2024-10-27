@@ -11,3 +11,5 @@
 	tool = default-difftool
 [difftool "default-difftool"]
 	cmd = code --wait --diff $LOCAL $REMOTE
+[alias]
+	new-feature = "!f() { \\\n  TITLE=\"$1\"; \\\n  DATE=$(date +%Y%m%d); \\\n  git checkout main && \\\n  git fetch origin -p && \\\n  git reset --hard origin/main && \\\n  git checkout -b \"feature/${TITLE}-${DATE}\"; \\\n}; f"
