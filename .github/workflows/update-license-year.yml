@@ -9,6 +9,10 @@ on:
     branches:
       - "feature/refactor-update-license-workflow-5-20241027"
 
+permissions:
+  contents: write
+  pull-requests: write
+
 jobs:
   commit-changes:
     runs-on: ubuntu-latest
