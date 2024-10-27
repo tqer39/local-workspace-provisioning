@@ -638,7 +638,7 @@ elif [[ "$OS_TYPE" == "Darwin" ]]; then
         echo "✅ HackGenNerd Font は既にインストールされています。"
     else
         echo "HackGenNerd Font がインストールされていません。インストールを試みます。"
-        if ! brew install --cask font-hackgen-nerd; then
+        if brew install --cask font-hackgen-nerd; then
             echo "✅ HackGenNerd Font が正常にインストールされました。"
         else
             echo "❌ HackGenNerd Font のインストールに失敗しました。"
