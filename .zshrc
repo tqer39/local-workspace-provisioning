@@ -127,7 +127,14 @@ alias apt-u='sudo apt update && sudo apt upgrade -y'
 alias brew-u='brew update && brew upgrade'
 
 # brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ $(command -v brew) ]]; then
+  # linux なら .linuxbrew にパスを通す
+  if is_linux; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  elif is_macos; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+  fi
+fi
 
 # git
 if [[ $(command -v git) ]]; then
