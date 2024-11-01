@@ -8,6 +8,9 @@ WORKSPACE="$HOME/workspace"
 REPO_NAME="local-workspace-provisioning"
 REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
 
+# OSタイプの取得
+OS_TYPE="$(uname -s)"
+
 # CI環境で実行されているか確認
 if [ -n "$CI" ]; then
     echo "CI環境で実行されています。"
@@ -15,9 +18,6 @@ else
     echo "CI環境で実行されていません。"
     CI="false"
 fi
-
-# OSタイプの取得
-OS_TYPE="$(uname -s)"
 
 # 管理者権限の確認
 if [ "$EUID" -ne 0 ]; then
