@@ -199,9 +199,9 @@ mkdir -p "$HOME/.config/git"
 
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
+    ".config/git/ignore"
     ".config/karabiner/assets/complex_modifications/hyperjs.json"
     ".config/karabiner/karabiner.json"
-    ".config/git/ignore"
     ".config/starship.toml"
     ".bash_profile"
     ".bashrc"
