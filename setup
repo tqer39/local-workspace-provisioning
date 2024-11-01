@@ -713,17 +713,20 @@ fi
 echo "HackGenNerd Font のインストールが完了しました。"
 
 # deskpad のインストール ※macOS のみ
+echo "deskpad をインストールします..."
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v deskpad &> /dev/null; then
         brew install deskpad
-    fi
 
-    # アプリの存在有無でインストールされたかどうかをチェック
-    if [ ! -d "/Applications/DeskPad.app" ]; then
-        echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
-        exit 1
+        # アプリの存在有無でインストールされたかどうかをチェック
+        if [ ! -d "/Applications/DeskPad.app" ]; then
+            echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ deskpad のインストールが完了しました。"
+        fi
     else
-        echo "✅ deskpad のインストールが完了しました。"
+        echo "✅ deskpad は既にインストールされています。"
     fi
 fi
 
