@@ -398,6 +398,24 @@ else
     echo "✅ Visual Studio Code は既にインストールされています。"
 fi
 
+# Karabiner-Elements
+echo "Karabiner-Elements をインストールします..."
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if [ ! -d "/Applications/Karabiner-Elements.app" ]; then
+        echo "Karabiner-Elements がインストールされていません。インストールを試みます。"
+        brew install --cask karabiner-elements
+    fi
+
+    if [ ! -d "/Applications/Karabiner-Elements.app" ]; then
+        echo "❌ Karabiner-Elements のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ Karabiner-Elements のインストールが完了しました。"
+    fi
+else
+    echo "❌ サポートされていないOSです。Karabiner-Elements のインストールをスキップします。"
+fi
+
 # Hyper.js
 echo "Hyper.js をインストールします..."
 if ! command -v hyper &> /dev/null; then
