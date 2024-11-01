@@ -9,6 +9,6 @@ dependencies = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 120
 select = ["E", "F", "W", "C"]
 ignore = ["E501"]  # 長い行を無視する場合
