@@ -42,12 +42,6 @@ export HISTSIZE=100000
 export SAVEHIST=100000
 setopt extended_history
 
-# debug
-# echo $PATH
-# which anyenv
-# which starship
-
-
 # macOSを判定する関数
 is_macos() {
   if [ "$(uname)" = "Darwin" ]; then
