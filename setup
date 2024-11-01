@@ -100,7 +100,7 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     # macOS では pbcopy/pbpaste がデフォルトで使える
 fi
 
-# brew の evaw を実行しておく
+# brew の eval を実行しておく
 if [[ "$OS_TYPE" == "Linux" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 elif [[ "$OS_TYPE" == "Darwin" ]]; then
