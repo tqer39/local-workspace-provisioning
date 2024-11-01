@@ -607,6 +607,24 @@ else
 fi
 echo "1password version: $(1password --version)"
 
+# Amazon Q
+echo "Amazon Q をインストールします..."
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if ! command -v q &> /dev/null; then
+        echo "Amazon Q がインストールされていません。インストールを試みます。"
+        brew install --cask amazon-q
+
+        if ! command -v q &> /dev/null; then
+            echo "❌ Amazon Q のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ Amazon Q のインストールが完了しました。"
+        fi
+    else
+        echo "✅ Amazon Q は既にインストールされています。"
+    fi
+fi
+
 # Alfred
 echo "Alfred をインストールします..."
 if [[ "$OS_TYPE" == "Darwin" ]]; then
