@@ -100,6 +100,12 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     # macOS では pbcopy/pbpaste がデフォルトで使える
 fi
 
+# クラムシェルの設定
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    $SUDO pmset -a disablesleep 1 # スリープさせない
+    echo "✅ クラムシェルモードの設定が完了しました。"
+fi
+
 # brew の eval を実行しておく
 if [[ "$OS_TYPE" == "Linux" ]]; then
     eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
