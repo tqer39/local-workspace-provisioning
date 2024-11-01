@@ -607,6 +607,22 @@ else
 fi
 echo "1password version: $(1password --version)"
 
+# Alfred
+echo "Alfred をインストールします..."
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if [ ! -d "/Applications/Alfred 5.app" ]; then
+        echo "Alfred がインストールされていません。インストールを試みます。"
+        brew install --cask alfred
+    fi
+
+    if [ ! -d "/Applications/Alfred 5.app" ]; then
+        echo "❌ Alfred のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ Alfred のインストールが完了しました。"
+    fi
+fi
+
 # HackGenNerd Font
 echo "HackGenNerd Font をインストールします..."
 if [[ "$OS_TYPE" == "Linux" ]]; then
