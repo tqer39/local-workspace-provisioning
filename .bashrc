@@ -154,7 +154,11 @@ alias apt-u='sudo apt update && sudo apt upgrade -y'
 alias brew-u='brew update && brew upgrade'
 
 # brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ "$(uname)" = "Linux" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ "$(uname)" = "Darwin" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # git
 if [[ $(command -v git) ]]; then
