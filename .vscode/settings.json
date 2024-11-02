@@ -2,9 +2,9 @@
   "editor.rulers": [80, 120],
   "[python]": {
     "editor.codeActionsOnSave": {
-      "source.organizeImports": true
+      "source.organizeImports": "explicit"
     },
     "editor.defaultFormatter": "charliermarsh.ruff",
     "editor.formatOnSave": true
-  },
+  }
 }
