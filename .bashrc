@@ -135,9 +135,7 @@ shift+insert\t:貼り付け
 ctrl+d\t\t:ターミナルを強制終了
 "'
 
-# ------------------------------------------------------------------------------
 # pre-commit
-# ------------------------------------------------------------------------------
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
   alias pci="pre-commit install --install-hooks"

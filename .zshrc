@@ -85,22 +85,12 @@ shift+insert\t:貼り付け
 ctrl+d\t\t:ターミナルを強制終了
 "'
 
-# ------------------------------------------------------------------------------
 # pre-commit
-# ------------------------------------------------------------------------------
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
   alias pci="pre-commit install --install-hooks"
   alias pcra="pre-commit run -a"
 fi
-
-# ------------------------------------------------------------------------------
-# go
-# ------------------------------------------------------------------------------
-export GOPATH="${HOME}/go"
-# export GOPATH=$HOME/go
-
-# export PATH="${GOPATH}:${PATH}"
 
 # Rancher Desktop
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
