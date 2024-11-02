@@ -1,0 +1,22 @@
+---
+  name: Generate PR Description
+
+  on:
+    pull_request:
+      branches:
+        - main
+
+  jobs:
+    generate-pr-description:
+      runs-on: ubuntu-latest
+      timeout-minutes: 10
+      if: contains(github.event.pull_request.user.login, 'renovate') == false
+      permissions:
+        pull-requests: write
+      steps:
+        - uses: actions/checkout@v4
+          with:
+            fetch-depth: 0  # 全ての履歴を取得するように設定
+
+        - name: "[test] Generate PR Title and Description"
+          uses: tqer39/generate-pr-description@v0.0.1-alpha
