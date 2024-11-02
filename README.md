@@ -8,6 +8,8 @@ This repository contains a shell script for provisioning a local development env
 curl -sL https://setup.tqer39.dev | bash
 ```
 
+`$HOME/workspace/local-workspace-provisioning` will be placed.
+
 ## High-Level Architecture
 
 1. Acquire the `tqer39.dev` domain on Google Cloud Platform (GCP) Cloud Domains
@@ -15,7 +17,7 @@ curl -sL https://setup.tqer39.dev | bash
    1. SSL/TLS is automatically issued
    2. Issue an NS record and set it in Cloud Domains
 3. Add rules to Cloudflare and redirect to `setup` when accessing `https://setup.tqer39.dev/*`
-4. When accessing `https://setup.tqer39.dev` with cURL, the `setup.sh` in this repository is loaded as plain text and executed with bash
+4. When accessing `https://setup.tqer39.dev` with cURL, the `setup` in this repository is loaded as plain text and executed with bash
 
 ### Sequence Diagram
 
@@ -30,9 +32,9 @@ sequenceDiagram
   User->>Cloudflare: https://setup.tqer39.dev
   Cloudflare->>Cloudflare: Add rule
   Cloudflare->>setup.tqer39.dev: Redirect
-  setup.tqer39.dev->>GitHub: setup.sh
-  GitHub->>setup.tqer39.dev: setup.sh
-  setup.tqer39.dev->>User: setup.sh
+  setup.tqer39.dev->>GitHub: setup
+  GitHub->>setup.tqer39.dev: setup
+  setup.tqer39.dev->>User: setup
   User->>User: Install software
   User->>User: Configure dotfiles
 ```

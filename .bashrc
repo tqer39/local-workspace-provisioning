@@ -135,19 +135,12 @@ shift+insert\t:貼り付け
 ctrl+d\t\t:ターミナルを強制終了
 "'
 
-# ------------------------------------------------------------------------------
 # pre-commit
-# ------------------------------------------------------------------------------
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
   alias pci="pre-commit install --install-hooks"
   alias pcra="pre-commit run -a"
 fi
-
-# ------------------------------------------------------------------------------
-# Rancher Desktop
-# ------------------------------------------------------------------------------
-export PATH="/home/tqer39/.rd/bin:$PATH"
 
 # shortcut
 alias ..='cd ..'
@@ -161,7 +154,11 @@ alias apt-u='sudo apt update && sudo apt upgrade -y'
 alias brew-u='brew update && brew upgrade'
 
 # brew
-eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+if [[ "$(uname)" = "Linux" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ "$(uname)" = "Darwin" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
 
 # git
 if [[ $(command -v git) ]]; then
@@ -288,6 +285,14 @@ if [[ $(command -v terraform) ]]; then
   alias tfaa='terraform apply --auto-approve'
   alias tfsl='terraform state list'
 fi
+
+# ruff
+# shellcheck source=/dev/null
+. "${HOME}/.cargo/env"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/home/tqer39/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # Starship ... # see https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要
