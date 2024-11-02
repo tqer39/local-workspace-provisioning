@@ -296,3 +296,5 @@ if command -v starship &> /dev/null; then
 fi
 
 echo "bash..."
+
+. "$HOME/.cargo/env"

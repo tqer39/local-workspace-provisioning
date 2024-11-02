@@ -258,3 +258,5 @@ if command -v starship &> /dev/null; then
 fi
 
 echo "zsh..."
+
+. "$HOME/.cargo/env"
