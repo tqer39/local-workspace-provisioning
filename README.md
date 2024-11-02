@@ -8,6 +8,8 @@ This repository contains a shell script for provisioning a local development env
 curl -sL https://setup.tqer39.dev | bash
 ```
 
+`$HOME/workspace/local-workspace-provisioning` will be placed.
+
 ## High-Level Architecture
 
 1. Acquire the `tqer39.dev` domain on Google Cloud Platform (GCP) Cloud Domains

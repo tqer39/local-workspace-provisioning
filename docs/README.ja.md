@@ -8,6 +8,8 @@
 curl -sL https://setup.tqer39.dev | bash
 ```
 
+`$HOME/workspace/local-workspace-provisioning` が配置されます。
+
 ## ハイレベルアーキテクチャ
 
 1. Google Cloud Platform (GCP) の Cloud Domains で `tqer39.dev` のドメインを取得
