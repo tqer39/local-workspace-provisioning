@@ -144,11 +144,6 @@ if [[ $(command -v pre-commit) ]]; then
   alias pcra="pre-commit run -a"
 fi
 
-# ------------------------------------------------------------------------------
-# Rancher Desktop
-# ------------------------------------------------------------------------------
-export PATH="/home/tqer39/.rd/bin:$PATH"
-
 # shortcut
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -289,6 +284,14 @@ if [[ $(command -v terraform) ]]; then
   alias tfsl='terraform state list'
 fi
 
+# ruff
+# shellcheck source=/dev/null
+. "${HOME}/.cargo/env"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/home/tqer39/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
+
 # Starship ... # see https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要
 if command -v starship &> /dev/null; then
@@ -296,5 +299,3 @@ if command -v starship &> /dev/null; then
 fi
 
 echo "bash..."
-
-. "$HOME/.cargo/env"
