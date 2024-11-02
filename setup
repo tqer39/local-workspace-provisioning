@@ -347,6 +347,9 @@ fi
 # starship
 install_if_missing "starship" "brew install starship"
 
+# pre-commit
+install_if_missing "pre-commit" "brew install pre-commit"
+
 # anyenv
 install_if_missing "anyenv" "brew install anyenv"
 if [ ! -d "$HOME/.anyenv" ]; then
