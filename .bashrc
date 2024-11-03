@@ -138,6 +138,7 @@ ctrl+d\t\t:ターミナルを強制終了
 # pre-commit
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
+  alias pcc="pre-commit clean"
   alias pci="pre-commit install --install-hooks"
   alias pcra="pre-commit run -a"
 fi
