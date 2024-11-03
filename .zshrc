@@ -68,6 +68,7 @@ ctrl+d\t\t:ターミナルを強制終了
 # pre-commit
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
+  alias pcc="pre-commit clean"
   alias pci="pre-commit install --install-hooks"
   alias pcra="pre-commit run -a"
 fi
@@ -120,8 +121,8 @@ if [[ $(command -v git) ]]; then
   alias gl='git log --oneline'
   alias gbm='git branch --merged'
   alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
-  alias gchp='git cherry-pick'
-  alias gnewb='git new-feature-branch'
+  alias gch='git cherry-pick'
+  alias gbn='git new-feature-branch'
 fi
 
 # anyenv
