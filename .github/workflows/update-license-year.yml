@@ -5,13 +5,16 @@ on:
   schedule:
     - cron: "0 0 1 1 *"  # 毎年1月1日に実行
   workflow_dispatch:
+  push:
+    branches:
+      - "feature/refactor**"
 
 jobs:
   commit-changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
