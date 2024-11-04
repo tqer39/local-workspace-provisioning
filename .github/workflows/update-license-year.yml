@@ -3,7 +3,7 @@ name: Update License Year
 
 on:
   schedule:
-    - cron: "0 0 1 1 *"  # 毎年1月1日に実行
+    - cron: '0 0 1 1 *' # 毎年1月1日に実行
   workflow_dispatch:
 
 jobs:
@@ -20,44 +20,9 @@ jobs:
         uses: actions/create-github-app-token@v1
         with:
           app-id: ${{ secrets.GHA_APP_ID }}
-          private-key: ${{ secrets.GHA_PRIVATE_KEY }}
+          private-key: ${{ secrets.GHA_APP_PRIVATE_KEY }}
           owner: ${{ github.repository_owner }}
 
-      - name: Make changes (e.g., update LICENSE year)
-        run: |
-          current_year=$(date +"%Y")
-          echo "current_year=$current_year" >> "$GITHUB_ENV"
-          sed -i "s/[0-9]\{4\}/$current_year/g" LICENSE
-
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-      - name: Create new branch
-        run: |
-          branch_name="update-license-year-$current_year"
-          echo "branch_name=$branch_name" >> "$GITHUB_ENV"
-          git checkout -b "$branch_name"
-
-      - name: Commit changes
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            git add LICENSE
-            git commit -m "Update License year to $current_year"
-          else
-            echo "No changes to commit"
-          fi
-
-      - name: Push changes
-        run: |
-          git push -fu origin "$branch_name"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Create Pull Request
-        env:
-          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
-        run: |
-          gh auth setup-git
-          gh pr create --title "Update License year to $current_year" --body "This PR updates the license year to $current_year." --head "$branch_name" --base "main"
+      - uses: tqer39/update-license-year@v1.0.0
+        with:
+          github-token: ${{ steps.app_token.outputs.token }}
