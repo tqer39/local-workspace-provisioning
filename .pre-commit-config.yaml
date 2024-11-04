@@ -1,5 +1,7 @@
 ---
 # see https://pre-commit.com
+default_language_version:
+  python: python3.13.0
 
 exclude: |
   (?x)^(
@@ -12,8 +14,6 @@ repos:
     hooks:
       - id: check-added-large-files
         args: ['--maxkb=512']
-      - id: check-json
-      - id: check-yaml
       - id: detect-aws-credentials
         args: [--allow-missing-credentials]
       - id: detect-private-key
@@ -26,6 +26,12 @@ repos:
     rev: v8.15.2
     hooks:
       - id: cspell
+
+  # see: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.42.0
+    hooks:
+      - id: markdownlint
 
   - repo: local
     hooks:
@@ -59,13 +65,13 @@ repos:
           - json
 
   - repo: https://github.com/renovatebot/pre-commit-hooks
-    rev: 38.132.3
+    rev: 38.142.3
     hooks:
       - id: renovate-config-validator
         files: renovate\.json
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.7.1
+    rev: v0.7.2
     hooks:
       # Run the linter.
       - id: ruff
@@ -73,7 +79,7 @@ repos:
         description: "Run 'ruff' for extremely fast Python linting"
         entry: ruff check --force-exclude
         language: python
-        language_version: 3.12.1
+        language_version: 3.13.0
         types_or: [python, pyi]
         # --fix: enable lint fixes
         args: [--fix]
@@ -86,7 +92,7 @@ repos:
         description: "Run 'ruff' for extremely fast Python formatting"
         entry: ruff format --force-exclude
         language: python
-        language_version: 3.12.1
+        language_version: 3.13.0
         types_or: [python, pyi]
         args: []
         require_serial: true

@@ -135,19 +135,13 @@ shift+insert\t:貼り付け
 ctrl+d\t\t:ターミナルを強制終了
 "'
 
-# ------------------------------------------------------------------------------
 # pre-commit
-# ------------------------------------------------------------------------------
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
+  alias pcc="pre-commit clean"
   alias pci="pre-commit install --install-hooks"
   alias pcra="pre-commit run -a"
 fi
-
-# ------------------------------------------------------------------------------
-# Rancher Desktop
-# ------------------------------------------------------------------------------
-export PATH="/home/tqer39/.rd/bin:$PATH"
 
 # shortcut
 alias ..='cd ..'
@@ -161,13 +155,10 @@ alias apt-u='sudo apt update && sudo apt upgrade -y'
 alias brew-u='brew update && brew upgrade'
 
 # brew
-if [[ $(command -v brew) ]]; then
-  # linux なら .linuxbrew にパスを通す
-  if is_linux; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  elif is_macos; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  fi
+if [[ "$(uname)" = "Linux" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ "$(uname)" = "Darwin" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # git
@@ -195,8 +186,8 @@ if [[ $(command -v git) ]]; then
   alias gl='git log --oneline'
   alias gbm='git branch --merged'
   alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
-  alias gchp='git cherry-pick'
-  alias gnewb='git new-feature-branch'
+  alias gch='git cherry-pick'
+  alias gbn='git new-feature-branch'
 fi
 
 # anyenv
@@ -295,6 +286,14 @@ if [[ $(command -v terraform) ]]; then
   alias tfaa='terraform apply --auto-approve'
   alias tfsl='terraform state list'
 fi
+
+# ruff
+# shellcheck source=/dev/null
+. "${HOME}/.cargo/env"
+
+### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
+export PATH="/home/tqer39/.rd/bin:$PATH"
+### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
 
 # Starship ... # see https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要

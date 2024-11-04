@@ -8,6 +8,9 @@ WORKSPACE="$HOME/workspace"
 REPO_NAME="local-workspace-provisioning"
 REPO_URL="https://github.com/${OWNER}/${REPO_NAME}.git"
 
+# OSタイプの取得
+OS_TYPE="$(uname -s)"
+
 # CI環境で実行されているか確認
 if [ -n "$CI" ]; then
     echo "CI環境で実行されています。"
@@ -15,9 +18,6 @@ else
     echo "CI環境で実行されていません。"
     CI="false"
 fi
-
-# OSタイプの取得
-OS_TYPE="$(uname -s)"
 
 # 管理者権限の確認
 if [ "$EUID" -ne 0 ]; then
@@ -100,14 +100,23 @@ if [[ "$OS_TYPE" == "Linux" ]]; then
     # macOS では pbcopy/pbpaste がデフォルトで使える
 fi
 
+# クラムシェルの設定
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    $SUDO pmset -a disablesleep 1 # スリープさせない
+    echo "✅ クラムシェルモードの設定が完了しました。"
+fi
+
+# brew の eval を実行しておく
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    eval "$(/opt/homebrew/bin/brew shellenv)"
+fi
+
 # brew のインストール確認
 if ! command -v brew &> /dev/null; then
     echo "Homebrew がインストールされていません。インストールを試みます。"
     /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-    # CI 環境でのみ eval コマンドを実行
-    if [[ "$CI" == "true" ]]; then
-        eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-    fi
     # brew がインストールされたか確認
     if ! command -v brew &> /dev/null; then
         echo "❌ Homebrew のインストールに失敗しました。手動でインストールしてください。"
@@ -185,12 +194,13 @@ fi
 # dotfiles のシンボリックリンクを作成
 echo "シンボリックリンクを作成します..."
 
-mkdir -p "$HOME/.config"
 mkdir -p "$HOME/.config/git"
 
 # リンクしたい dotfile を個別に指定
 DOTFILES=(
     ".config/git/ignore"
+    ".config/karabiner/assets/complex_modifications/hyperjs.json"
+    ".config/karabiner/karabiner.json"
     ".config/starship.toml"
     ".bash_profile"
     ".bashrc"
@@ -337,6 +347,9 @@ fi
 # starship
 install_if_missing "starship" "brew install starship"
 
+# pre-commit
+install_if_missing "pre-commit" "brew install pre-commit"
+
 # anyenv
 install_if_missing "anyenv" "brew install anyenv"
 if [ ! -d "$HOME/.anyenv" ]; then
@@ -393,6 +406,24 @@ if ! command -v code &> /dev/null; then
     fi
 else
     echo "✅ Visual Studio Code は既にインストールされています。"
+fi
+
+# Karabiner-Elements
+echo "Karabiner-Elements をインストールします..."
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if [ ! -d "/Applications/Karabiner-Elements.app" ]; then
+        echo "Karabiner-Elements がインストールされていません。インストールを試みます。"
+        brew install --cask karabiner-elements
+    fi
+
+    if [ ! -d "/Applications/Karabiner-Elements.app" ]; then
+        echo "❌ Karabiner-Elements のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ Karabiner-Elements のインストールが完了しました。"
+    fi
+else
+    echo "❌ サポートされていないOSです。Karabiner-Elements のインストールをスキップします。"
 fi
 
 # Hyper.js
@@ -580,6 +611,40 @@ else
 fi
 echo "1password version: $(1password --version)"
 
+# Amazon Q
+echo "Amazon Q をインストールします..."
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if [ ! -d "/Applications/Amazon Q.app" ] &> /dev/null; then
+        echo "Amazon Q がインストールされていません。インストールを試みます。"
+        brew install --cask amazon-q
+
+        if [ ! -d "/Applications/Amazon Q.app" ] &> /dev/null; then
+            echo "❌ Amazon Q のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ Amazon Q のインストールが完了しました。"
+        fi
+    else
+        echo "✅ Amazon Q は既にインストールされています。"
+    fi
+fi
+
+# Alfred
+echo "Alfred をインストールします..."
+if [[ "$OS_TYPE" == "Darwin" ]]; then
+    if [ ! -d "/Applications/Alfred 5.app" ]; then
+        echo "Alfred がインストールされていません。インストールを試みます。"
+        brew install --cask alfred
+    fi
+
+    if [ ! -d "/Applications/Alfred 5.app" ]; then
+        echo "❌ Alfred のインストールに失敗しました。手動でインストールしてください。"
+        exit 1
+    else
+        echo "✅ Alfred のインストールが完了しました。"
+    fi
+fi
+
 # HackGenNerd Font
 echo "HackGenNerd Font をインストールします..."
 if [[ "$OS_TYPE" == "Linux" ]]; then
@@ -652,17 +717,20 @@ fi
 echo "HackGenNerd Font のインストールが完了しました。"
 
 # deskpad のインストール ※macOS のみ
+echo "deskpad をインストールします..."
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v deskpad &> /dev/null; then
         brew install deskpad
-    fi
 
-    # アプリの存在有無でインストールされたかどうかをチェック
-    if [ ! -d "/Applications/DeskPad.app" ]; then
-        echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
-        exit 1
+        # アプリの存在有無でインストールされたかどうかをチェック
+        if [ ! -d "/Applications/DeskPad.app" ]; then
+            echo "❌ deskpad のインストールに失敗しました。手動でインストールしてください。"
+            exit 1
+        else
+            echo "✅ deskpad のインストールが完了しました。"
+        fi
     else
-        echo "✅ deskpad のインストールが完了しました。"
+        echo "✅ deskpad は既にインストールされています。"
     fi
 fi
 

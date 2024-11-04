@@ -42,33 +42,7 @@ export HISTSIZE=100000
 export SAVEHIST=100000
 setopt extended_history
 
-# debug
-# echo $PATH
-# which anyenv
-# which starship
-
-
-# macOSを判定する関数
-is_macos() {
-  if [ "$(uname)" = "Darwin" ]; then
-    return 0  # 成功（真）
-  else
-    return 1  # 失敗（偽）
-  fi
-}
-
-# その他のLinuxディストリビューションを判定する関数
-is_linux() {
-  if [ "$(uname)" = "Linux" ]; then
-    return 0  # 成功（真）
-  else
-    return 1  # 失敗（偽）
-  fi
-}
-
-# ------------------------------------------------------------------------------
 # \shellcheck
-# ------------------------------------------------------------------------------
 if [[ $(command -v shellcheck) ]]; then
   alias sc='shellcheck'
   function schelp() {
@@ -91,26 +65,15 @@ shift+insert\t:貼り付け
 ctrl+d\t\t:ターミナルを強制終了
 "'
 
-# ------------------------------------------------------------------------------
 # pre-commit
-# ------------------------------------------------------------------------------
 if [[ $(command -v pre-commit) ]]; then
   alias pcv="pre-commit -V"
+  alias pcc="pre-commit clean"
   alias pci="pre-commit install --install-hooks"
   alias pcra="pre-commit run -a"
 fi
 
-# ------------------------------------------------------------------------------
-# go
-# ------------------------------------------------------------------------------
-export GOPATH="${HOME}/go"
-# export GOPATH=$HOME/go
-
-# export PATH="${GOPATH}:${PATH}"
-
-# ------------------------------------------------------------------------------
 # Rancher Desktop
-# ------------------------------------------------------------------------------
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/home/tqer39/.rd/bin:$PATH"
 ### MANAGED BY RANCHER DESKTOP END (DO NOT EDIT)
@@ -127,13 +90,10 @@ alias apt-u='sudo apt update && sudo apt upgrade -y'
 alias brew-u='brew update && brew upgrade'
 
 # brew
-if [[ $(command -v brew) ]]; then
-  # linux なら .linuxbrew にパスを通す
-  if is_linux; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-  elif is_macos; then
-    eval "$(/opt/homebrew/bin/brew shellenv)"
-  fi
+if [[ "$(uname)" = "Linux" ]]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+elif [ "$(uname)" = "Darwin" ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # git
@@ -161,8 +121,8 @@ if [[ $(command -v git) ]]; then
   alias gl='git log --oneline'
   alias gbm='git branch --merged'
   alias gbm-all='git branch --merged|egrep -v "\*|develop|main"|xargs git branch' # -d で削除, -D で完全削除
-  alias gchp='git cherry-pick'
-  alias gnewb='git new-feature-branch'
+  alias gch='git cherry-pick'
+  alias gbn='git new-feature-branch'
 fi
 
 # anyenv
@@ -234,11 +194,6 @@ if [[ $(command -v eza) ]]; then
   alias l='clear && ls'
 fi
 
-# Starship ... https://starship.rs/ja-jp/guide/
-# ※ 一番最後の行に設定が必要
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
-fi
 
 # openjdk
 if [[ $(command -v brew) ]]; then
@@ -269,4 +224,14 @@ if [[ $(command -v terraform) ]]; then
   alias tfsl='terraform state list'
 fi
 
+# Starship ... https://starship.rs/ja-jp/guide/
+# ※ 一番最後の行に設定が必要
+if command -v starship &> /dev/null; then
+  eval "$(starship init zsh)"
+fi
+
 echo "zsh..."
+
+# ruff
+# shellcheck source=/dev/null
+. "$HOME/.cargo/env"

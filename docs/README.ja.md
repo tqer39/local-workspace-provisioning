@@ -8,6 +8,8 @@
 curl -sL https://setup.tqer39.dev | bash
 ```
 
+`$HOME/workspace/local-workspace-provisioning` が配置されます。
+
 ## ハイレベルアーキテクチャ
 
 1. Google Cloud Platform (GCP) の Cloud Domains で `tqer39.dev` のドメインを取得
@@ -15,7 +17,7 @@ curl -sL https://setup.tqer39.dev | bash
    1. SSL/TLS が自動的に発行される
    2. NS レコードを発行して Cloud Domains に設定
 3. Cloudflare のルールを追加し、`https://setup.tqer39.dev/*` へアクセスすると `setup` へリダイレクトさせる
-4. cURL で `https://setup.tqer39.dev` へアクセスすると、このリポジトリの `setup.sh` プレーンテキストで読み込まれ、bash で実行される
+4. cURL で `https://setup.tqer39.dev` へアクセスすると、このリポジトリの `setup` プレーンテキストで読み込まれ、bash で実行される
 
 ### シーケンス図
 
@@ -30,9 +32,9 @@ sequenceDiagram
   User->>Cloudflare: https://setup.tqer39.dev
   Cloudflare->>Cloudflare: ルール追加
   Cloudflare->>setup.tqer39.dev: リダイレクト
-  setup.tqer39.dev->>GitHub: setup.sh
-  GitHub->>setup.tqer39.dev: setup.sh
-  setup.tqer39.dev->>User: setup.sh
+  setup.tqer39.dev->>GitHub: setup
+  GitHub->>setup.tqer39.dev: setup
+  setup.tqer39.dev->>User: setup
   User->>User: ソフトウェアのインストール
   User->>User: dotfiles の設定
 ```
@@ -69,3 +71,16 @@ symbolic link で dotfiles を配置します。
 - `.gitconfig`
 - `.hyper.js`
 - `.zshrc`
+
+## Contributing
+
+### ローカルでの開発
+
+```bash
+git clone https://github.com/tqer39/local-workspace-provisioning
+cd local-workspace-provisioning
+git fetch -p
+git switch -c feature/branch-name
+
+pre-commit install --install-hooks
+```

@@ -5,13 +5,16 @@ on:
   schedule:
     - cron: "0 0 1 1 *"  # 毎年1月1日に実行
   workflow_dispatch:
+  push:
+    branches:
+      - "feature/refactor**"
 
 jobs:
   commit-changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: write
+      contents: read
       pull-requests: write
     steps:
       - uses: actions/checkout@v4
@@ -38,27 +41,32 @@ jobs:
       - name: Create new branch
         run: |
           branch_name="update-license-year-$current_year"
-          echo "branch_name=$branch_name" >> $GITHUB_ENV
           git checkout -b "$branch_name"
 
       - name: Commit changes
+        id: commit_changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add LICENSE
             git commit -m "Update License year to $current_year"
+            echo "changes_made=true" >> "$GITHUB_ENV"
           else
             echo "No changes to commit"
+            echo "changes_made=false" >> "$GITHUB_ENV"
           fi
 
-      - name: Push changes
-        run: |
-          git push -fu origin "$branch_name"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Create Pull Request
-        env:
-          GITHUB_TOKEN: ${{ steps.app_token.outputs.token }}
-        run: |
-          gh auth setup-git
-          gh pr create --title "Update License year to $current_year" --body "This PR updates the license year to $current_year." --head "$branch_name" --base "main"
+        if: env.changes_made == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: "Update License year to $current_year"
+          title: "Update License year to $current_year"
+          body: "This PR updates the LICENSE year to $current_year."
+          branch: ${{ env.branch_name }}
+          base: main
+          labels: "auto-merge"
+          reviewers: "octocat"
+          assignees: "octocat"
+          draft: false
+          branch-suffix: timestamp
