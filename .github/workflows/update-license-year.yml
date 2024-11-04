@@ -13,6 +13,8 @@ jobs:
   commit-changes:
     runs-on: ubuntu-latest
     timeout-minutes: 5
+    permissions:
+      contents: write # git push するために必要
     steps:
       - uses: actions/checkout@v4
 
