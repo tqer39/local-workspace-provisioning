@@ -70,6 +70,4 @@ jobs:
           branch: ${{ env.branch_name }}
           base: main
           labels: "auto-merge"
-          reviewers: "octocat"
-          assignees: "octocat"
           draft: false
