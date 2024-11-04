@@ -16,7 +16,7 @@ jobs:
     permissions:
       pull-requests: write # uses: tqer39/generate-pr-description-action
     # Check if the PR is not created by 'renovate' or 'tqer39-apps'
-    if: ${{ contains('["renovate", "tqer39-apps"]', github.event.pull_request.user.login) == false }}
+    if: contains('["renovate", "tqer39-apps"]', github.event.pull_request.user.login) == false
     steps:
       - uses: actions/checkout@v4
         with:
