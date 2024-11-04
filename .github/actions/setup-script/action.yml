@@ -1,0 +1,21 @@
+---
+name: Setup Script
+
+description: Runs the setup script and performs checks
+
+inputs:
+  script:
+    description: 'The setup script to run'
+    default: 'setup'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+    - name: 実行権限を設定
+      run: chmod +x ${{ inputs.script }}
+      shell: bash
+
+    - name: セットアップスクリプトを実行
+      run: ./${{ inputs.script }}
+      shell: bash
