@@ -44,15 +44,19 @@ jobs:
           git checkout -b "$branch_name"
 
       - name: Commit changes
+        id: commit_changes
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             git add LICENSE
             git commit -m "Update License year to $current_year"
+            echo "changes_made=true" >> "$GITHUB_ENV"
           else
             echo "No changes to commit"
+            echo "changes_made=false" >> "$GITHUB_ENV"
           fi
 
       - name: Create Pull Request
+        if: env.changes_made == 'true'
         uses: peter-evans/create-pull-request@v7
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
