@@ -1,8 +1,7 @@
 ---
 # see https://pre-commit.com
-
 default_language_version:
-    python: python3.13.0
+  python: python3.13.0
 
 exclude: |
   (?x)^(
@@ -15,8 +14,6 @@ repos:
     hooks:
       - id: check-added-large-files
         args: ['--maxkb=512']
-      - id: check-json
-      - id: check-yaml
       - id: detect-aws-credentials
         args: [--allow-missing-credentials]
       - id: detect-private-key
@@ -29,6 +26,12 @@ repos:
     rev: v8.15.2
     hooks:
       - id: cspell
+
+  # see: https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md
+  - repo: https://github.com/igorshubovych/markdownlint-cli
+    rev: v0.42.0
+    hooks:
+      - id: markdownlint
 
   - repo: local
     hooks:
