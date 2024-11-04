@@ -75,4 +75,3 @@ jobs:
           reviewers: "octocat"
           assignees: "octocat"
           draft: false
-          branch-suffix: timestamp
