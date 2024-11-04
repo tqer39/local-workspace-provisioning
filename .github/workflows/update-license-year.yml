@@ -74,4 +74,4 @@ jobs:
           reviewers: "octocat"
           assignees: "octocat"
           draft: false
-          branch-suffix: timestamp
+          branch-suffix: "update-license-year-${{ env.current_year }}"
