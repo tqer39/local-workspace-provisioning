@@ -15,8 +15,8 @@ jobs:
     timeout-minutes: 10
     permissions:
       pull-requests: write # uses: tqer39/generate-pr-description-action
-    # Check if the PR is not created by '[bot]' or 'renovate'
-    if: contains(fromJSON('["[bot]", "renovate"]'), github.event.pull_request.user.login) == false
+    # Check if the PR is not created by 'renovate' or 'tqer39-apps'
+    if: contains(fromJSON('["renovate[bot]", "tqer39-apps[bot]"]'), github.event.pull_request.user.login) == false
     steps:
       - uses: actions/checkout@v4
         with:
