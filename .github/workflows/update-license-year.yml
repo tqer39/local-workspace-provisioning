@@ -55,6 +55,10 @@ jobs:
             echo "changes_made=false" >> "$GITHUB_ENV"
           fi
 
+      - name: Push changes
+        if: env.changes_made == 'true'
+        run: git push -fu origin ${{ env.branch_name }}
+
       - name: Create Pull Request
         if: env.changes_made == 'true'
         uses: peter-evans/create-pull-request@v7
