@@ -29,6 +29,7 @@ jobs:
       - name: Make changes (e.g., update LICENSE year)
         run: |
           current_year=$(date +"%Y")
+          echo "current_year=$current_year" >> "$GITHUB_ENV"
           sed -i "s/[0-9]\{4\}/$current_year/g" LICENSE
 
       - name: Configure Git
