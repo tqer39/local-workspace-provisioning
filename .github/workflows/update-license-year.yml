@@ -14,8 +14,8 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
-      contents: read
-      pull-requests: write
+      contents: write # required to commit changes
+      pull-requests: write # uses peter-evans/create-pull-request
     steps:
       - uses: actions/checkout@v4
 
@@ -37,10 +37,13 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config advice.refSyntax false
+          git config --global --add --bool push.autoSetupRemote true
 
       - name: Create new branch
         run: |
           branch_name="update-license-year-$current_year"
+          echo "branch_name=$branch_name" >> "$GITHUB_ENV"
           git checkout -b "$branch_name"
 
       - name: Commit changes
@@ -54,6 +57,10 @@ jobs:
             echo "No changes to commit"
             echo "changes_made=false" >> "$GITHUB_ENV"
           fi
+
+      - name: Push changes
+        if: env.changes_made == 'true'
+        run: git push --set-upstream --force origin ${{ env.branch_name }}
 
       - name: Create Pull Request
         if: env.changes_made == 'true'
@@ -69,4 +76,3 @@ jobs:
           reviewers: "octocat"
           assignees: "octocat"
           draft: false
-          branch-suffix: timestamp
