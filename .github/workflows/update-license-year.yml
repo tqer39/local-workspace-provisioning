@@ -57,7 +57,7 @@ jobs:
 
       - name: Push changes
         if: env.changes_made == 'true'
-        run: git push -fu origin ${{ env.branch_name }}
+        run: git push --set-upstream origin ${{ env.branch_name }}
 
       - name: Create Pull Request
         if: env.changes_made == 'true'
