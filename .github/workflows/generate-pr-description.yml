@@ -26,3 +26,6 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           openai-api-key: ${{ secrets.OPENAI_API_KEY }}
           openai-model: "gpt-4o"
+      - name: Debug
+        run: |
+          echo ${{ github.event.pull_request.user.login }}
