@@ -15,7 +15,8 @@ jobs:
     timeout-minutes: 10
     permissions:
       pull-requests: write # uses: tqer39/generate-pr-description-action
-    if: contains(github.event.pull_request.user.login, 'renovate') == false
+    # Check if the PR is not created by 'renovate' or 'tqer39-apps'
+    if: github.event.pull_request.user.login != 'renovate' && github.event.pull_request.user.login != 'tqer39-apps'
     steps:
       - uses: actions/checkout@v4
         with:

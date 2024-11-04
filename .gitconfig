@@ -8,6 +8,7 @@
 	tool = code --wait \"$MERGED\"
 [push]
 	default = simple
+	autoSetupRemote = true
 [diff]
 	tool = default-difftool
 [difftool "default-difftool"]
