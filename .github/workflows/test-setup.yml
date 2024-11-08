@@ -17,6 +17,10 @@ on:
       - 'setup'
   workflow_dispatch:
 
+concurrency:
+  cancel-in-progress: true
+  group: ${{ github.workflow }}-${{ github.ref }}
+
 env:
   DL_PATH: "$HOME/Downloads"
   HACKGEN_VERSION: "2.9.0"
