@@ -232,4 +232,6 @@ fi
 
 # ruff
 # shellcheck source=/dev/null
-. "$HOME/.cargo/env"
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
