@@ -174,7 +174,7 @@ if command -v git &> /dev/null; then
 fi
 
 # bat
-if command -v bat; then
+if command -v bat &> /dev/null; then
   alias cat="bat"
 fi
 
@@ -224,14 +224,19 @@ if [[ $(command -v terraform) ]]; then
   alias tfsl='terraform state list'
 fi
 
+# ruff
+# shellcheck source=/dev/null
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
+# code-insiders
+if command -v code-insiders &> /dev/null; then
+  alias ci='code-insiders'
+fi
+
 # Starship ... https://starship.rs/ja-jp/guide/
 # ※ 一番最後の行に設定が必要
 if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
 fi
-
-echo "zsh..."
-
-# ruff
-# shellcheck source=/dev/null
-. "$HOME/.cargo/env"
