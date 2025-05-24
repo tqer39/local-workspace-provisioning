@@ -1,5 +1,5 @@
 # プロンプトの先頭の空行を無効にする
-add_newline = false
+add_newline = true
 
 # モジュールの表示順序
 format = """(bg:#A6A6A6 fg:#57686B)\
