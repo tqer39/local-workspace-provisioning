@@ -174,7 +174,7 @@ if command -v git &> /dev/null; then
 fi
 
 # bat
-if command -v bat; then
+if command -v bat &> /dev/null; then
   alias cat="bat"
 fi
 
