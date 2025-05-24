@@ -235,3 +235,8 @@ fi
 if [ -f "$HOME/.cargo/env" ]; then
   . "$HOME/.cargo/env"
 fi
+
+# code-insiders
+if command -v code-insiders &> /dev/null; then
+  alias ci='code-insiders'
+fi
