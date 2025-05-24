@@ -289,7 +289,14 @@ fi
 
 # ruff
 # shellcheck source=/dev/null
-. "${HOME}/.cargo/env"
+if [ -f "$HOME/.cargo/env" ]; then
+  . "$HOME/.cargo/env"
+fi
+
+# code-insiders
+if command -v code-insiders &> /dev/null; then
+  alias ci='code-insiders'
+fi
 
 ### MANAGED BY RANCHER DESKTOP START (DO NOT EDIT)
 export PATH="/home/tqer39/.rd/bin:$PATH"
@@ -300,5 +307,3 @@ export PATH="/home/tqer39/.rd/bin:$PATH"
 if command -v starship &> /dev/null; then
   eval "$(starship init bash)"
 fi
-
-echo "bash..."

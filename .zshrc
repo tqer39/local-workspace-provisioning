@@ -224,12 +224,6 @@ if [[ $(command -v terraform) ]]; then
   alias tfsl='terraform state list'
 fi
 
-# Starship ... https://starship.rs/ja-jp/guide/
-# ※ 一番最後の行に設定が必要
-if command -v starship &> /dev/null; then
-  eval "$(starship init zsh)"
-fi
-
 # ruff
 # shellcheck source=/dev/null
 if [ -f "$HOME/.cargo/env" ]; then
@@ -239,4 +233,10 @@ fi
 # code-insiders
 if command -v code-insiders &> /dev/null; then
   alias ci='code-insiders'
+fi
+
+# Starship ... https://starship.rs/ja-jp/guide/
+# ※ 一番最後の行に設定が必要
+if command -v starship &> /dev/null; then
+  eval "$(starship init zsh)"
 fi
