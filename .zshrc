@@ -230,8 +230,6 @@ if command -v starship &> /dev/null; then
   eval "$(starship init zsh)"
 fi
 
-echo "zsh..."
-
 # ruff
 # shellcheck source=/dev/null
 . "$HOME/.cargo/env"
