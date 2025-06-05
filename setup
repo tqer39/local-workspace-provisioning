@@ -191,27 +191,46 @@ else
     fi
 fi
 
-# dotfiles のシンボリックリンクを作成
-echo "シンボリックリンクを作成します..."
+# dotfiles のシンボリックリンクを作成する関数
+create_dotfiles_symlinks() {
+    printf "シンボリックリンクを作成します...\n"
 
-# dotfiles/src ディレクトリ内のファイルを再帰的に検索
-find "$WORKSPACE/$REPO_NAME/dotfiles/src" -type f -not -path "*/\.*" | while read -r source_file; do
-    # ターゲットパスを計算（dotfiles/src を除いた相対パス）
-    relative_path="${source_file#"$WORKSPACE"/"$REPO_NAME"/dotfiles/src/}"
-    target_file="$HOME/$relative_path"
+    # dotfiles/src ディレクトリ内のファイルを再帰的に検索
+    find "$WORKSPACE/$REPO_NAME/dotfiles/src" -type f | while read -r source_file; do
+        # ターゲットパスを計算（dotfiles/src を除いた相対パス）
+        relative_path="${source_file#"$WORKSPACE"/"$REPO_NAME"/dotfiles/src/}"
+        target_file="$HOME/$relative_path"
 
-    # ターゲットディレクトリが存在しない場合は作成
-    target_dir=$(dirname "$target_file")
-    mkdir -p "$target_dir"
+        # ターゲットディレクトリが存在しない場合は作成
+        target_dir=$(dirname "$target_file")
+        mkdir -p "$target_dir"
 
-    # シンボリックリンクを作成
-    if ln -sf "$source_file" "$target_file"; then
-        echo "✅ シンボリックリンクを作成しました: $target_file"
-    else
-        echo "❌ シンボリックリンクの作成に失敗しました: $target_file"
-    fi
-done
+        # シンボリックリンクを作成
+        if ln -sf "$source_file" "$target_file"; then
+            printf "✅ シンボリックリンクを作成しました: %s\n" "$target_file"
+        else
+            printf "❌ シンボリックリンクの作成に失敗しました: %s\n" "$target_file"
+        fi
+    done
+}
 
+# 引数に応じて処理を分岐
+case "$1" in
+    "symlinks")
+        create_dotfiles_symlinks
+        exit 0
+        ;;
+    "")
+        # 引数なしの場合は通常のセットアップを実行
+        ;;
+    *)
+        printf "使用方法: %s [symlinks]\n" "$0"
+        printf "  symlinks: dotfiles のシンボリックリンクのみを作成\n"
+        exit 1
+        ;;
+esac
+
+# 以下、通常のセットアップ処理
 # zsh
 install_if_missing "zsh" "brew install zsh"
 
