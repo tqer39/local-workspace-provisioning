@@ -1,6 +1,10 @@
 #!/bin/bash
 
-set -ex
+# デバッグモードの設定
+if [ "$1" = "debug" ]; then
+    set -x
+    shift  # debug 引数を削除
+fi
 
 # 作業ディレクトリの設定
 OWNER="tqer39"  # あなたのGitHubのユーザー名に変更してください
@@ -187,7 +191,7 @@ else
         fi
     else
         echo "dotfiles は既に存在します。ローカルのリポジトリに移動します..."
-        cd "$WORKSPACE/$REPO_NAME"
+        cd "$WORKSPACE/$REPO_NAME" || exit 1
     fi
 fi
 
@@ -224,7 +228,8 @@ case "$1" in
         # 引数なしの場合は通常のセットアップを実行
         ;;
     *)
-        printf "使用方法: %s [symlinks]\n" "$0"
+        printf "使用方法: %s [debug] [symlinks]\n" "$0"
+        printf "  debug: デバッグモードで実行（詳細な出力を表示）\n"
         printf "  symlinks: dotfiles のシンボリックリンクのみを作成\n"
         exit 1
         ;;
