@@ -194,36 +194,21 @@ fi
 # dotfiles のシンボリックリンクを作成
 echo "シンボリックリンクを作成します..."
 
-mkdir -p "$HOME/.config/git"
+# dotfiles/src ディレクトリ内のファイルを再帰的に検索
+find "$WORKSPACE/$REPO_NAME/dotfiles/src" -type f -not -path "*/\.*" | while read -r source_file; do
+    # ターゲットパスを計算（dotfiles/src を除いた相対パス）
+    relative_path="${source_file#"$WORKSPACE"/"$REPO_NAME"/dotfiles/src/}"
+    target_file="$HOME/$relative_path"
 
-# リンクしたい dotfile を個別に指定
-DOTFILES=(
-    "dotfiles/src/.config/git/ignore"
-    "dotfiles/src/.config/karabiner/assets/complex_modifications/hyperjs.json"
-    "dotfiles/src/.config/karabiner/karabiner.json"
-    "dotfiles/src/.config/starship.toml"
-    "dotfiles/src/.bash_profile"
-    "dotfiles/src/.bashrc"
-    "dotfiles/src/.gitconfig"
-    "dotfiles/src/.hyper.js"
-    "dotfiles/src/.zshrc"
-)
+    # ターゲットディレクトリが存在しない場合は作成
+    target_dir=$(dirname "$target_file")
+    mkdir -p "$target_dir"
 
-for file in "${DOTFILES[@]}"; do
-    if [ "$CI" == "true" ]; then
-        source_file="$WORKSPACE/$file"
+    # シンボリックリンクを作成
+    if ln -sf "$source_file" "$target_file"; then
+        echo "✅ シンボリックリンクを作成しました: $target_file"
     else
-        source_file="$WORKSPACE/$REPO_NAME/$file"
-    fi
-    target_file="$HOME/${file#dotfiles/src/}"
-    if [ -e "$source_file" ]; then
-        if ln -sf "$source_file" "$target_file"; then
-            echo "✅ シンボリックリンクを作成しました: $target_file"
-        else
-            echo "❌ シンボリックリンクの作成に失敗しました: $target_file"
-        fi
-    else
-        echo "❌ ファイルが存在しません: $source_file"
+        echo "❌ シンボリックリンクの作成に失敗しました: $target_file"
     fi
 done
 
@@ -380,7 +365,7 @@ done
 # Visual Studio Code
 echo "Visual Studio Code をインストールします..."
 if ! command -v code &> /dev/null; then
-    echo "Visual Studio Code がインストールされていません。インストールを試みます。"　
+    echo "Visual Studio Code がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl https://packages.microsoft.com/keys/microsoft.asc | $SUDO gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
