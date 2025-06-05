@@ -50,9 +50,9 @@ fi
 install_if_missing() {
     local cmd="$1"
     local install_cmd="$2"
-    echo "$cmd のインストールを確認します..."
+    printf "🚀 %s のインストールを確認します...\n" "$cmd"
     if ! command -v "$cmd" &> /dev/null; then
-        echo "$cmd がインストールされていません。インストールを試みます。"
+        printf "%s がインストールされていません。インストールを試みます。\n" "$cmd"
         if [[ "$install_cmd" == *"brew"* ]]; then
             brew install "$cmd"
         else
@@ -60,15 +60,15 @@ install_if_missing() {
         fi
 
         if ! command -v "$cmd" &> /dev/null; then
-            echo "❌ $cmd のインストールに失敗しました。手動でインストールしてください。"
+            printf "❌ %s のインストールに失敗しました。手動でインストールしてください。\n" "$cmd"
             exit 1
         else
-            echo "$cmd --version: $($cmd --version)"
-            echo "✅ $cmd のインストールが完了しました。"
+            printf "%s --version: %s\n" "$cmd" "$($cmd --version)"
+            printf "✅ %s のインストールが完了しました。\n" "$cmd"
         fi
     else
-        echo "$cmd --version: $($cmd --version)"
-        echo "✅ $cmd は既にインストールされています。"
+        printf "%s --version: %s\n" "$cmd" "$($cmd --version)"
+        printf "✅ %s は既にインストールされています。\n" "$cmd"
     fi
 }
 
@@ -197,7 +197,7 @@ fi
 
 # dotfiles のシンボリックリンクを作成する関数
 create_dotfiles_symlinks() {
-    printf "シンボリックリンクを作成します...\n"
+    printf "🚀 シンボリックリンクを作成します...\n"
 
     # dotfiles/src ディレクトリ内のファイルを再帰的に検索
     find "$WORKSPACE/$REPO_NAME/dotfiles/src" -type f | while read -r source_file; do
@@ -258,11 +258,10 @@ fi
 
 # デフォルトのシェルが bash なら .bashrc を読み込み、zsh なら .zshrc を読み込むように設定
 if [ "$SHELL" == "/bin/bash" ]; then
-    echo "✅ デフォルトのシェルが bash です。.bashrc を読み込むように設定します。"
-    echo "source ~/.bashrc" >> "$HOME/.bash_profile"
+    printf "✅ デフォルトのシェルが bash です。.bashrc を読み込むように設定します。\n"
+    printf "source ~/.bashrc\n" >> "$HOME/.bash_profile"
 elif [ "$SHELL" == "/bin/zsh" ]; then
-    echo "✅ デフォルトのシェルが zsh です。.zshrc を読み込むように設定します。"
-    echo "source ~/.zshrc" >> "$HOME/.zshrc"
+    printf "✅ デフォルトのシェルが zsh です。\n"
 fi
 
 # bat
@@ -387,9 +386,9 @@ for env in "${ENVS[@]}"; do
 done
 
 # Visual Studio Code
-echo "Visual Studio Code をインストールします..."
+printf "🚀 Visual Studio Code をインストールします...\n"
 if ! command -v code &> /dev/null; then
-    echo "Visual Studio Code がインストールされていません。インストールを試みます。"
+    printf "Visual Studio Code がインストールされていません。インストールを試みます。\n"
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             curl https://packages.microsoft.com/keys/microsoft.asc | $SUDO gpg --dearmor -o /usr/share/keyrings/packages.microsoft.gpg
@@ -418,7 +417,7 @@ else
 fi
 
 # Karabiner-Elements
-echo "Karabiner-Elements をインストールします..."
+printf "🚀 Karabiner-Elements をインストールします...\n"
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if [ ! -d "/Applications/Karabiner-Elements.app" ]; then
         echo "Karabiner-Elements がインストールされていません。インストールを試みます。"
@@ -436,7 +435,7 @@ else
 fi
 
 # Hyper.js
-echo "Hyper.js をインストールします..."
+printf "🚀 Hyper.js をインストールします...\n"
 if ! command -v hyper &> /dev/null; then
     echo "Hyper.js がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
@@ -473,7 +472,7 @@ else
 fi
 
 # Rancher Desktop
-echo "Rancher Desktop をインストールします..."
+printf "🚀 Rancher Desktop をインストールします...\n"
 if ! command -v rancher-desktop &> /dev/null; then
     if [[ "$OS_TYPE" == "Linux" ]]; then
         echo "Rancher Desktop がインストールされていません。インストールを試みます。"
@@ -502,7 +501,7 @@ else
 fi
 
 # Google Chrome
-echo "Google Chrome をインストールします..."
+printf "🚀 Google Chrome をインストールします...\n"
 if ! command -v google-chrome &> /dev/null; then
     echo "Google Chrome がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
@@ -539,7 +538,7 @@ else
 fi
 
 # Brave
-echo "Brave ブラウザをインストールします..."
+printf "🚀 Brave ブラウザをインストールします...\n"
 if ! command -v brave-browser &> /dev/null; then
   echo "Brave ブラウザがインストールされていません。インストールを試みます。"
   if [[ "$OS_TYPE" == "Linux" ]]; then
@@ -588,7 +587,7 @@ fi
 echo "brave-browser version: $(brave-browser --version)"
 
 # 1Password
-echo "1Password をインストールします..."
+printf "🚀 1Password をインストールします...\n"
 if ! command -v 1password &> /dev/null; then
     echo "1Password がインストールされていません。インストールを試みます。"
     if [[ "$OS_TYPE" == "Linux" ]]; then
@@ -621,7 +620,7 @@ fi
 echo "1password version: $(1password --version)"
 
 # Amazon Q
-echo "Amazon Q をインストールします..."
+printf "🚀 Amazon Q をインストールします...\n"
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if [ ! -d "/Applications/Amazon Q.app" ] &> /dev/null; then
         echo "Amazon Q がインストールされていません。インストールを試みます。"
@@ -639,7 +638,7 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
 fi
 
 # Alfred
-echo "Alfred をインストールします..."
+printf "🚀 Alfred をインストールします...\n"
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if [ ! -d "/Applications/Alfred 5.app" ]; then
         echo "Alfred がインストールされていません。インストールを試みます。"
@@ -655,7 +654,7 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
 fi
 
 # HackGenNerd Font
-echo "HackGenNerd Font をインストールします..."
+printf "🚀 HackGenNerd Font をインストールします...\n"
 if [[ "$OS_TYPE" == "Linux" ]]; then
     if fc-list | grep -i "HackGen"; then
         echo "✅ HackGenNerd Font は既にインストールされています。"
@@ -726,7 +725,7 @@ fi
 echo "HackGenNerd Font のインストールが完了しました。"
 
 # deskpad のインストール ※macOS のみ
-echo "deskpad をインストールします..."
+printf "🚀 deskpad をインストールします...\n"
 if [[ "$OS_TYPE" == "Darwin" ]]; then
     if ! command -v deskpad &> /dev/null; then
         brew install deskpad
@@ -745,7 +744,7 @@ fi
 
 # ローカル専用の utility のインストール
 if [ "$CI" != "true" ]; then
-    echo "ローカル専用の utility をインストールします..."
+    printf "🚀 ローカル専用の utility をインストールします...\n"
     if [[ "$OS_TYPE" == "Linux" ]]; then
         if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
             # pyenv install 3.12.1 で必要なパッケージ
