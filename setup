@@ -141,6 +141,15 @@ else
     echo "✅ Homebrew は既にインストールされています。"
 fi
 
+# Brewfileを使用してパッケージをインストール
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    echo "Linux用のBrewfileを使用してパッケージをインストールします..."
+    brew bundle --file="Brewfile/Brewfile.Linux"
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    echo "macOS用のBrewfileを使用してパッケージをインストールします..."
+    brew bundle --file="Brewfile/Brewfile.macOS"
+fi
+
 # git のインストール確認
 if ! command -v git &> /dev/null; then
     if [[ "$OS_TYPE" == "Linux" ]]; then
