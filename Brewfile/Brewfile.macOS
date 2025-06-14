@@ -1,0 +1,58 @@
+# macOS用のBrewfile
+
+brew "awscli"
+brew "bat"
+brew "direnv"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "gh"
+brew "gnupg"
+brew "grep"
+brew "mas"
+brew "mise"
+brew "ollama"
+brew "pinentry-mac"
+brew "pre-commit"
+brew "ripgrep"
+brew "ruff"
+brew "starship"
+brew "tcl-tk"
+brew "uv"
+
+# Cask Apps
+
+cask "1password"
+cask "alfred"
+cask "alt-tab"
+cask "amazon-q"
+cask "aws-vault"
+cask "brave-browser"
+cask "claude"
+cask "cursor"
+cask "deskpad"
+cask "font-hackgen-nerd"
+cask "google-chrome"
+cask "hammerspoon"
+cask "hyper"
+cask "karabiner-elements"
+cask "obsidian"
+cask "orbstack"
+cask "pushplaylabs-sidekick"
+cask "rancher"
+cask "rectangle"
+cask "swiftbar"
+cask "visual-studio-code"
+cask "visual-studio-code@insiders"
+cask "vlc"
+cask "warp"
+
+# App Store Apps
+
+mas "GarageBand", id: 682658836
+mas "iMovie", id: 408981434
+mas "Keynote", id: 409183694
+mas "Kindle", id: 302584613
+mas "Numbers", id: 409203825
+mas "Pages", id: 409201541
+mas "RunCat", id: 1429033973
