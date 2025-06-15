@@ -15,6 +15,7 @@ brew "direnv"
 brew "starship"
 brew "pre-commit"
 brew "tcl-tk"
+brew "uv"
 
 # サービス
 brew "postgresql@16", restart_service: true
