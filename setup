@@ -371,35 +371,6 @@ else
     echo "❌ サポートされていないOSです。Karabiner-Elements のインストールをスキップします。"
 fi
 
-# Rancher Desktop
-printf "🚀 Rancher Desktop をインストールします...\n"
-if ! command -v rancher-desktop &> /dev/null; then
-    if [[ "$OS_TYPE" == "Linux" ]]; then
-        echo "Rancher Desktop がインストールされていません。インストールを試みます。"
-        # Debian/Ubuntu 系の場合
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            curl -fsSL https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/Release.key | $SUDO gpg --dearmor -o /usr/share/keyrings/rancher-desktop-keyring.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/rancher-desktop-keyring.gpg] https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/ /" | $SUDO tee /etc/apt/sources.list.d/rancher-desktop.list
-            $SUDO "$PACKAGE_MANAGER" update
-            $SUDO "$PACKAGE_MANAGER" install -y rancher-desktop
-        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            $SUDO curl -fsSL https://download.opensuse.org/repositories/isv:Rancher:stable/rpm.repo -o /etc/yum.repos.d/rancher-desktop.repo
-            $SUDO yum install -y rancher-desktop
-        fi
-
-        if ! command -v rancher-desktop &> /dev/null; then
-            echo "❌ Rancher Desktop のインストールに失敗しました。手動でインストールしてください。"
-            exit 1
-        else
-            echo "✅ Rancher Desktop のインストールが完了しました。"
-        fi
-    elif [[ "$OS_TYPE" == "Darwin" ]]; then
-        brew install --cask rancher
-    fi
-else
-    echo "✅ Rancher Desktop は既にインストールされています。"
-fi
-
 # Google Chrome
 printf "🚀 Google Chrome をインストールします...\n"
 if ! command -v google-chrome &> /dev/null; then
