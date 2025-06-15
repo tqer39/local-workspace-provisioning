@@ -1,0 +1,21 @@
+# Linux用のBrewfile
+
+# コマンドラインツール
+brew "zsh"
+brew "bat"
+brew "fzf"
+brew "eza"
+brew "fd"
+brew "ruff"
+brew "ripgrep"
+brew "awscli"
+brew "jq"
+brew "gh"
+brew "direnv"
+brew "starship"
+brew "pre-commit"
+brew "tcl-tk"
+brew "uv"
+
+# サービス
+brew "postgresql@16", restart_service: true

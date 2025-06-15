@@ -53,11 +53,7 @@ install_if_missing() {
     printf "🚀 %s のインストールを確認します...\n" "$cmd"
     if ! command -v "$cmd" &> /dev/null; then
         printf "%s がインストールされていません。インストールを試みます。\n" "$cmd"
-        if [[ "$install_cmd" == *"brew"* ]]; then
-            brew install "$cmd"
-        else
-            $SUDO bash -c "$install_cmd"
-        fi
+        $SUDO bash -c "$install_cmd"
 
         if ! command -v "$cmd" &> /dev/null; then
             printf "❌ %s のインストールに失敗しました。手動でインストールしてください。\n" "$cmd"
@@ -139,6 +135,15 @@ if ! command -v brew &> /dev/null; then
     fi
 else
     echo "✅ Homebrew は既にインストールされています。"
+fi
+
+# Brewfileを使用してパッケージをインストール
+if [[ "$OS_TYPE" == "Linux" ]]; then
+    echo "Linux用のBrewfileを使用してパッケージをインストールします..."
+    brew bundle --file="Brewfile/Brewfile.Linux"
+elif [[ "$OS_TYPE" == "Darwin" ]]; then
+    echo "macOS用のBrewfileを使用してパッケージをインストールします..."
+    brew bundle --file="Brewfile/Brewfile.macOS"
 fi
 
 # git のインストール確認
@@ -236,8 +241,6 @@ case "$1" in
 esac
 
 # 以下、通常のセットアップ処理
-# zsh
-install_if_missing "zsh" "brew install zsh"
 
 # デフォルトシェルを zsh に変更 (CI環境ではスキップ)
 if [ "$CI" != "true" ]; then
@@ -263,21 +266,6 @@ if [ "$SHELL" == "/bin/bash" ]; then
 elif [ "$SHELL" == "/bin/zsh" ]; then
     printf "✅ デフォルトのシェルが zsh です。\n"
 fi
-
-# bat
-install_if_missing "bat" "brew install bat"
-
-# fzf
-install_if_missing "fzf" "brew install fzf"
-
-# eza
-install_if_missing "eza" "brew install eza"
-
-# fd
-install_if_missing "fd" "brew install fd"
-
-# ruff
-install_if_missing "ruff" "brew install ruff"
 
 # ripgrep
 if ! command -v rp &> /dev/null; then
@@ -334,57 +322,6 @@ else
     echo "✅ aws-vault は既にインストールされています。"
 fi
 
-# jq
-install_if_missing "jq" "brew install jq"
-
-# gh (GitHub CLI)
-install_if_missing "gh" "brew install gh"
-
-# direnv
-install_if_missing "direnv" "brew install direnv"
-# bash を使っているなら direnv hook bash にする。zsh を使っているなら direnv hook zsh にする。
-if [ "$SHELL" == "/bin/bash" ]; then
-    eval "$(direnv hook bash)"
-elif [ "$SHELL" == "/bin/zsh" ]; then
-    eval "$(direnv hook zsh)"
-fi
-
-# direnv の初期化（dotfiles で管理されている前提）
-# eval "$(direnv hook zsh)" は .zshrc に含まれている前提
-
-# starship
-install_if_missing "starship" "brew install starship"
-
-# pre-commit
-install_if_missing "pre-commit" "brew install pre-commit"
-
-# anyenv
-install_if_missing "anyenv" "brew install anyenv"
-if [ ! -d "$HOME/.anyenv" ]; then
-    git clone https://github.com/anyenv/anyenv "$HOME/.anyenv"
-    anyenv install --force-init
-fi
-anyenv install -l
-export PATH="$HOME/.anyenv/bin:$PATH"
-eval "$(anyenv init -)"
-
-# シェルに anyenv のパスを追加（dotfiles で管理されている前提）
-# eval "$(anyenv init -)" は .bashrc や .zshrc に含まれている前提
-
-# **env のインストール
-ENVS=("nodenv" "pyenv" "tfenv")
-
-for env in "${ENVS[@]}"; do
-    if [ ! -d "$HOME/.anyenv/envs/$env" ]; then
-        echo "$env をインストールします..."
-        anyenv install "$env"
-    else
-        echo "✅ $env は既にインストールされています。"
-    fi
-    eval "$(anyenv init -)"
-    $env --version
-done
-
 # Visual Studio Code
 printf "🚀 Visual Studio Code をインストールします...\n"
 if ! command -v code &> /dev/null; then
@@ -432,35 +369,6 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
     fi
 else
     echo "❌ サポートされていないOSです。Karabiner-Elements のインストールをスキップします。"
-fi
-
-# Rancher Desktop
-printf "🚀 Rancher Desktop をインストールします...\n"
-if ! command -v rancher-desktop &> /dev/null; then
-    if [[ "$OS_TYPE" == "Linux" ]]; then
-        echo "Rancher Desktop がインストールされていません。インストールを試みます。"
-        # Debian/Ubuntu 系の場合
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            curl -fsSL https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/Release.key | $SUDO gpg --dearmor -o /usr/share/keyrings/rancher-desktop-keyring.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/rancher-desktop-keyring.gpg] https://download.opensuse.org/repositories/isv:/Rancher:/stable/deb/ /" | $SUDO tee /etc/apt/sources.list.d/rancher-desktop.list
-            $SUDO "$PACKAGE_MANAGER" update
-            $SUDO "$PACKAGE_MANAGER" install -y rancher-desktop
-        elif [[ "$PACKAGE_MANAGER" == "yum" ]]; then
-            $SUDO curl -fsSL https://download.opensuse.org/repositories/isv:Rancher:stable/rpm.repo -o /etc/yum.repos.d/rancher-desktop.repo
-            $SUDO yum install -y rancher-desktop
-        fi
-
-        if ! command -v rancher-desktop &> /dev/null; then
-            echo "❌ Rancher Desktop のインストールに失敗しました。手動でインストールしてください。"
-            exit 1
-        else
-            echo "✅ Rancher Desktop のインストールが完了しました。"
-        fi
-    elif [[ "$OS_TYPE" == "Darwin" ]]; then
-        brew install --cask rancher
-    fi
-else
-    echo "✅ Rancher Desktop は既にインストールされています。"
 fi
 
 # Google Chrome
@@ -702,43 +610,6 @@ if [[ "$OS_TYPE" == "Darwin" ]]; then
         fi
     else
         echo "✅ deskpad は既にインストールされています。"
-    fi
-fi
-
-# ローカル専用の utility のインストール
-if [ "$CI" != "true" ]; then
-    printf "🚀 ローカル専用の utility をインストールします...\n"
-    if [[ "$OS_TYPE" == "Linux" ]]; then
-        if [[ "$PACKAGE_MANAGER" == "apt" || "$PACKAGE_MANAGER" == "apt-get" ]]; then
-            # pyenv install 3.12.1 で必要なパッケージ
-            echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
-            $SUDO "$PACKAGE_MANAGER" update
-            $SUDO "$PACKAGE_MANAGER" install -y libcrypt-dev
-            brew install tcl-tk
-            # uv
-            echo "uv をインストールします..."
-            if ! command -v uv &> /dev/null; then
-                curl -LsSf https://astral.sh/uv/install.sh | sh
-            fi
-            # pyenv
-            echo "pyenv install -s を実行します..."
-            # 一度 unlink しないとエラーになる see https://mainmokeybusiness.com/post/pyenv_install_error/
-            brew unlink pkg-config
-            pyenv install -s
-            brew link pkg-config
-        fi
-    elif [[ "$OS_TYPE" == "Darwin" ]]; then
-        # pyenv install 3.12.1 で必要なパッケージ
-        echo "pyenv install 3.12.1 で必要なパッケージをインストールします..."
-        brew install tcl-tk
-        # uv
-        echo "uv をインストールします..."
-        if ! command -v uv &> /dev/null; then
-            curl -LsSf https://astral.sh/uv/install.sh | sh
-        fi
-        # pyenv
-        echo "pyenv install -s を実行します..."
-        pyenv install -s
     fi
 fi
 
