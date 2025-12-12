@@ -41,7 +41,7 @@ jobs:
 
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DL_PATH }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip
           key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
@@ -55,7 +55,7 @@ jobs:
 
       - name: Cache HackGen
         id: cache-hackgen
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
           key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
@@ -69,7 +69,7 @@ jobs:
 
       - name: Cache Hyper.js
         id: cache-hyper
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DL_PATH }}/deb
           key: ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
@@ -97,7 +97,7 @@ jobs:
 
       - name: Cache HackGenNerd Font
         id: cache-hackgen-nf
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DL_PATH }}/HackGen_NF_v${{ env.HACKGEN_VERSION }}.zip
           key: ${{ runner.os }}-hackgen-nf-${{ env.HACKGEN_VERSION }}-
@@ -111,7 +111,7 @@ jobs:
 
       - name: Cache HackGen
         id: cache-hackgen
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DL_PATH }}/HackGen_v${{ env.HACKGEN_VERSION }}.zip
           key: ${{ runner.os }}-hackgen-${{ env.HACKGEN_VERSION }}-
@@ -125,7 +125,7 @@ jobs:
 
       - name: Cache Hyper.js
         id: cache-hyper
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: ${{ env.DL_PATH }}/deb
           key: ${{ runner.os }}-hyper-js-${{ env.HYPER_VERSION }}-
